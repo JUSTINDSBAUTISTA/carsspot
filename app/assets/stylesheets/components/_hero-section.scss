@@ -34,10 +34,15 @@
     width: 50%;
     height: auto;
     max-width: 900px;
+    background-image: url('https://www.pngmart.com/files/13/Abstract-Graphic-Design-PNG-Free-Download.png'); /* Replace with your background image URL */
+    background-size: cover;
+    background-position: center;
   }
   
   .hero-image .car-image {
+    position: relative;
     width: 100%;
     height: auto;
+    z-index: 1;
   }
   
