@@ -6,15 +6,30 @@
     position: relative;
     background-color: white;
     height: 600px;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      height: auto;
+      padding: 20px;
+    }
   }
   
   .hero-content {
     max-width: 50%;
+  
+    @media (max-width: 768px) {
+      max-width: 100%;
+      text-align: center;
+    }
   }
   
   .hero-content h1 {
     font-size: 3em;
     margin: 0;
+  
+    @media (max-width: 768px) {
+      font-size: 2em;
+    }
   }
   
   .hero-content h1 span {
@@ -25,6 +40,10 @@
   .hero-content p {
     font-size: 1.5em;
     color: #666;
+  
+    @media (max-width: 768px) {
+      font-size: 1.2em;
+    }
   }
   
   .hero-image {
@@ -34,9 +53,16 @@
     width: 50%;
     height: auto;
     max-width: 900px;
-    background-image: url('https://www.pngmart.com/files/13/Abstract-Graphic-Design-PNG-Free-Download.png'); /* Replace with your background image URL */
+    background-image: url('https://www.pngmart.com/files/13/Abstract-Graphic-Design-PNG-Free-Download.png');
     background-size: cover;
     background-position: center;
+  
+    @media (max-width: 768px) {
+      position: static;
+      width: 100%;
+      max-width: 100%;
+      margin-top: 20px;
+    }
   }
   
   .hero-image .car-image {
@@ -45,4 +71,6 @@
     height: auto;
     z-index: 1;
   }
+  
+
   

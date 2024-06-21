@@ -10,12 +10,21 @@
     width: 80%;
     max-width: 1200px;
     margin: 0 auto;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      width: 100%;
+    }
   }
   
   .input-group {
     display: flex;
     gap: 10px;
     width: 100%;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
   }
   
   .input-item {
@@ -27,6 +36,11 @@
     flex: 1;
     position: relative;
     max-width: 300px;
+  
+    @media (max-width: 768px) {
+      max-width: 100%;
+      width: 100%;
+    }
   }
   
   .input-item i {
@@ -62,6 +76,12 @@
     display: flex;
     align-items: center;
     max-width: 150px;
+  
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
   }
   
   .search-button {
@@ -73,6 +93,10 @@
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
+  
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
   
   .search-button:hover {
@@ -93,9 +117,9 @@
     width: 1px;
     height: 50%;
     background-color: #e0e0e0;
-  }
   
-  .mapboxgl-ctrl-geocoder {
-    width: 100%;
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
   
