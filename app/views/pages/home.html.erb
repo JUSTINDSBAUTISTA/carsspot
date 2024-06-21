@@ -1,2 +1,196 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="hero-section">
+  <div class="hero-content">
+    <h1>Find, book and rent a car <span>Easily</span></h1>
+    <p>Get a car wherever and whenever you need it.</p>
+  </div>
+  <div class="hero-image">
+    <%= image_tag "image.png", alt: "Car Image", class: "car-image" %>
+  </div>
+</div>
+
+<div class="search-bar">
+  <div class="input-group">
+    <div class="input-item">
+      <i class="fas fa-map-marker-alt"></i>
+      <div class="input-wrapper">
+        <label for="location">Location</label>
+        <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", class: "location-input" %>
+      </div>
+    </div>
+    <div class="input-item">
+      <i class="fas fa-calendar-alt"></i>
+      <div class="input-wrapper">
+        <label for="pickup_date">Pickup date</label>
+        <%= date_field_tag :pickup_date, nil, placeholder: "Pickup date", id: "pickup_date" %>
+      </div>
+    </div>
+    <div class="input-item">
+      <i class="fas fa-calendar-alt"></i>
+      <div class="input-wrapper">
+        <label for="return_date">Return date</label>
+        <%= date_field_tag :return_date, nil, placeholder: "Return date", id: "return_date" %>
+      </div>
+    </div>
+    <div class="input-item search-button-wrapper">
+      <%= button_tag "Search", class: "search-button" %>
+    </div>
+  </div>
+</div>
+
+
+<div class="how-it-works">
+  <h2>Rent with following 3 working steps</h2>
+  <div class="steps">
+    <div class="step">
+      <i class="fas fa-map-marker-alt"></i>
+      <h3>Choose location</h3>
+      <p>Choose your and find your best car</p>
+    </div>
+    <div class="step">
+      <i class="fas fa-calendar-alt"></i>
+      <h3>Pick-up date</h3>
+      <p>Select your pick up date and time to book your car</p>
+    </div>
+    <div class="step">
+      <i class="fas fa-car"></i>
+      <h3>Book your car</h3>
+      <p>Book your car and we will deliver it directly to you</p>
+    </div>
+  </div>
+</div>
+
+<div class="brand-logos">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-honda-car-logologocar-brand-logoscarshonda-car-logo-1701527428101lhn2z.png" alt="Honda">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-jaguar-car-logologocar-brand-logoscarsjaguar-car-logo-1701527428194ju6al.png" alt="Jaguar">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-nissan-car-logologocar-brand-logoscarsnissan-car-logo-1701527428763eoz9z.png" alt="Nissan">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-volvo-car-logologocar-brand-logoscarsvolvo-car-logo-1701527429026kbtdt.png" alt="Volvo">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-audi-car-logologocar-brand-logoscarsaudi-1701527428038cl0rr.png" alt="Audi">
+  <img src="https://purepng.com/public/uploads/large/purepng.com-mercedes-benz-car-logologocar-brand-logoscarsmercedes-benz-car-logo-1701527428463n3kha.png" alt="Mercedes">
+</div>
+
+<div class="why-choose-us">
+  <div class="feature-image">
+    <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Audi R8">
+  </div>
+  <div class="why-choose-us-content">
+    <h2>Why Choose Us</h2>
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-tags"></i>
+        <div class="feature-text">
+          <h3>Best price guaranteed</h3>
+          <p>Find a lower price? We'll refund you 100% of the difference.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <i class="fas fa-user-tie"></i>
+        <div class="feature-text">
+          <h3>Experience driver</h3>
+          <p>Don't have a driver? Don't worry, we have many experienced drivers for you.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <i class="fas fa-car-side"></i>
+        <div class="feature-text">
+          <h3>24 hour car delivery</h3>
+          <p>Book your car anytime and we will deliver it directly to you.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <i class="fas fa-headset"></i>
+        <div class="feature-text">
+          <h3>24/7 technical support</h3>
+          <p>Have a question? Contact Rentcars support any time when you have a problem.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popular-rental-deals">
+  <h2>Most popular cars rental deals</h2>
+  <div class="car-deals">
+    <div class="car-deal">
+      <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Jaguar XF">
+      <h3>Jaguar XF</h3>
+      <p>Price: $1,400/day</p>
+      <p>4.8 rating</p>
+      <%= button_tag "Rent now", class: "rent-button" %>
+    </div>
+    <div class="car-deal">
+      <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Audi R8">
+      <h3>Audi R8</h3>
+      <p>Price: $2,100/day</p>
+      <p>4.9 rating</p>
+      <%= button_tag "Rent now", class: "rent-button" %>
+    </div>
+    <div class="car-deal">
+      <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="BMW X6">
+      <h3>BMW X6</h3>
+      <p>Price: $1,600/day</p>
+      <p>4.7 rating</p>
+      <%= button_tag "Rent now", class: "rent-button" %>
+    </div>
+    <div class="car-deal">
+      <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Lamborghini Huracan">
+      <h3>Lamborghini Huracan</h3>
+      <p>Price: $2,300/day</p>
+      <p>5.0 rating</p>
+      <%= button_tag "Rent now", class: "rent-button" %>
+    </div>
+  </div>
+  <button class="show-all-button">Show all vehicles</button>
+</div>
+
+<div class="testimonials">
+  <h2>What people say about us?</h2>
+  <div class="testimonial">
+    <p>"Excellent service and great cars!"</p>
+    <p>- John Doe</p>
+  </div>
+  <div class="testimonial">
+    <p>"I loved the experience. Will rent again."</p>
+    <p>- Jane Smith</p>
+  </div>
+  <div class="testimonial">
+    <p>"Highly recommend for anyone needing a rental car."</p>
+    <p>- David Wilson</p>
+  </div>
+</div>
+
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Rentcars</h3>
+      <p>123 Main Street, Anytown, USA</p>
+      <p>Email: info@rentcars.com</p>
+      <p>Phone: (123) 456-7890</p>
+    </div>
+    <div class="footer-section">
+      <h3>Our Product</h3>
+      <ul>
+        <li><a href="#">Cars</a></li>
+        <li><a href="#">Deals</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Resources</h3>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-linkedin-in"></i>
+      </div>
+    </div>
+  </div>
+</footer>

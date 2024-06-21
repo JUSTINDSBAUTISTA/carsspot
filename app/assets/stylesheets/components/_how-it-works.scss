@@ -1,0 +1,78 @@
+.how-it-works {
+    text-align: center;
+    margin-top: 80px;
+    padding: 40px 0;
+  
+    @media (max-width: 768px) {
+      padding: 20px 0;
+    }
+  }
+  
+  .how-it-works h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 40px;
+  
+    @media (max-width: 768px) {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+  }
+  
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1200px;
+    gap: 20px; /* Add gap between steps */
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+  
+  .step {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1; /* Make steps flexible */
+    max-width: 300px; /* Adjust width to prevent crowding */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+    @media (max-width: 768px) {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+  
+  .step i {
+    font-size: 3em;
+    color: #44A1A0;
+    margin-bottom: 10px;
+  
+    @media (max-width: 768px) {
+      font-size: 2em;
+    }
+  }
+  
+  .step h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+  
+    @media (max-width: 768px) {
+      font-size: 1em;
+    }
+  }
+  
+  .step p {
+    font-size: 0.9em;
+    color: #666;
+  
+    @media (max-width: 768px) {
+      font-size: 0.8em;
+    }
+  }
+  

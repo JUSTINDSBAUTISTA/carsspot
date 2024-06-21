@@ -1,5 +1,22 @@
-// Import your components CSS files here.
+
 @import "alert";
 @import "avatar";
 @import "form_legend_clear";
 @import "navbar";
+
+@import "hero-section";
+@import "search-bar";
+@import "how-it-works";
+@import "brand-logos";
+@import "why-choose-us";
+@import "popular-rental-deals";
+@import "testimonials";
+@import "log_in";
+@import "sign_up";
+@import "footer";
+@import "forgot_password";
+@import "change_password";
+
+body {
+  background-color: white;
+}

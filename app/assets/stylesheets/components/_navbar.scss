@@ -1,12 +1,87 @@
+
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
 .navbar-lewagon {
-  justify-content: space-between;
-  background: white;
+  background-color: white;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
+.navbar-brand img {
+  height: 50px;
 }
 
-.navbar-lewagon .navbar-brand img {
+.navbar-toggler {
+  border-color: #44A1A0;
+}
+
+.navbar-toggler-icon {
+  background-color: #44A1A0;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: #333;
+  font-weight: 500;
+  padding: 10px 20px;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #44A1A0;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+  color: #44A1A0;
+}
+
+.navbar-nav .nav-item .dropdown-menu {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.navbar-nav .nav-item .dropdown-menu .dropdown-item {
+  color: #333;
+  padding: 10px 20px;
+}
+
+.navbar-nav .nav-item .dropdown-menu .dropdown-item:hover {
+  background-color: #44A1A0;
+  color: white;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.avatar {
+  height: 40px;
   width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.navbar-nav .nav-item .nav-link.sign-up {
+  background-color: #44A1A0;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: 500; 
+}
+
+.navbar-nav .nav-item .nav-link.sign-up:hover {
+  background-color: #388f8f;
 }
