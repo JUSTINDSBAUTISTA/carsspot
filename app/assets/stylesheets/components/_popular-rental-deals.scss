@@ -1,84 +1,122 @@
 .popular-rental-deals {
-    text-align: center;
-    margin-top: 80px;
-    padding: 40px 0;
+  text-align: center;
+  margin-top: 80px;
+  padding: 40px 0;
+
+  @media (max-width: 768px) {
+    padding: 20px 0;
   }
-  
-  .popular-rental-deals h2 {
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 40px;
+}
+
+.popular-rental-deals h2 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 40px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5em;
+    margin-bottom: 20px;
   }
-  
-  .car-deals {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 auto;
-    max-width: 1200px;
-    gap: 20px;
+}
+
+.car-deals {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1200px;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
   }
-  
-  .car-deal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    flex: 1;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.car-deal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    width: 100%;
   }
-  
-  .car-deal img {
-    width: 250px;
-    margin-bottom: 10px;
+}
+
+.car-deal img {
+  width: 250px;
+  margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
-  
-  .car-deal h3 {
-    font-size: 1.2em;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .car-deal p {
-    font-size: 0.9em;
-    color: #666;
-  }
-  
-  .rent-button {
-    background-color: #44A1A0;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
+}
+
+.car-deal h3 {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 10px;
+
+  @media (max-width: 768px) {
     font-size: 1em;
-    transition: background-color 0.3s ease;
   }
-  
-  .rent-button:hover {
-    background-color: #388f8f;
+}
+
+.car-deal p {
+  font-size: 0.9em;
+  color: #666;
+
+  @media (max-width: 768px) {
+    font-size: 0.8em;
   }
-  
-  .rent-button:active {
-    background-color: #2c6e6d;
+}
+
+.rent-button {
+  background-color: #44A1A0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
-  
-  .show-all-button {
-    background-color: #44A1A0;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
+}
+
+.rent-button:hover {
+  background-color: #388f8f;
+}
+
+.rent-button:active {
+  background-color: #2c6e6d;
+}
+
+.show-all-button {
+  background-color: #44A1A0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
-  
-  .show-all-button:hover {
-    background-color: #388f8f;
-  }
-  
-  .show-all-button:active {
-    background-color: #2c6e6d;
-  }
-  
+}
+
+.show-all-button:hover {
+  background-color: #388f8f;
+}
+
+.show-all-button:active {
+  background-color: #2c6e6d;
+}
