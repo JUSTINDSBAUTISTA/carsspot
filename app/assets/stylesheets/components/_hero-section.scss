@@ -1,0 +1,43 @@
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    position: relative;
+    background-color: white;
+    height: 600px;
+  }
+  
+  .hero-content {
+    max-width: 50%;
+  }
+  
+  .hero-content h1 {
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  .hero-content h1 span {
+    color: #44A1A0;
+    text-decoration: underline;
+  }
+  
+  .hero-content p {
+    font-size: 1.5em;
+    color: #666;
+  }
+  
+  .hero-image {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    height: auto;
+    max-width: 900px;
+  }
+  
+  .hero-image .car-image {
+    width: 100%;
+    height: auto;
+  }
+  
