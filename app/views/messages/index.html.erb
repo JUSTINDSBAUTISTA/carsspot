@@ -1,0 +1,26 @@
+<h1>Messages</h1>
+
+<div class="messages-container">
+  <div class="received-messages">
+    <h2>Received Messages</h2>
+    <% @received_messages.each do |message| %>
+      <div class="message">
+        <p><strong>From:</strong> <%= message.sender.email %></p>
+        <p><%= message.body %></p>
+        <%= link_to 'Reply', new_message_path(recipient_id: message.sender.id), class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="sent-messages">
+    <h2>Sent Messages</h2>
+    <% @sent_messages.each do |message| %>
+      <div class="message">
+        <p><strong>To:</strong> <%= message.recipient.email %></p>
+        <p><%= message.body %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to 'New Message', new_message_path, class: "btn btn-primary" %>

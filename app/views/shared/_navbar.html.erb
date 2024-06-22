@@ -10,8 +10,14 @@
 
     <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <%= link_to "Become a renter", "#", class: "nav-link" %>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" id="becomeRenterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Become a renter
+          </a>
+          <div class="dropdown-menu" aria-labelledby="becomeRenterDropdown">
+            <%= link_to "My Cars", my_cars_cars_path, class: "dropdown-item" %>
+            <%= link_to "Add New Car", new_car_path, class: "dropdown-item" %>
+          </div>
         </li>
         <li class="nav-item">
           <%= link_to "Rental deals", "#", class: "nav-link" %>
@@ -26,18 +32,31 @@
       <ul class="navbar-nav">
         <% if user_signed_in? %>
           <li class="nav-item">
-             <% link_to "Home", "#", class: "nav-link" %> <!-- this i hide we might use later -->
+            <%= link_to "Messages", messages_path, class: "nav-link" %>
           </li>
-          <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link" %>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" id="notificationsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Notifications
+              <% if current_user.notifications.unread.count > 0 %>
+                <span class="badge bg-danger"><%= current_user.notifications.unread.count %></span>
+              <% end %>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+              <% current_user.notifications.recent.each do |notification| %>
+                <a class="dropdown-item" href="<%= mark_as_read_notification_path(notification) %>">
+                  <%= notification.message %>
+                </a>
+              <% end %>
+              <div class="dropdown-divider"></div>
+              <%= link_to "View all notifications", notifications_path, class: "dropdown-item" %>
+            </div>
           </li>
           <li class="nav-item dropdown">
             <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <%= image_tag "https://www.memecreator.org/static/images/memes/4920691.jpg", class: "avatar", alt: "dropdown menu" %>
+              <%= image_tag gravatar_for(current_user, size: 40), class: "avatar", alt: "Profile" %>
             </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Action", "#", class: "dropdown-item" %>
-              <%= link_to "Another action", "#", class: "dropdown-item" %>
+              <%= link_to "Profile", profile_path, class: "dropdown-item" %>
               <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
             </div>
           </li>

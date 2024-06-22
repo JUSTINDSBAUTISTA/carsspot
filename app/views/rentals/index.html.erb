@@ -1,0 +1,14 @@
+<h1>Rentals</h1>
+
+<% @rentals.each do |rental| %>
+  <div class="rental">
+    <h2><%= link_to rental.car.car_name, rental_path(rental) %></h2>
+    <p><strong>Start Date:</strong> <%= rental.start_date %></p>
+    <p><strong>End Date:</strong> <%= rental.end_date %></p>
+    <p><strong>Driving License:</strong> <%= rental.driving_license %></p>
+    <p><strong>ID Proof:</strong> <%= rental.id_proof %></p>
+    <p><strong>Status:</strong> <%= rental.status %></p>
+    <%= link_to 'Edit', edit_rental_path(rental), class: 'btn btn-secondary' %>
+    <%= link_to 'Delete', rental, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+  </div>
+<% end %>

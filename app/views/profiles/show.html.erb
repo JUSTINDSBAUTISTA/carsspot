@@ -1,0 +1,62 @@
+<h1>Profile</h1>
+
+<div class="profile-details">
+  <p><strong>Name:</strong> <%= @user.name %></p>
+  <p><strong>Email:</strong> <%= @user.email %></p>
+  <p><strong>Birthday:</strong> <%= @user.birthday %></p>
+  <p><strong>Phone Number:</strong> <%= @user.phone_number %></p>
+  <p><strong>Address:</strong> <%= @user.address %></p>
+  <p><strong>Zip Code:</strong> <%= @user.zip_code %></p>
+  <p><strong>Town:</strong> <%= @user.town %></p>
+  <p><strong>Country:</strong> <%= @user.country %></p>
+  <p><strong>About Me:</strong> <%= @user.about_me %></p>
+</div>
+
+<div class="edit-profile-btn-wrapper">
+  <%= link_to "Edit Profile", edit_profile_path, class: "btn btn-primary edit-profile-btn" %>
+</div>
+
+<style>
+.profile-details {
+  max-width: 600px;
+  margin: 0 auto 20px; /* Adjust margin to separate form from button */
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 10px;
+
+    strong {
+      color: #555;
+    }
+  }
+}
+
+.edit-profile-btn-wrapper {
+  text-align: center; /* Center the button */
+}
+
+.edit-profile-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 4px;
+  background-color: #44A1A0;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #44A1A0; /* Same color to remove hover effect */
+  }
+}
+
+</style>

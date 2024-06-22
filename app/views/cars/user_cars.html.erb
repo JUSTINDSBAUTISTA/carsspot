@@ -1,0 +1,164 @@
+<%= form_with url: user_cars_path, method: :get, local: true, class: "filter-form" do |f| %>
+  <div class="filter-container">
+    <h1>Earn money by sharing your car with locals</h1>
+    <div class="filter-row">
+      <div class="filter-item">
+        <%= f.select :make, options_for_select(["Volkswagen", "Toyota", "Honda", "Ford", "BMW"], params[:make]), { prompt: "Select Make" }, class: "form-control" %>
+      </div>
+      <div class="filter-item">
+        <%= f.select :model, options_for_select(["Golf", "Camry", "Civic", "Focus", "3 Series"], params[:model]), { prompt: "Select Model" }, class: "form-control" %>
+      </div>
+      <div class="filter-item">
+        <%= f.select :year, options_for_select((2000..2024).to_a.reverse, params[:year]), { prompt: "Select Year" }, class: "form-control" %>
+      </div>
+      <div class="filter-item">
+        <%= f.select :mileage, options_for_select(["0-25,000 mi", "25,000-50,000 mi", "50,000-75,000 mi", "75,000-100,000 mi", "100,000+ mi"], params[:mileage]), { prompt: "Select Mileage" }, class: "form-control" %>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-item">
+        <%= f.text_field :city, placeholder: "Enter your city", class: "form-control" %>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-item">
+        <%= f.submit "Search", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<% if @cars.any? %>
+  <div class="cars-list">
+    <% @cars.each do |car| %>
+      <div class="car">
+        <h2><%= car.car_name %></h2>
+        <p><strong>Make:</strong> <%= car.car_make %></p>
+        <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
+        <p><strong>Status:</strong> <%= car.status %></p>
+        <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
+        <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
+        <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No cars found.</p>
+<% end %>
+
+<%= link_to 'Add New Car', new_car_path, class: 'btn btn-primary' %>
+
+<style>
+    .filter-form {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+
+  .filter-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+
+      .filter-item {
+        flex: 1;
+        margin: 0 10px;
+
+        .form-control {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+      }
+    }
+
+    .btn-primary {
+      background-color: #44A1A0;
+      border-color: #44A1A0;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: darken(#44A1A0, 10%);
+        border-color: darken(#44A1A0, 10%);
+      }
+    }
+  }
+}
+
+.cars-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 30px;
+
+  .car {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    flex: 1 0 30%;
+    max-width: 30%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+
+    h2 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background-color: #44A1A0;
+      border-color: #44A1A0;
+
+      &:hover {
+        background-color: darken(#44A1A0, 10%);
+        border-color: darken(#44A1A0, 10%);
+      }
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+
+      &:hover {
+        background-color: darken(#6c757d, 10%);
+        border-color: darken(#6c757d, 10%);
+      }
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+
+      &:hover {
+        background-color: darken(#dc3545, 10%);
+        border-color: darken(#dc3545, 10%);
+      }
+    }
+  }
+}
+</style>

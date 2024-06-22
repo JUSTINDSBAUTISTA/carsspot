@@ -1,0 +1,19 @@
+<h1>Cars</h1>
+
+<% @cars.each do |car| %>
+  <div class="car">
+    <h2><%= link_to car.car_name, car_path(car) %></h2>
+    <p><strong>Make:</strong> <%= car.car_make %></p>
+    <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
+    <p><strong>Status:</strong> <%= car.status %></p>
+    <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
+    <% if policy(car).update? %>
+      <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
+    <% end %>
+    <% if policy(car).destroy? %>
+      <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= link_to 'Add New Car', new_car_path, class: 'btn btn-primary' %>

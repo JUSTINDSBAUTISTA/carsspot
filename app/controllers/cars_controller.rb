@@ -1,10 +1,12 @@
 class CarsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :set_car, only: [:show, :edit, :update, :destroy, :approve, :reject]
+
   def index
     @cars = policy_scope(Car)
   end
 
   def show
-    @car = Car.find(params[:id])
     authorize @car
   end
 
@@ -25,12 +27,10 @@ class CarsController < ApplicationController
   end
 
   def edit
-    @car = Car.find(params[:id])
     authorize @car
   end
 
   def update
-    @car = Car.find(params[:id])
     authorize @car
     if @car.update(car_params)
       redirect_to @car, notice: 'Car was successfully updated.'
@@ -40,13 +40,21 @@ class CarsController < ApplicationController
   end
 
   def destroy
-    @car = Car.find(params[:id])
     authorize @car
     @car.destroy
     redirect_to cars_url, notice: 'Car was successfully destroyed.'
   end
 
+  def my_cars
+    @cars = current_user.cars
+    authorize @cars
+  end
+
   private
+
+  def set_car
+    @car = Car.find(params[:id])
+  end
 
   def car_params
     params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat)

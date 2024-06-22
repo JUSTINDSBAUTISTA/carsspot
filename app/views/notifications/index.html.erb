@@ -1,0 +1,8 @@
+<h1>Notifications</h1>
+
+<% @notifications.each do |notification| %>
+  <div class="notification <%= 'unread' if !notification.read %>">
+    <p><%= notification.message %></p>
+    <%= link_to 'Mark as read', mark_as_read_notification_path(notification), method: :patch, class: 'btn btn-secondary' %>
+  </div>
+<% end %>

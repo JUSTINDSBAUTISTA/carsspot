@@ -1,0 +1,41 @@
+<h1><%= @car.car_name %></h1>
+
+<p><strong>Make:</strong> <%= @car.car_make %></p>
+<p><strong>Price per Day:</strong> <%= @car.price_per_day %></p>
+<p><strong>Status:</strong> <%= @car.status %></p>
+
+<h2>Reviews</h2>
+<% @car.reviews.each do |review| %>
+  <div class="review">
+    <p><strong><%= review.user.name %>:</strong> <%= review.rating %> stars</p>
+    <p><%= review.comment %></p>
+  </div>
+<% end %>
+
+<h3>Add a Review</h3>
+<%= form_for [@car, Review.new] do |f| %>
+  <div class="form-group">
+    <%= f.label :rating %>
+    <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :comment %>
+    <%= f.text_area :comment, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.submit "Submit Review", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', cars_path, class: 'btn btn-primary' %>
+<% if policy(@car).edit? %>
+  <%= link_to 'Edit', edit_car_path(@car), class: 'btn btn-secondary' %>
+<% end %>
+<% if policy(@car).destroy? %>
+  <%= link_to 'Delete', @car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+<% end %>
+
+<% if user_signed_in? && @car.user != current_user %>
+  <%= link_to "Send Message to Owner", new_message_path(recipient_id: @car.user.id), class: "btn btn-secondary" %>
+  <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,21 @@
+<h1>My Cars</h1>
+
+<%= link_to 'Add New Car', new_car_path, class: 'btn btn-primary mb-3' %>
+
+<% if @cars.any? %>
+  <% @cars.each do |car| %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="card-title"><%= car.car_name %></h2>
+        <p class="card-text"><strong>Make:</strong> <%= car.car_make %></p>
+        <p class="card-text"><strong>Price per Day:</strong> <%= car.price_per_day %></p>
+        <p class="card-text"><strong>Status:</strong> <%= car.status %></p>
+        <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
+        <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
+        <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p>You have no cars listed.</p>
+<% end %>
