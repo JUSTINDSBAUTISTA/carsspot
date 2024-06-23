@@ -1,0 +1,14 @@
+<p>Hello <%= @car_owner.name %>,</p>
+
+<p>You have a new rental request for your car <%= @rental.car.car_name %>.</p>
+
+<p>Details:</p>
+<ul>
+  <li>Start Date: <%= @rental.start_date %></li>
+  <li>End Date: <%= @rental.end_date %></li>
+  <li>Driving License: <%= @rental.driving_license %></li>
+  <li>ID Proof: <%= @rental.id_proof %></li>
+</ul>
+
+<p>Please log in to your account to approve or reject the request.</p>
+

@@ -1,0 +1,11 @@
+<h1>Rental Details</h1>
+
+<p><strong>Car Name:</strong> <%= @rental.car.car_name %></p>
+<p><strong>Start Date:</strong> <%= @rental.start_date %></p>
+<p><strong>End Date:</strong> <%= @rental.end_date %></p>
+<p><strong>Driving License:</strong> <%= @rental.driving_license %></p>
+<p><strong>ID Proof:</strong> <%= @rental.id_proof %></p>
+<p><strong>Status:</strong> <%= @rental.status %></p>
+
+<%= link_to 'Edit', edit_rental_path(@rental), class: 'btn btn-secondary' %>
+<%= link_to 'Back', rentals_path, class: 'btn btn-primary' %>

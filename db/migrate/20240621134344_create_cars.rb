@@ -10,6 +10,9 @@ class CreateCars < ActiveRecord::Migration[7.1]
       t.integer :price_per_day
       t.integer :rating
       t.integer :number_of_seat
+      t.string :status
+      t.boolean :approved, default: false
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end

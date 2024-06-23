@@ -1,27 +1,39 @@
 class CarPolicy < ApplicationPolicy
-  def index?
-    true
+  class Scope < Scope
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.where(status: 'approved')
+      end
+    end
   end
 
   def show?
-    true
+    record.status == 'approved' || user.admin?
   end
 
   def create?
-    true
+    user.present?
   end
 
   def update?
-    record.user == user
+    user.admin? || record.user == user
   end
 
   def destroy?
-    record.user == user
+    user.admin? || record.user == user
   end
 
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+  def approve?
+    user.admin?
+  end
+
+  def reject?
+    user.admin?
+  end
+
+  def my_cars?
+    user.present?
   end
 end

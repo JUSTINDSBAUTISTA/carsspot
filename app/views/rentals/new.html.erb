@@ -1,0 +1,23 @@
+<h1>Request to Rent <%= @car.car_name %></h1>
+
+<%= form_for [@car, @rental] do |f| %>
+  <div class="form-group">
+    <%= f.label :start_date %>
+    <%= f.date_field :start_date, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :end_date %>
+    <%= f.date_field :end_date, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :driving_license %>
+    <%= f.text_field :driving_license, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :id_proof %>
+    <%= f.text_field :id_proof, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.submit "Request to Rent", class: "btn btn-primary" %>
+  </div>
+<% end %>
