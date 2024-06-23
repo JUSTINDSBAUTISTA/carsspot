@@ -4,27 +4,29 @@
 <p><strong>Price per Day:</strong> <%= @car.price_per_day %></p>
 <p><strong>Status:</strong> <%= @car.status %></p>
 
-<h2>Reviews</h2>
-<% @car.reviews.each do |review| %>
-  <div class="review">
-    <p><strong><%= review.user.name %>:</strong> <%= review.rating %> stars</p>
-    <p><%= review.comment %></p>
-  </div>
-<% end %>
+<% if @car.status == 'approved' %>
+  <h2>Reviews</h2>
+  <% @car.reviews.each do |review| %>
+    <div class="review">
+      <p><strong><%= review.user.name %>:</strong> <%= review.rating %> stars</p>
+      <p><%= review.comment %></p>
+    </div>
+  <% end %>
 
-<h3>Add a Review</h3>
-<%= form_for [@car, Review.new] do |f| %>
-  <div class="form-group">
-    <%= f.label :rating %>
-    <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :comment %>
-    <%= f.text_area :comment, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.submit "Submit Review", class: "btn btn-primary" %>
-  </div>
+  <h3>Add a Review</h3>
+  <%= form_for [@car, Review.new] do |f| %>
+    <div class="form-group">
+      <%= f.label :rating %>
+      <%= f.select :rating, options_for_select(1..5), {}, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :comment %>
+      <%= f.text_area :comment, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.submit "Submit Review", class: "btn btn-primary" %>
+    </div>
+  <% end %>
 <% end %>
 
 <%= link_to 'Back', cars_path, class: 'btn btn-primary' %>

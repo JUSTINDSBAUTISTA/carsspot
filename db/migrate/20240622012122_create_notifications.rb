@@ -1,14 +1,16 @@
-class CreateNotifications < ActiveRecord::Migration[7.1]
+class CreateNotifications < ActiveRecord::Migration[6.0]
   def change
     create_table :notifications do |t|
-      t.references :user, null: false, foreign_key: true
-      t.references :car, null: false, foreign_key: true
-      t.references :actor, null: false, foreign_key: { to_table: :users }
-      t.string :action
-      t.boolean :read, default: false
+      t.integer :recipient_id, null: false
+      t.integer :actor_id, null: false
       t.references :notifiable, polymorphic: true, null: false
+      t.string :message
+      t.boolean :read, default: false
 
       t.timestamps
     end
+
+    add_foreign_key :notifications, :users, column: :recipient_id
+    add_foreign_key :notifications, :users, column: :actor_id
   end
 end

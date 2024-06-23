@@ -1,6 +1,7 @@
 # db/seeds.rb
 
 # Destroy all records in the correct order to prevent foreign key violations
+Notification.destroy_all
 Rental.destroy_all
 Message.destroy_all
 Favorite.destroy_all
@@ -28,12 +29,12 @@ cars = Car.create!(
 )
 
 # Create rentals
-Rental.create!(
+rentals = Rental.create!(
   [
-    { user: user2, car: cars.first, start_date: '2024-07-01', end_date: '2024-07-10', driving_license: 'DL12345', id_proof: 'ID12345' },
-    { user: user3, car: cars.second, start_date: '2024-07-05', end_date: '2024-07-12', driving_license: 'DL23456', id_proof: 'ID23456' },
-    { user: user4, car: cars.third, start_date: '2024-07-15', end_date: '2024-07-20', driving_license: 'DL34567', id_proof: 'ID34567' },
-    { user: user1, car: cars.fourth, start_date: '2024-07-18', end_date: '2024-07-25', driving_license: 'DL45678', id_proof: 'ID45678' }
+    { user: user2, car: cars.first, start_date: '2024-07-01', end_date: '2024-07-10', driving_license: 'DL12345', id_proof: 'ID12345', status: 'pending' },
+    { user: user3, car: cars.second, start_date: '2024-07-05', end_date: '2024-07-12', driving_license: 'DL23456', id_proof: 'ID23456', status: 'pending' },
+    { user: user4, car: cars.third, start_date: '2024-07-15', end_date: '2024-07-20', driving_license: 'DL34567', id_proof: 'ID34567', status: 'pending' },
+    { user: user1, car: cars.fourth, start_date: '2024-07-18', end_date: '2024-07-25', driving_license: 'DL45678', id_proof: 'ID45678', status: 'pending' }
   ]
 )
 

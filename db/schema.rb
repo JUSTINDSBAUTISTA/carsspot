@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_22_042642) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_23_095021) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,19 +66,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_042642) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.bigint "recipient_id"
-    t.bigint "actor_id"
+    t.integer "recipient_id", null: false
+    t.integer "actor_id", null: false
     t.string "notifiable_type", null: false
     t.bigint "notifiable_id", null: false
     t.string "message"
     t.boolean "read", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["actor_id"], name: "index_notifications_on_actor_id"
-    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
-    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
-    t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
   end
 
   create_table "rentals", force: :cascade do |t|
@@ -91,6 +87,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_042642) do
     t.datetime "updated_at", null: false
     t.string "driving_license"
     t.string "id_proof"
+    t.string "status"
     t.index ["car_id"], name: "index_rentals_on_car_id"
     t.index ["user_id"], name: "index_rentals_on_user_id"
   end
@@ -134,7 +131,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_042642) do
   add_foreign_key "favorites", "users"
   add_foreign_key "messages", "users", column: "recipient_id"
   add_foreign_key "messages", "users", column: "sender_id"
-  add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "notifications", "users", column: "recipient_id"
   add_foreign_key "rentals", "cars"

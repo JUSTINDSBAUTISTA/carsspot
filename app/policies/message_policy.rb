@@ -1,7 +1,7 @@
 class MessagePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.where(sender: user).or(scope.where(recipient: user))
+      scope.where(sender_id: user.id).or(scope.where(recipient_id: user.id))
     end
   end
 
@@ -9,11 +9,15 @@ class MessagePolicy < ApplicationPolicy
     true
   end
 
+  def show?
+    record.sender_id == user.id || record.recipient_id == user.id
+  end
+
   def create?
     true
   end
 
-  def show?
-    record.sender == user || record.recipient == user
+  def new?
+    create?
   end
 end

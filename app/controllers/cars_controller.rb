@@ -41,13 +41,21 @@ class CarsController < ApplicationController
 
   def destroy
     authorize @car
-    @car.destroy
-    redirect_to cars_url, notice: 'Car was successfully destroyed.'
+    if @car.destroy
+      redirect_to cars_url, notice: 'Car was successfully destroyed.'
+    else
+      redirect_to @car, alert: 'Car cannot be deleted while it is pending approval.'
+    end
   end
 
   def my_cars
     @cars = current_user.cars
     authorize @cars
+  end
+
+  def pending_approval
+    @cars = policy_scope(Car).pending_approval
+    authorize @cars, :pending_approval?
   end
 
   private
@@ -57,6 +65,6 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat)
+    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status)
   end
 end

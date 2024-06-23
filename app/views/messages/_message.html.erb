@@ -1,0 +1,4 @@
+<div class="message <%= message.sender_id == current_user.id ? 'sent' : 'received' %>">
+  <p class="message-header"><strong><%= message.sender_id == current_user.id ? 'You' : message.sender.email %>:</strong></p>
+  <p class="message-body"><%= message.body %></p>
+</div>

@@ -10,9 +10,20 @@ class Car < ApplicationRecord
 
   after_initialize :set_default_status, if: :new_record?
 
+  scope :pending_approval, -> { where(status: 'pending') }
+
+  before_destroy :check_pending_status, prepend: true
+
   private
 
   def set_default_status
     self.status ||= 'pending'
+  end
+
+  def check_pending_status
+    if status == 'pending'
+      errors.add(:base, "Cannot delete a car that is pending approval")
+      throw(:abort)
+    end
   end
 end

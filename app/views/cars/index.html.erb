@@ -1,19 +1,116 @@
+<!-- app/views/cars/index.html.erb -->
 <h1>Cars</h1>
 
-<% @cars.each do |car| %>
-  <div class="car">
-    <h2><%= link_to car.car_name, car_path(car) %></h2>
-    <p><strong>Make:</strong> <%= car.car_make %></p>
-    <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
-    <p><strong>Status:</strong> <%= car.status %></p>
-    <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
-    <% if policy(car).update? %>
-      <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
-    <% end %>
-    <% if policy(car).destroy? %>
-      <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-    <% end %>
-  </div>
+<div class="cars-container">
+  <% @cars.each do |car| %>
+    <div class="car">
+      <h2><%= link_to car.car_name, car_path(car) %></h2>
+      <p><strong>Make:</strong> <%= car.car_make %></p>
+      <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
+      <p><strong>Status:</strong> <%= car.status %></p>
+      <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
+      <% if policy(car).update? %>
+        <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
+      <% end %>
+      <% if policy(car).destroy? && current_user.admin? %>
+        <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      <% end %>
+      <% unless car.user == current_user %>
+        <%= link_to 'Rent now', new_rental_path(car_id: car.id), class: 'btn btn-success' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% if current_user %>
+  <%= link_to 'Add New Car', new_car_path, class: 'add-car-button' %>
 <% end %>
 
-<%= link_to 'Add New Car', new_car_path, class: 'btn btn-primary' %>
+<style>
+  /* app/assets/stylesheets/cars.css */
+
+.cars-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.car {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.car:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.car h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.car p {
+  font-size: 1em;
+  margin: 5px 0;
+}
+
+.car .btn {
+  display: inline-block;
+  margin: 10px 5px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.car .btn:hover {
+  background-color: #0056b3;
+}
+
+.car .btn.btn-secondary {
+  background-color: #6c757d;
+}
+
+.car .btn.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.car .btn.btn-danger {
+  background-color: #dc3545;
+}
+
+.car .btn.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.add-car-button {
+  display: block;
+  margin: 30px auto;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-car-button:hover {
+  background-color: #218838;
+}
+</style>
