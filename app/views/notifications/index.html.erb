@@ -1,8 +1,8 @@
+<!-- app/views/notifications/index.html.erb -->
 <h1>Notifications</h1>
 
-<% @notifications.each do |notification| %>
-  <div class="notification <%= 'unread' if !notification.read %>">
-    <p><%= notification.message %></p>
-    <%= link_to 'Mark as read', mark_as_read_notification_path(notification), method: :patch, class: 'btn btn-secondary' %>
-  </div>
-<% end %>
+<div id="notifications" data-controller="notifications" data-notifications-target="list">
+  <% @notifications.each do |notification| %>
+    <%= render partial: 'notification', locals: { notification: notification } %>
+  <% end %>
+</div>

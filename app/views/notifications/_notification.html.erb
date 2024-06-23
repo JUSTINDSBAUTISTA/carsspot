@@ -1,0 +1,147 @@
+<!-- app/views/notifications/_notification.html.erb -->
+<div class="notification <%= 'unread' unless notification.read %> card">
+  <p><strong>Message:</strong> <%= notification.message %></p>
+
+  <% if notification.notifiable_type == 'Rental' %>
+    <% rental = notification.notifiable %>
+    <% user = rental.user %>
+    <% car = rental.car %>
+
+    <div class="rental-details">
+      <div class="renter-info card">
+        <h2>Renter Information</h2>
+        <p><strong>ID:</strong> <%= user.id %></p>
+        <p><strong>Name:</strong> <%= user.name %></p>
+        <p><strong>Email:</strong> <%= user.email %></p>
+        <p><strong>Phone:</strong> <%= user.phone_number %></p>
+      </div>
+      <div class="car-info card">
+        <h2>Car Information</h2>
+        <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
+        <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
+        <p><strong>Rental Start Date:</strong> <%= rental.start_date.strftime("%Y-%m-%d %H:%M") %></p>
+        <p><strong>Rental End Date:</strong> <%= rental.end_date.strftime("%Y-%m-%d %H:%M") %></p>
+        <p><strong>Cost:</strong> $<%= number_with_delimiter(car.price_per_day * (rental.end_date - rental.start_date).to_i) %></p>
+      </div>
+    </div>
+    <p><strong>Request Date:</strong> <%= rental.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+
+    <% if current_user == notification.recipient %>
+      <% if rental.status == 'pending' && car.user == current_user %>
+        <%= link_to 'Approve', approve_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
+        <%= link_to 'Reject', reject_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<style>
+  /* Container styling */
+.notifications-container {
+  text-align: center;
+  margin-top: 80px;
+  padding: 40px 0;
+
+  @media (max-width: 768px) {
+    padding: 20px 0;
+  }
+}
+
+.notification {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Card styling for renter and car information */
+.card {
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* Styling for rental details */
+.rental-details {
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.renter-info, .car-info {
+  flex: 1;
+  margin-right: 10px;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.car-info img.car-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+/* Styling for the headings */
+.notification h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #333;
+
+  @media (max-width: 768px) {
+    font-size: 1.2em;
+  }
+}
+
+/* General paragraph styling */
+.notification p {
+  font-size: 1em;
+  color: #666;
+  margin-bottom: 10px;
+
+  @media (max-width: 768px) {
+    font-size: 0.9em;
+  }
+}
+
+/* Button styling */
+.notification .btn {
+  background-color: #44A1A0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-right: 10px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 0;
+  }
+}
+
+.notification .btn:hover {
+  background-color: #388f8f;
+}
+
+.notification .btn:active {
+  background-color: #2c6e6d;
+}
+</style>

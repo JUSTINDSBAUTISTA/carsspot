@@ -1,8 +1,7 @@
+# app/policies/rental_policy.rb
 class RentalPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.all
-    end
+  def index?
+    true
   end
 
   def show?
@@ -10,14 +9,28 @@ class RentalPolicy < ApplicationPolicy
   end
 
   def create?
-    user.present?
+    true
+  end
+
+  def new?
+    create?
   end
 
   def update?
-    user.admin? || record.user == user
+    user == record.user
+  end
+
+  def edit?
+    update?
   end
 
   def destroy?
-    user.admin? || record.user == user
+    user == record.user
+  end
+
+  class Scope < Scope
+    def resolve
+      scope.all
+    end
   end
 end

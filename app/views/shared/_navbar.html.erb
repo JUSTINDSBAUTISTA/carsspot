@@ -1,3 +1,4 @@
+<!-- app/views/shared/_navbar.html.erb -->
 <div class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid">
     <%= link_to "/", class: "navbar-brand" do %>
@@ -10,41 +11,27 @@
 
     <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" id="becomeRenterDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Become a renter
-          </a>
-          <div class="dropdown-menu" aria-labelledby="becomeRenterDropdown">
-            <%= link_to "My Cars", my_cars_cars_path, class: "dropdown-item" %>
-            <%= link_to "Add New Car", new_car_path, class: "dropdown-item" %>
-          </div>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Rental deals", "#", class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "How it works", "#", class: "nav-link" %>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Why choose us", "#", class: "nav-link" %>
-        </li>
+        <!-- Other nav items -->
       </ul>
       <ul class="navbar-nav">
         <% if user_signed_in? %>
           <li class="nav-item">
             <%= link_to "Messages", messages_path, class: "nav-link" %>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" data-controller="notifications">
             <a href="#" class="nav-link dropdown-toggle" id="notificationsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Notifications
-              <% if current_user.notifications.unread.count > 0 %>
-                <span class="badge bg-danger"><%= current_user.notifications.unread.count %></span>
+              <% if current_user.notifications_as_recipient.unread.count > 0 %>
+                <span class="badge bg-danger"><%= current_user.notifications_as_recipient.unread.count %></span>
               <% end %>
             </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
-              <% current_user.notifications.recent.each do |notification| %>
-                <a class="dropdown-item" href="<%= mark_as_read_notification_path(notification) %>">
+            <div class="dropdown-menu dropdown-menu-end notifications-dropdown" aria-labelledby="notificationsDropdown" data-notifications-target="list">
+              <% current_user.notifications_as_recipient.recent.each do |notification| %>
+                <a class="dropdown-item" href="<%= notification_path(notification) %>">
                   <%= notification.message %>
+                  <% if notification.read == false %>
+                    <span class="badge bg-danger">New</span>
+                  <% end %>
                 </a>
               <% end %>
               <div class="dropdown-divider"></div>

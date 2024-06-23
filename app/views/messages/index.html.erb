@@ -1,26 +1,96 @@
 <h1>Messages</h1>
 
-<div class="messages-container">
-  <div class="received-messages">
-    <h2>Received Messages</h2>
-    <% @received_messages.each do |message| %>
-      <div class="message">
-        <p><strong>From:</strong> <%= message.sender.email %></p>
-        <p><%= message.body %></p>
-        <%= link_to 'Reply', new_message_path(recipient_id: message.sender.id), class: "btn btn-secondary" %>
-      </div>
-    <% end %>
-  </div>
-
-  <div class="sent-messages">
-    <h2>Sent Messages</h2>
-    <% @sent_messages.each do |message| %>
-      <div class="message">
-        <p><strong>To:</strong> <%= message.recipient.email %></p>
-        <p><%= message.body %></p>
-      </div>
-    <% end %>
-  </div>
+<div id="messages" class="messages-container">
+  <% @messages.each do |message| %>
+    <%= render partial: 'message', locals: { message: message } %>
+  <% end %>
 </div>
 
-<%= link_to 'New Message', new_message_path, class: "btn btn-primary" %>
+<div class="new-message">
+  <%= form_with model: @message, local: false, id: 'new_message_form' do |form| %>
+    <div class="field">
+      <%= form.label :recipient_id, "Select Recipient" %>
+      <%= form.collection_select :recipient_id, User.all, :id, :email, prompt: "Choose a recipient" %>
+    </div>
+    <div class="field">
+      <%= form.text_area :body, id: 'message_body', placeholder: 'Type your message here...' %>
+    </div>
+    <div class="actions">
+      <%= form.submit 'Send Message', class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .message {
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 60%;
+  }
+
+  .message.sent {
+    background-color: #e0f7fa;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .message.received {
+    background-color: #e8f5e9;
+    align-self: flex-start;
+  }
+
+  .message-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .message-body {
+    margin: 0;
+  }
+
+  .new-message {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .actions {
+    align-self: flex-end;
+  }
+
+  #message_body {
+    resize: none;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+</style>

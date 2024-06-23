@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :favorites
   has_many :cars, through: :favorites
   has_many :rentals
-  has_many :notifications, dependent: :destroy
+  has_many :notifications_as_recipient, class_name: 'Notification', foreign_key: 'recipient_id', dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
