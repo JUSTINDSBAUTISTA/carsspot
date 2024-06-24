@@ -1,4 +1,3 @@
-# config/routes.rb
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
@@ -14,6 +13,7 @@ Rails.application.routes.draw do
       get :my_cars
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy]
+    resources :reviews, only: [:create, :index] # Add this line
   end
 
   get 'all_cars', to: 'cars#index', as: 'all_cars'

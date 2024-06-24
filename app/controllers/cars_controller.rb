@@ -41,12 +41,16 @@ class CarsController < ApplicationController
 
   def destroy
     authorize @car
+    Rails.logger.debug "Attempting to destroy car: #{@car.inspect}"
     if @car.destroy
+      Rails.logger.debug "Successfully destroyed car: #{@car.inspect}"
       redirect_to cars_url, notice: 'Car was successfully destroyed.'
     else
+      Rails.logger.debug "Failed to destroy car: #{@car.errors.full_messages.join(', ')}"
       redirect_to @car, alert: 'Car cannot be deleted while it is pending approval.'
     end
   end
+
 
   def my_cars
     @cars = current_user.cars
@@ -54,8 +58,26 @@ class CarsController < ApplicationController
   end
 
   def pending_approval
-    @cars = policy_scope(Car).pending_approval
+    @cars = policy_scope(Car).where(status: 'pending')
     authorize @cars, :pending_approval?
+  end
+
+  def approve
+    authorize @car
+    if @car.update(status: 'approved')
+      redirect_to pending_approval_cars_path, notice: 'Car was successfully approved.'
+    else
+      redirect_to pending_approval_cars_path, alert: 'Failed to approve the car.'
+    end
+  end
+
+  def reject
+    authorize @car
+    if @car.update(status: 'rejected')
+      redirect_to pending_approval_cars_path, notice: 'Car was successfully rejected.'
+    else
+      redirect_to pending_approval_cars_path, alert: 'Failed to reject the car.'
+    end
   end
 
   private

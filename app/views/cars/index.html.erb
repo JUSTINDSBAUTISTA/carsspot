@@ -1,4 +1,3 @@
-<!-- app/views/cars/index.html.erb -->
 <h1>Cars</h1>
 
 <div class="cars-container">
@@ -12,11 +11,8 @@
       <% if policy(car).update? %>
         <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
       <% end %>
-      <% if policy(car).destroy? && current_user.admin? %>
+      <% if policy(car).destroy? %>
         <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-      <% end %>
-      <% unless car.user == current_user %>
-        <%= link_to 'Rent now', new_rental_path(car_id: car.id), class: 'btn btn-success' %>
       <% end %>
     </div>
   <% end %>
