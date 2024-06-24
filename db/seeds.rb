@@ -1,5 +1,3 @@
-# db/seeds.rb
-
 # Destroy all records in the correct order to prevent foreign key violations
 Notification.destroy_all
 Rental.destroy_all
@@ -13,6 +11,9 @@ user1 = User.create!(email: 'user1@example.com', password: 'password', name: 'Us
 user2 = User.create!(email: 'user2@example.com', password: 'password', name: 'User Two')
 user3 = User.create!(email: 'user3@example.com', password: 'password', name: 'User Three')
 user4 = User.create!(email: 'user4@example.com', password: 'password', name: 'User Four')
+
+# Create an admin user
+admin = User.create!(email: 'admin@example.com', password: 'password', name: 'Admin User', admin: true)
 
 # Create cars
 cars = Car.create!(

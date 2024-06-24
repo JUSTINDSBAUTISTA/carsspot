@@ -17,24 +17,26 @@ class NotificationsController < ApplicationController
   end
 
   def approve
-    rental = @notification.notifiable
-    if rental.update(status: 'approved')
+    authorize @notification, :approve?
+    car = @notification.notifiable
+    if car.update(status: 'approved')
       @notification.update(read: true)
-      create_status_notification(rental, 'approved')
-      redirect_to notifications_path, notice: 'Rental request approved.'
+      create_status_notification(car, 'approved')
+      redirect_to notifications_path, notice: 'Car was successfully approved.'
     else
-      redirect_to notifications_path, alert: 'Unable to approve rental request.'
+      redirect_to notifications_path, alert: 'Unable to approve car.'
     end
   end
 
   def reject
-    rental = @notification.notifiable
-    if rental.update(status: 'rejected')
+    authorize @notification, :reject?
+    car = @notification.notifiable
+    if car.update(status: 'rejected')
       @notification.update(read: true)
-      create_status_notification(rental, 'rejected')
-      redirect_to notifications_path, notice: 'Rental request rejected.'
+      create_status_notification(car, 'rejected')
+      redirect_to notifications_path, notice: 'Car was successfully rejected.'
     else
-      redirect_to notifications_path, alert: 'Unable to reject rental request.'
+      redirect_to notifications_path, alert: 'Unable to reject car.'
     end
   end
 
@@ -45,13 +47,12 @@ class NotificationsController < ApplicationController
     authorize @notification
   end
 
-  def create_status_notification(rental, status)
+  def create_status_notification(car, status)
     Notification.create!(
-      recipient: rental.user,
-      actor: rental.car.user,
-      notifiable: rental,
-      message: "Your rental request for #{rental.car.car_name} has been #{status}.",
-      read: false
+      recipient: car.user,
+      actor: current_user,
+      notifiable: car,
+      message: "Your car (#{car.car_name}) has been #{status}."
     )
   end
 end

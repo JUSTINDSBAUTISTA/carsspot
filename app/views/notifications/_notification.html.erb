@@ -1,39 +1,24 @@
-<!-- app/views/notifications/_notification.html.erb -->
 <div class="notification <%= 'unread' unless notification.read %> card">
   <p><strong>Message:</strong> <%= notification.message %></p>
 
-  <% if notification.notifiable_type == 'Rental' %>
-    <% rental = notification.notifiable %>
-    <% user = rental.user %>
-    <% car = rental.car %>
+  <% if notification.notifiable_type == 'Car' %>
+    <% car = notification.notifiable %>
 
-    <div class="rental-details">
-      <div class="renter-info card">
-        <h2>Renter Information</h2>
-        <p><strong>ID:</strong> <%= user.id %></p>
-        <p><strong>Name:</strong> <%= user.name %></p>
-        <p><strong>Email:</strong> <%= user.email %></p>
-        <p><strong>Phone:</strong> <%= user.phone_number %></p>
-      </div>
-      <div class="car-info card">
-        <h2>Car Information</h2>
-        <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
-        <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
-        <p><strong>Rental Start Date:</strong> <%= rental.start_date.strftime("%Y-%m-%d %H:%M") %></p>
-        <p><strong>Rental End Date:</strong> <%= rental.end_date.strftime("%Y-%m-%d %H:%M") %></p>
-        <p><strong>Cost:</strong> $<%= number_with_delimiter(car.price_per_day * (rental.end_date - rental.start_date).to_i) %></p>
-      </div>
+    <div class="car-info card">
+      <h2>Car Information</h2>
+      <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
+      <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
+      <p><strong>Price per Day:</strong> $<%= car.price_per_day %></p>
+      <p><strong>Status:</strong> <%= car.status %></p>
     </div>
-    <p><strong>Request Date:</strong> <%= rental.created_at.strftime("%Y-%m-%d %H:%M") %></p>
 
-    <% if current_user == notification.recipient %>
-      <% if rental.status == 'pending' && car.user == current_user %>
-        <%= link_to 'Approve', approve_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
-        <%= link_to 'Reject', reject_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
-      <% end %>
+    <% if current_user == notification.recipient && car.status == 'pending' %>
+      <%= link_to 'Approve', approve_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
+      <%= link_to 'Reject', reject_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
     <% end %>
   <% end %>
 </div>
+
 
 <style>
   /* Container styling */
