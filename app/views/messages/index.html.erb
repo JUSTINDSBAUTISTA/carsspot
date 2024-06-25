@@ -1,9 +1,7 @@
 <h1>Messages</h1>
 
 <div id="messages" class="messages-container">
-  <% @messages.each do |message| %>
-    <%= render partial: 'message', locals: { message: message } %>
-  <% end %>
+  <%= render @messages %>
 </div>
 
 <div class="new-message">
@@ -20,6 +18,7 @@
     </div>
   <% end %>
 </div>
+
 
 <style>
   .messages-container {

@@ -51,7 +51,6 @@ class CarsController < ApplicationController
     end
   end
 
-
   def my_cars
     @cars = current_user.cars
     authorize @cars
