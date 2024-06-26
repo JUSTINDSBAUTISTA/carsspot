@@ -1,95 +1,114 @@
 <h1>Messages</h1>
 
-<div id="messages" class="messages-container">
-  <%= render @messages %>
+<div class="conversations">
+  <h2>Your Conversations</h2>
+  <ul>
+    <% @conversations.each do |conversation| %>
+      <% other_user = conversation.sender == current_user ? conversation.recipient : conversation.sender %>
+      <li>
+        <%= link_to other_user.name, messages_path(recipient_id: other_user.id) %>
+      </li>
+    <% end %>
+  </ul>
 </div>
 
-<div class="new-message">
-  <%= form_with model: @message, local: false, id: 'new_message_form' do |form| %>
-    <div class="field">
-      <%= form.label :recipient_id, "Select Recipient" %>
-      <%= form.collection_select :recipient_id, User.all, :id, :email, prompt: "Choose a recipient" %>
-    </div>
-    <div class="field">
-      <%= form.text_area :body, id: 'message_body', placeholder: 'Type your message here...' %>
-    </div>
-    <div class="actions">
-      <%= form.submit 'Send Message', class: "btn btn-primary" %>
-    </div>
-  <% end %>
-</div>
+<% if @recipient %>
+  <h2>Conversation with <%= @recipient.name %></h2>
+
+  <div id="messages" data-controller="messages" data-messages-recipient-id-value="<%= @recipient.id %>" data-messages-target="messages" class="messages-container">
+    <%= render @messages %>
+  </div>
+
+  <div class="new-message">
+    <%= form_with model: @message, url: messages_path(recipient_id: @recipient.id), data: { turbo_stream: true, action: "turbo:submit-end->messages#resetForm" }, class: "d-flex", data: { target: 'messages.form' } do |form| %>
+      <div class="field flex-grow-1">
+        <%= form.hidden_field :recipient_id, value: @recipient.id %>
+        <%= form.text_area :body, placeholder: 'Type your message here...', class: "form-control" %>
+      </div>
+      <div class="actions">
+        <%= form.submit 'Send Message', class: 'btn btn-primary mb-3' %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>Select a conversation to view or send a message.</p>
+<% end %>
 
 
 <style>
-  .messages-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-  }
 
-  .message {
-    padding: 10px;
-    border-radius: 5px;
-    max-width: 60%;
-  }
 
-  .message.sent {
-    background-color: #e0f7fa;
-    align-self: flex-end;
-    text-align: right;
-  }
+h1, h2 {
+  color: #555;
+  margin-bottom: 20px;
+}
 
-  .message.received {
-    background-color: #e8f5e9;
-    align-self: flex-start;
-  }
+.conversations, .messages-container, .new-message {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #d3d3d3;
+}
 
-  .message-header {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
+.conversations ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
 
-  .message-body {
-    margin: 0;
-  }
+.conversations li {
+  padding: 10px 5px;
+  border-bottom: 1px solid #f0f0f0;
+}
 
-  .new-message {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+.conversations li:last-child {
+  border-bottom: none;
+}
 
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
+.conversations a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
 
-  .actions {
-    align-self: flex-end;
-  }
+.messages-container {
+  height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+}
 
-  #message_body {
-    resize: none;
-    width: 100%;
-    height: 50px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+.new-message {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds space between elements */
+}
 
-  .btn-primary {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.new-message .field {
+  flex-grow: 1;
+}
 
-  .btn-primary:hover {
-    background-color: #0056b3;
-  }
+.form-control {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  background-color: #f8f9fa;
+  box-sizing: border-box; /* Ensures padding does not affect the final size */
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
 </style>

@@ -1,3 +1,4 @@
+<!-- app/views/cars/show.html.erb -->
 <h1><%= @car.car_name %></h1>
 
 <p><strong>Make:</strong> <%= @car.car_make %></p>
@@ -8,4 +9,5 @@
 
 <% if user_signed_in? && @car.user != current_user %>
   <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
+  <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
 <% end %>

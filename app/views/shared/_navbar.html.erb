@@ -15,8 +15,7 @@
             Become a renter
           </a>
           <div class="dropdown-menu" aria-labelledby="becomeRenterDropdown">
-           <%= link_to "My Cars", my_cars_cars_path, class: "dropdown-item" %>
-
+            <%= link_to "My Cars", my_cars_cars_path, class: "dropdown-item" %>
             <%= link_to "Add New Car", new_car_path, class: "dropdown-item" %>
           </div>
         </li>
@@ -32,14 +31,18 @@
       </ul>
       <ul class="navbar-nav">
         <% if user_signed_in? %>
-          <li class="nav-item">
+          <li class="nav-item position-relative">
             <%= link_to "Messages", messages_path, class: "nav-link" %>
+            <% unread_messages_count = current_user.received_messages.where(read: false).count %>
+            <% if unread_messages_count > 0 %>
+              <span class="badge"><%= unread_messages_count %></span>
+            <% end %>
           </li>
-          <li class="nav-item dropdown" data-controller="notifications">
+          <li class="nav-item dropdown position-relative" data-controller="notifications">
             <a href="#" class="nav-link dropdown-toggle" id="notificationsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Notifications
               <% if current_user.notifications_as_recipient.unread.count > 0 %>
-                <span class="badge bg-danger"><%= current_user.notifications_as_recipient.unread.count %></span>
+                <span class="badge"><%= current_user.notifications_as_recipient.unread.count %></span>
               <% end %>
             </a>
             <div class="dropdown-menu dropdown-menu-end notifications-dropdown" aria-labelledby="notificationsDropdown" data-notifications-target="list">
