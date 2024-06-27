@@ -4,7 +4,7 @@ class CarPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        scope.where(user: user)
+        scope.where(status: 'approved')
       end
     end
   end
