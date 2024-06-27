@@ -1,39 +1,39 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   def index
-    @conversations = policy_scope(Message.where("sender_id = :current_user_id OR recipient_id = :current_user_id", current_user_id: current_user.id)
-                             .select(Arel.sql("DISTINCT ON (GREATEST(sender_id, recipient_id), LEAST(sender_id, recipient_id)) *"))
-                             .order(Arel.sql("GREATEST(sender_id, recipient_id), LEAST(sender_id, recipient_id), created_at DESC")))
-
     if params[:recipient_id].present?
       @recipient = User.find(params[:recipient_id])
-      @messages = policy_scope(Message).where(
-        "(sender_id = :current_user_id AND recipient_id = :recipient_id) OR (sender_id = :recipient_id AND recipient_id = :current_user_id)",
-        current_user_id: current_user.id, recipient_id: @recipient.id
-      ).order(:created_at)
+      @messages = policy_scope(Message)
+                    .where(sender: current_user, recipient: @recipient)
+                    .or(policy_scope(Message).where(sender: @recipient, recipient: current_user))
+                    .order(created_at: :asc)
+    else
+      @recipient = nil
+      @messages = policy_scope(Message).where(sender: current_user).or(policy_scope(Message).where(recipient: current_user)).order(created_at: :asc)
     end
 
+    sent_partners = current_user.sent_messages.includes(:recipient).map(&:recipient).compact.uniq
+    received_partners = current_user.received_messages.includes(:sender).map(&:sender).compact.uniq
+    @chat_partners = (sent_partners + received_partners).compact.uniq
+
+    @chat_partners ||= [] # Ensure @chat_partners is an array
+
     @message = Message.new
-    @unread_messages_count = current_user.received_messages.where(read: false).count
   end
 
   def create
-    @message = current_user.sent_messages.build(message_params)
+    @message = Message.new(message_params)
+    @message.sender = current_user
     authorize @message
 
     if @message.save
-      message_html = render_message(@message)
-      Rails.logger.debug "Rendered message: #{message_html.inspect}"
-      ActionCable.server.broadcast "messages_#{@message.recipient_id}_channel", message_html
-
-      respond_to do |format|
-        format.html { redirect_to messages_path(recipient_id: @message.recipient_id) }
-        format.turbo_stream { render turbo_stream: turbo_stream.append('messages', partial: 'messages/message', locals: { message: @message }) }
-      end
+      broadcast_message(@message)
+      head :ok
     else
-      Rails.logger.debug "Message save failed: #{@message.errors.full_messages}"
-      render :index
+      render :new
     end
   end
 
@@ -43,10 +43,13 @@ class MessagesController < ApplicationController
     params.require(:message).permit(:body, :recipient_id)
   end
 
+  def broadcast_message(message)
+    ActionCable.server.broadcast "messages_#{message.recipient_id}_channel", {
+      message: render_message(message)
+    }
+  end
+
   def render_message(message)
-    render_to_string(
-      partial: 'messages/message',
-      locals: { message: message, current_user: current_user }
-    )
+    render_to_string partial: 'messages/message', locals: { message: message }
   end
 end
