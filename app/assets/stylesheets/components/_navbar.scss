@@ -1,5 +1,3 @@
-
-
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -79,9 +77,26 @@ body {
   color: white;
   border-radius: 5px;
   padding: 10px 20px;
-  font-weight: 500; 
+  font-weight: 500;
 }
 
 .navbar-nav .nav-item .nav-link.sign-up:hover {
   background-color: #388f8f;
+}
+
+/* Updated CSS for notification badge */
+.navbar-nav .nav-item .badge {
+  position: absolute;
+  top: 5px; /* Adjust this value to align vertically */
+  right: -1px; /* Adjust this value to align horizontally */
+  font-size: 0.75rem; /* Adjust font size as needed */
+  background-color: #dc3545; /* Bootstrap's danger color */
+  color: white;
+  border-radius: 50%; /* Makes the badge round */
+  padding: 3px 6px; /* Adjust padding to make the badge smaller */
+}
+
+.navbar-nav .nav-item {
+  position: relative;
+  margin-right: 20px; /* Adjust to create more space between items */
 }

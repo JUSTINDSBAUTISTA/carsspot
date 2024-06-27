@@ -1,9 +1,9 @@
 class Car < ApplicationRecord
   belongs_to :user
   has_many :notifications, as: :notifiable, dependent: :destroy
-  has_many :favorites
+  has_many :favorites, dependent: :destroy
   has_many :users, through: :favorites
-  has_many :rentals
+  has_many :rentals, dependent: :destroy
   has_many :reviews, dependent: :destroy
 
   validates :status, inclusion: { in: %w[pending approved rejected] }

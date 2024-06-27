@@ -9,10 +9,6 @@ class MessagePolicy < ApplicationPolicy
     true
   end
 
-  def show?
-    record.sender_id == user.id || record.recipient_id == user.id
-  end
-
   def create?
     true
   end

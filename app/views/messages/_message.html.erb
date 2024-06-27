@@ -1,4 +1,7 @@
-<div class="message <%= message.sender_id == current_user.id ? 'sent' : 'received' %>">
-  <p class="message-header"><strong><%= message.sender_id == current_user.id ? 'You' : message.sender.email %>:</strong></p>
-  <p class="message-body"><%= message.body %></p>
+<!-- app/views/messages/_message.html.erb -->
+<div class="message" id="message-<%= message.id %>">
+  <p class="timestamp"><%= message.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+  <p>
+    <strong><%= message.sender.email %>:</strong> <%= message.body %>
+  </p>
 </div>

@@ -10,7 +10,7 @@ class CarPolicy < ApplicationPolicy
   end
 
   def show?
-    record.user == user || user.admin? || record.status == 'approved'
+    user.present? && (record.user == user || user.admin? || record.status == 'approved')
   end
 
   def create?
@@ -18,19 +18,19 @@ class CarPolicy < ApplicationPolicy
   end
 
   def update?
-    record.user == user || user.admin?
+    user.present? && (record.user == user || user.admin?)
   end
 
   def destroy?
-    record.user == user || user.admin?
+    user.present? && (record.user == user || user.admin?)
   end
 
   def approve?
-    user.admin?
+    user.present? && user.admin?
   end
 
   def reject?
-    user.admin?
+    user.present? && user.admin?
   end
 
   def my_cars?
@@ -38,6 +38,6 @@ class CarPolicy < ApplicationPolicy
   end
 
   def pending_approval?
-    user.admin?
+    user.present? && user.admin?
   end
 end

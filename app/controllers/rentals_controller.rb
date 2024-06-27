@@ -38,6 +38,7 @@ class RentalsController < ApplicationController
   end
 
   def edit
+    @rental = Rental.find(params[:id])
     authorize @rental
   end
 

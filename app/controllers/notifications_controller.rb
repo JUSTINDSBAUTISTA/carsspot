@@ -8,7 +8,7 @@ class NotificationsController < ApplicationController
 
   def show
     @notification.mark_as_read!
-    render :show
+    redirect_to @notification.url
   end
 
   def mark_as_read

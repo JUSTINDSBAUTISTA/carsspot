@@ -8,11 +8,13 @@
       <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
       <p><strong>Status:</strong> <%= car.status %></p>
       <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
-      <% if policy(car).update? %>
-        <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
-      <% end %>
-      <% if policy(car).destroy? %>
-        <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      <% if car.status == 'approved' %>
+        <% if policy(car).update? %>
+          <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
+        <% end %>
+        <% if policy(car).destroy? %>
+          <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        <% end %>
       <% end %>
     </div>
   <% end %>
@@ -21,6 +23,7 @@
 <% if current_user %>
   <%= link_to 'Add New Car', new_car_path, class: 'add-car-button' %>
 <% end %>
+
 
 <style>
   /* app/assets/stylesheets/cars.css */

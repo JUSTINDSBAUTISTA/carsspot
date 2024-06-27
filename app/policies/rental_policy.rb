@@ -1,4 +1,3 @@
-# app/policies/rental_policy.rb
 class RentalPolicy < ApplicationPolicy
   def index?
     true
