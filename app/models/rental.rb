@@ -13,15 +13,14 @@ class Rental < ApplicationRecord
   end
 
   def create_notification
-    notification = Notification.create!(
+    Notification.create!(
       recipient_id: self.car.user_id,
       actor_id: self.user_id,
       notifiable: self,
       message: "#{self.user.name} requested to rent your car #{self.car.car_name}",
       read: false
     )
-
-
+  end
 
   def render_notification(notification)
     ApplicationController.render(
@@ -29,5 +28,4 @@ class Rental < ApplicationRecord
       locals: { notification: notification }
     )
   end
-end
 end

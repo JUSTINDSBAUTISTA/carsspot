@@ -1,45 +1,12 @@
+<!-- app/views/cars/user_cars.html.erb -->
 <%= form_with url: user_cars_path, method: :get, local: true, class: "filter-form" do |f| %>
-  <div class="filter-container">
-    <h1>Earn money by sharing your car with locals</h1>
-    <div class="filter-row">
-      <div class="filter-item">
-        <%= f.select :make, options_for_select(["Volkswagen", "Toyota", "Honda", "Ford", "BMW"], params[:make]), { prompt: "Select Make" }, class: "form-control" %>
-      </div>
-      <div class="filter-item">
-        <%= f.select :model, options_for_select(["Golf", "Camry", "Civic", "Focus", "3 Series"], params[:model]), { prompt: "Select Model" }, class: "form-control" %>
-      </div>
-      <div class="filter-item">
-        <%= f.select :year, options_for_select((2000..2024).to_a.reverse, params[:year]), { prompt: "Select Year" }, class: "form-control" %>
-      </div>
-      <div class="filter-item">
-        <%= f.select :mileage, options_for_select(["0-25,000 mi", "25,000-50,000 mi", "50,000-75,000 mi", "75,000-100,000 mi", "100,000+ mi"], params[:mileage]), { prompt: "Select Mileage" }, class: "form-control" %>
-      </div>
-    </div>
-    <div class="filter-row">
-      <div class="filter-item">
-        <%= f.text_field :city, placeholder: "Enter your city", class: "form-control" %>
-      </div>
-    </div>
-    <div class="filter-row">
-      <div class="filter-item">
-        <%= f.submit "Search", class: "btn btn-primary" %>
-      </div>
-    </div>
-  </div>
+  <!-- Your form code here -->
 <% end %>
 
 <% if @cars.any? %>
   <div class="cars-list">
     <% @cars.each do |car| %>
-      <div class="car">
-        <h2><%= car.car_name %></h2>
-        <p><strong>Make:</strong> <%= car.car_make %></p>
-        <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
-        <p><strong>Status:</strong> <%= car.status %></p>
-        <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
-        <%= link_to 'Edit', edit_car_path(car), class: 'btn btn-secondary' %>
-        <%= link_to 'Delete', car, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-      </div>
+      <%= render partial: 'car_details', locals: { car: car } %>
     <% end %>
   </div>
 <% else %>
@@ -47,6 +14,9 @@
 <% end %>
 
 <%= link_to 'Add New Car', new_car_path, class: 'btn btn-primary' %>
+
+<!-- Include your styles here -->
+
 
 <style>
     .filter-form {
