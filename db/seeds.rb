@@ -55,7 +55,8 @@ car_images = [
 # Create cars and assign them to users
 users.each do |user|
   3.times do
-    Car.create!(
+    address = Faker::Address.full_address
+    car = Car.new(
       user: user,
       car_name: Faker::Vehicle.model,
       car_make: Faker::Vehicle.make,
@@ -66,8 +67,10 @@ users.each do |user|
       transmission: Faker::Vehicle.transmission,
       fuel_type: Faker::Vehicle.fuel_type,
       number_of_seat: Faker::Number.between(from: 2, to: 8),
-      rating: Faker::Number.between(from: 1, to: 5)
+      rating: Faker::Number.between(from: 1, to: 5),
+      address: address
     )
+    car.save!
   end
 end
 

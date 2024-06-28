@@ -1,9 +1,17 @@
+# app/controllers/admin/cars_controller.rb
 class Admin::CarsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_admin!
 
   def index
     @cars = Car.where(status: 'pending')
+    @markers = @cars.map do |car|
+      {
+        lat: car.latitude,
+        lng: car.longitude,
+        info_window_html: render_to_string(partial: "info_window", locals: { car: car })
+      }
+    end
   end
 
   def approve

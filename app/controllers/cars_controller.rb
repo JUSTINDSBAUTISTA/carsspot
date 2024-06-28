@@ -4,6 +4,13 @@ class CarsController < ApplicationController
 
   def index
     @cars = policy_scope(Car)
+    @markers = @cars.map do |car|
+      {
+        lat: car.latitude,
+        lng: car.longitude,
+        info_window_html: render_to_string(partial: "info_window", locals: { car: car })
+      }
+    end
   end
 
   def show
@@ -86,6 +93,6 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status)
+    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address)
   end
 end

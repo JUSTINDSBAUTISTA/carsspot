@@ -1,9 +1,8 @@
+<!-- app/views/cars/pending_approval.html.erb -->
 <h1>Pending Approval</h1>
 
-<% @cars.each do |car| %>
-  <div>
-    <h2><%= link_to car.car_name, car_path(car) %></h2>
-    <p><%= car.features %></p>
-    <!-- Other car details -->
-  </div>
-<% end %>
+<div class="cars-container">
+  <% @cars.each do |car| %>
+    <%= render partial: 'car_details', locals: { car: car } %>
+  <% end %>
+</div>
