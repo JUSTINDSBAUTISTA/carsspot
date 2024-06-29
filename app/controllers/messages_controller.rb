@@ -4,15 +4,24 @@ class MessagesController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   def index
+    @messages = policy_scope(Message) # Ensure policy_scope is called before accessing @messages
+
     if params[:recipient_id].present?
       @recipient = User.find(params[:recipient_id])
-      @messages = policy_scope(Message)
-                    .where(sender: current_user, recipient: @recipient)
-                    .or(policy_scope(Message).where(sender: @recipient, recipient: current_user))
-                    .order(created_at: :asc)
+      if !conversation_allowed?(current_user, @recipient)
+        redirect_to root_path, alert: "You are not allowed to start a conversation with this user."
+        return
+      end
+
+      authorize @recipient, :message?
+      @messages = @messages.where(sender: current_user, recipient: @recipient)
+                           .or(@messages.where(sender: @recipient, recipient: current_user))
+                           .order(created_at: :asc)
     else
       @recipient = nil
-      @messages = policy_scope(Message).where(sender: current_user).or(policy_scope(Message).where(recipient: current_user)).order(created_at: :asc)
+      @messages = @messages.where(sender: current_user)
+                           .or(@messages.where(recipient: current_user))
+                           .order(created_at: :asc)
     end
 
     sent_partners = current_user.sent_messages.includes(:recipient).map(&:recipient).compact.uniq
@@ -29,9 +38,15 @@ class MessagesController < ApplicationController
 
     if @message.save
       broadcast_message(@message)
-      head :ok
+      respond_to do |format|
+        format.html { redirect_to messages_path(recipient_id: @message.recipient_id) }
+        format.turbo_stream
+      end
     else
-      render :new
+      respond_to do |format|
+        format.html { redirect_to messages_path, alert: "Message could not be sent." }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("form-container", partial: "messages/form", locals: { message: @message }) }
+      end
     end
   end
 
@@ -49,5 +64,12 @@ class MessagesController < ApplicationController
 
   def render_message(message)
     render_to_string partial: 'messages/message', locals: { message: message }
+  end
+
+  def conversation_allowed?(user, recipient)
+    CarView.exists?(user: user, car: recipient.cars) ||
+    CarView.exists?(user: recipient, car: user.cars) ||
+    Message.exists?(sender: user, recipient: recipient) ||
+    Message.exists?(sender: recipient, recipient: user)
   end
 end

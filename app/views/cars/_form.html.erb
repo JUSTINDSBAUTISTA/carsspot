@@ -1,46 +1,248 @@
-<!-- app/views/cars/_form.html.erb -->
-<%= form_for @car do |f| %>
+<%= form_with(model: @car, local: true, html: { class: "car-form" }) do |form| %>
+  <% if @car.errors.any? %>
+    <div id="error_explanation" class="error-explanation">
+      <h2><%= pluralize(@car.errors.count, "error") %> prohibited this car from being saved:</h2>
+      <ul>
+        <% @car.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="form-group">
-    <%= f.label :car_name %>
-    <%= f.text_field :car_name, class: "form-control" %>
+    <%= form.label :car_name, class: "form-label" %>
+    <%= form.text_field :car_name, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :features %>
-    <%= f.text_field :features, class: "form-control" %>
+    <%= form.label :features, class: "form-label" %>
+    <div class="feature-options">
+      <label class="feature-option">
+        <%= form.check_box :features, { multiple: true }, 'Air Conditioning', nil %>
+        <i class="fas fa-snowflake"></i> Air Conditioning
+      </label>
+      <label class="feature-option">
+        <%= form.check_box :features, { multiple: true }, 'GPS', nil %>
+        <i class="fas fa-map-marker-alt"></i> GPS
+      </label>
+      <label class="feature-option">
+        <%= form.check_box :features, { multiple: true }, 'Bluetooth', nil %>
+        <i class="fas fa-bluetooth"></i> Bluetooth
+      </label>
+      <label class="feature-option">
+        <%= form.check_box :features, { multiple: true }, 'Cruise Control', nil %>
+        <i class="fas fa-tachometer-alt"></i> Cruise Control
+      </label>
+      <label class="feature-option">
+        <%= form.check_box :features, { multiple: true }, 'Backup Camera', nil %>
+        <i class="fas fa-camera"></i> Backup Camera
+      </label>
+      <!-- Add more feature options as needed -->
+    </div>
   </div>
+
   <div class="form-group">
-    <%= f.label :transmission %>
-    <%= f.text_field :transmission, class: "form-control" %>
+    <%= form.label :transmission, class: "form-label" %>
+    <div class="feature-options">
+      <label class="feature-option">
+        <%= form.radio_button :transmission, 'Automatic' %>
+        <i class="fas fa-cogs"></i> Automatic
+      </label>
+      <label class="feature-option">
+        <%= form.radio_button :transmission, 'Manual' %>
+        <i class="fas fa-cog"></i> Manual
+      </label>
+    </div>
   </div>
+
   <div class="form-group">
-    <%= f.label :fuel_type %>
-    <%= f.text_field :fuel_type, class: "form-control" %>
+    <%= form.label :fuel_type, class: "form-label" %>
+    <div class="feature-options">
+      <label class="feature-option">
+        <%= form.radio_button :fuel_type, 'Petrol' %>
+        <i class="fas fa-gas-pump"></i> Petrol
+      </label>
+      <label class="feature-option">
+        <%= form.radio_button :fuel_type, 'Diesel' %>
+        <i class="fas fa-oil-can"></i> Diesel
+      </label>
+      <label class="feature-option">
+        <%= form.radio_button :fuel_type, 'Electric' %>
+        <i class="fas fa-charging-station"></i> Electric
+      </label>
+      <label class="feature-option">
+        <%= form.radio_button :fuel_type, 'Hybrid' %>
+        <i class="fas fa-leaf"></i> Hybrid
+      </label>
+    </div>
   </div>
+
   <div class="form-group">
-    <%= f.label :car_make %>
-    <%= f.text_field :car_make, class: "form-control" %>
+    <%= form.label :car_make, class: "form-label" %>
+    <%= form.text_field :car_make, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :image %>
-    <%= f.text_field :image, class: "form-control" %>
+    <%= form.label :image, class: "form-label" %>
+    <%= form.text_field :image, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :price_per_day %>
-    <%= f.number_field :price_per_day, class: "form-control" %>
+    <%= form.label :price_per_day, class: "form-label" %>
+    <%= form.number_field :price_per_day, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :rating %>
-    <%= f.number_field :rating, class: "form-control" %>
+    <%= form.label :rating, class: "form-label" %>
+    <%= form.number_field :rating, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :number_of_seat %>
-    <%= f.number_field :number_of_seat, class: "form-control" %>
+    <%= form.label :number_of_seat, class: "form-label" %>
+    <%= form.number_field :number_of_seat, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.label :address %>
-    <%= f.text_field :address, class: "form-control" %>
+    <%= form.label :status, class: "form-label" %>
+    <%= form.text_field :status, class: "form-input" %>
   </div>
+
   <div class="form-group">
-    <%= f.submit "Save Car", class: "btn btn-primary" %>
+    <%= form.label :address, class: "form-label" %>
+    <%= form.text_field :address, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :min_rental_duration, "Minimum Rental Duration (days)", class: "form-label" %>
+    <%= form.number_field :min_rental_duration, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :max_rental_duration, "Maximum Rental Duration (days)", class: "form-label" %>
+    <%= form.number_field :max_rental_duration, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :min_advance_notice, "Minimum Advance Notice (days)", class: "form-label" %>
+    <%= form.number_field :min_advance_notice, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :availability_start_date, class: "form-label" %>
+    <%= form.date_field :availability_start_date, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :availability_end_date, class: "form-label" %>
+    <%= form.date_field :availability_end_date, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :owner_rules, class: "form-label" %>
+    <%= form.text_area :owner_rules, class: "form-input" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<style>
+  .car-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .error-explanation {
+    color: #d9534f;
+    background: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .error-explanation h2 {
+    margin-top: 0;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  .form-input:focus {
+    border-color: #66afe9;
+    outline: none;
+  }
+
+  .feature-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .feature-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  .feature-option input[type="checkbox"] {
+    display: none;
+  }
+
+  .feature-option i {
+    font-size: 1.5em;
+  }
+
+  .actions {
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+</style>

@@ -3,7 +3,12 @@ class NotificationsController < ApplicationController
   before_action :set_notification, only: [:show, :approve, :reject]
 
   def index
-    @notifications = policy_scope(Notification).order(created_at: :desc)
+    if current_user.admin?
+      @cars = policy_scope(Car).where(status: 'pending')
+      render 'admin/cars/index'
+    else
+      @notifications = policy_scope(Notification).order(created_at: :desc)
+    end
   end
 
   def show

@@ -1,28 +1,35 @@
-// app/javascript/channels/messages_channel.js
-import consumer from "./consumer";
+import consumer from "./consumer"
 
-document.addEventListener("turbolinks:load", () => {
-  const messagesContainer = document.getElementById("messages-container");
+document.addEventListener('turbolinks:load', () => {
+  const recipientElement = document.getElementById('chat-recipient-id')
+  const recipient_id = recipientElement.getAttribute('data-recipient-id')
 
-  if (messagesContainer) {
-    const recipientId = messagesContainer.getAttribute("data-messages-recipient-id-value");
+  consumer.subscriptions.create({ channel: "MessagesChannel", recipient_id: recipient_id }, {
+    connected() {
+      console.log("Connected to the messages channel " + recipient_id)
+    },
 
-    consumer.subscriptions.create({ channel: "MessagesChannel", recipient_id: recipientId }, {
-      connected() {
-        console.log(`Connected to MessagesChannel with recipient_id: ${recipientId}`);
-      },
+    disconnected() {
+      console.log("Disconnected from the messages channel " + recipient_id)
+    },
 
-      disconnected() {
-        console.log("Disconnected from the MessagesChannel.");
-      },
+    received(data) {
+      const chatContainer = document.getElementById('chat-container')
+      chatContainer.innerHTML += `<div class="message">${data.message}</div>`
+    },
 
-      received(data) {
-        console.log("Message received:", data);
-        const messages = document.getElementById('messages');
-        if (messages) {
-          messages.insertAdjacentHTML('beforeend', data.message);
-        }
-      }
-    });
-  }
+    sendMessage: function(message) {
+      return this.perform('receive', { message: message });
+    }
+  });
+
+  const input = document.getElementById('chat-input')
+  input.addEventListener('keypress', (event) => {
+    if (event.keyCode === 13 && input.value !== '') {
+      const message = input.value
+      consumer.subscriptions.subscriptions[0].sendMessage(message)
+      input.value = ''
+      event.preventDefault()
+    }
+  })
 });

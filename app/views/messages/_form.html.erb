@@ -1,0 +1,9 @@
+<%= form_with model: @message, local: false, data: { 'messages-target': 'form', action: "submit->messages#sendMessage" } do |form| %>
+  <div class="form-icons">
+    <i class="fa fa-paperclip"></i>
+    <i class="fa fa-image"></i>
+  </div>
+  <%= form.text_area :body, placeholder: "Type your message", rows: 1 %>
+  <%= form.hidden_field :recipient_id, value: @recipient.id %>
+  <%= form.submit 'Send' %>
+<% end %>

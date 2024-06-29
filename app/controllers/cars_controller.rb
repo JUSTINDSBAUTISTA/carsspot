@@ -16,6 +16,7 @@ class CarsController < ApplicationController
 
   def show
     authorize @car
+    CarView.find_or_create_by(user: current_user, car: @car) if user_signed_in?
   end
 
   def new
@@ -77,6 +78,6 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address)
+    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_range, :owner_rules)
   end
 end
