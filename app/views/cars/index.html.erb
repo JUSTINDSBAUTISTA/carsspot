@@ -1,5 +1,7 @@
 <h1>Cars</h1>
 
+<p><%= pluralize(@cars.count, 'car') %> found</p>
+
 <div class="main-container">
   <div class="cars-container">
     <% @cars.each do |car| %>
@@ -18,7 +20,14 @@
 </div>
 
 
+
 <style>
+
+    .search-results-count {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #555;
+  }
 .main-container {
   display: flex;
   height: 100vh;

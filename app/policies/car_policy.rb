@@ -40,4 +40,8 @@ class CarPolicy < ApplicationPolicy
   def pending_approval?
     user.present? && user.admin?
   end
+
+  def search?
+    true
+  end
 end

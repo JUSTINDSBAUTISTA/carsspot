@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { createConsumer } from "@rails/actioncable";
 
 export default class extends Controller {
-  static values = { recipientId: Number };
+  static values = { recipientId: Number, currentUserId: Number };
   static targets = ["messages", "form"];
 
   connect() {
@@ -11,10 +11,10 @@ export default class extends Controller {
     }
 
     this.subscription = createConsumer().subscriptions.create(
-      { channel: "MessagesChannel", recipient_id: this.recipientIdValue },
+      { channel: "MessagesChannel", recipient_id: this.recipientIdValue, sender_id: this.currentUserIdValue },
       {
         received: data => this.insertMessageAndScrollDown(data.message),
-        connected: () => console.log(`Subscribed to the chatroom with the recipient id ${this.recipientIdValue}.`),
+        connected: () => console.log(`Subscribed to the chatroom with recipient id ${this.recipientIdValue} and sender id ${this.currentUserIdValue}.`),
         disconnected: () => console.log("Unsubscribed from the chatroom")
       }
     );
@@ -27,14 +27,8 @@ export default class extends Controller {
   }
 
   insertMessageAndScrollDown(messageHTML) {
-    console.log("Message received:", messageHTML);
-
     const messagesContainer = this.messagesTarget;
-
-    // Insert the new message at the end of the container
     messagesContainer.insertAdjacentHTML("beforeend", messageHTML);
-
-    // Always scroll to the bottom when a new message is received
     this.scrollToBottom();
   }
 
@@ -42,10 +36,17 @@ export default class extends Controller {
     this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight;
   }
 
-  resetForm(event) {
+  sendMessage(event) {
     event.preventDefault();
-    this.formTarget.reset();
-    // Scroll to the bottom when a new message is sent
+    const messageInput = this.formTarget.querySelector('textarea');
+    const message = messageInput.value.trim();
+
+    if (message === '') {
+      return;
+    }
+
+    this.subscription.perform('receive', { message: message });
+    messageInput.value = ''; // Clear the input field after sending the message
     this.scrollToBottom();
   }
 }

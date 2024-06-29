@@ -1,4 +1,3 @@
-<!-- app/views/cars/show.html.erb -->
 <h1><%= @car.car_name %></h1>
 
 <% if @car.image.present? %>
@@ -10,6 +9,11 @@
 <p><strong>Make:</strong> <%= @car.car_make %></p>
 <p><strong>Price per Day:</strong> <%= @car.price_per_day %></p>
 <p><strong>Status:</strong> <%= @car.status %></p>
+<p><strong>Minimum Rental Duration:</strong> <%= @car.min_rental_duration %> days</p>
+<p><strong>Maximum Rental Duration:</strong> <%= @car.max_rental_duration %> days</p>
+<p><strong>Minimum Advance Notice:</strong> <%= @car.min_advance_notice %> days</p>
+<p><strong>Availability:</strong> <%= @car.availability_start_date %> to <%= @car.availability_end_date %></p>
+<p><strong>Owner Rules:</strong> <%= @car.owner_rules %></p>
 
 <%= link_to 'Back', cars_path, class: 'btn btn-primary' %>
 
@@ -24,10 +28,19 @@
 <% end %>
 
 <style>
-  .car-show-image {
-    width: 100%;
-    height: auto;
-    max-width: 250px; /* Adjust as needed */
-    margin-bottom: 15px;
-  }
+.car-show-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.car-details p {
+  font-size: 1em;
+  margin: 5px 0;
+}
+
+.btn {
+  margin: 10px 0;
+}
+
 </style>

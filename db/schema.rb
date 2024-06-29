@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_28_013148) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_29_195744) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_013148) do
     t.datetime "updated_at", null: false
     t.index ["car_id"], name: "index_bookings_on_car_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "car_views", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "car_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["car_id"], name: "index_car_views_on_car_id"
+    t.index ["user_id"], name: "index_car_views_on_user_id"
   end
 
   create_table "cars", force: :cascade do |t|
@@ -45,6 +54,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_013148) do
     t.float "latitude"
     t.float "longitude"
     t.string "address"
+    t.integer "min_rental_duration"
+    t.integer "max_rental_duration"
+    t.integer "min_advance_notice"
+    t.date "availability_start_date"
+    t.date "availability_end_date"
+    t.text "owner_rules"
+    t.string "country"
     t.index ["user_id"], name: "index_cars_on_user_id"
   end
 
@@ -130,6 +146,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_013148) do
 
   add_foreign_key "bookings", "cars"
   add_foreign_key "bookings", "users"
+  add_foreign_key "car_views", "cars", on_delete: :cascade
+  add_foreign_key "car_views", "users"
   add_foreign_key "cars", "users"
   add_foreign_key "favorites", "cars"
   add_foreign_key "favorites", "users"

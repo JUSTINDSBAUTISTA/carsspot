@@ -4,7 +4,7 @@ class Admin::CarsController < ApplicationController
   before_action :set_car, only: [:approve, :reject]
 
   def index
-    @cars = Car.where(status: 'pending')
+    @cars = Car.where(status: 'pending').includes(:user)
   end
 
   def approve

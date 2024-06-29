@@ -8,6 +8,11 @@
   <p><strong>Make:</strong> <%= car.car_make %></p>
   <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
   <p><strong>Status:</strong> <%= car.status %></p>
+  <p><strong>Minimum Rental Duration:</strong> <%= car.min_rental_duration %> days</p>
+  <p><strong>Maximum Rental Duration:</strong> <%= car.max_rental_duration %> days</p>
+  <p><strong>Minimum Advance Notice:</strong> <%= car.min_advance_notice %> days</p>
+  <p><strong>Availability:</strong> <%= car.availability_start_date %> to <%= car.availability_end_date %></p>
+  <p><strong>Owner Rules:</strong> <%= car.owner_rules %></p>
   <div class="buttons">
     <%= link_to 'View Details', car_path(car), class: 'btn btn-primary' %>
     <% if policy(car).update? %>
@@ -18,7 +23,6 @@
     <% end %>
   </div>
 </div>
-
 
 
 
