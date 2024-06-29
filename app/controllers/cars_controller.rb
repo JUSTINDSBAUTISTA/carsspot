@@ -1,5 +1,5 @@
 class CarsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :search]
   before_action :set_car, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -68,6 +68,42 @@ class CarsController < ApplicationController
     authorize @cars, :pending_approval?
   end
 
+  def search
+    authorize Car
+    if params[:location].present? && !params[:location].downcase.include?("canada")
+      redirect_to root_path, alert: "We don't operate in this country yet."
+      return
+    end
+
+    @cars = Car.where(status: 'approved', country: "Canada")
+    if params[:location].present?
+      @cars = @cars.where("address ILIKE ?", "%#{params[:location]}%")
+    end
+    @cars = @cars.where("availability_start_date <= ?", params[:pickup_date]) if params[:pickup_date].present?
+    @cars = @cars.where("availability_end_date >= ?", params[:return_date]) if params[:return_date].present?
+
+    if params[:location].blank? && params[:pickup_date].blank? && params[:return_date].blank?
+      @cars = Car.where(country: "Canada")
+    end
+
+    # Debugging statements
+    puts "Location: #{params[:location]}"
+    puts "Pickup Date: #{params[:pickup_date]}"
+    puts "Return Date: #{params[:return_date]}"
+    puts "Number of Cars Found: #{@cars.count}"
+    puts "SQL Query: #{@cars.to_sql}"
+
+    @markers = @cars.map do |car|
+      {
+        id: car.id,
+        lat: car.latitude,
+        lng: car.longitude,
+        info_window_html: render_to_string(partial: "info_window", locals: { car: car })
+      }
+    end
+    render :index
+  end
+
   private
 
   def set_car
@@ -78,6 +114,6 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_range, :owner_rules)
+    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :country, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_start_date, :availability_end_date, :owner_rules)
   end
 end
