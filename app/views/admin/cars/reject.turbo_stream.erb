@@ -1,0 +1,3 @@
+<%= turbo_stream.remove dom_id(@car) %>
+<%= turbo_stream.append "flash", partial: "shared/flashes", locals: { notice: "Car rejected successfully." } %>
+<script>console.log('Reject Turbo Stream executed');</script>

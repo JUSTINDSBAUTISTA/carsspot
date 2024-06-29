@@ -17,11 +17,17 @@
   <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
   <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
 <% end %>
+
+<% if current_user.admin? && @car.status == 'pending' %>
+  <%= link_to 'Approve', approve_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-success' %>
+  <%= link_to 'Reject', reject_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
+<% end %>
+
 <style>
   .car-show-image {
-  width: 100%;
-  height: auto;
-  max-width: 250px; /* Adjust as needed */
-  margin-bottom: 15px;
-}
+    width: 100%;
+    height: auto;
+    max-width: 250px; /* Adjust as needed */
+    margin-bottom: 15px;
+  }
 </style>

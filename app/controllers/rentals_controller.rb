@@ -1,8 +1,7 @@
 class RentalsController < ApplicationController
-  before_action :set_rental, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :set_rental, only: [:show, :edit, :update, :destroy, :approve, :reject]
   before_action :set_car, only: [:new, :create]
-  after_action :verify_authorized, except: [:index]
-  after_action :verify_policy_scoped, only: :index
 
   def index
     @rentals = policy_scope(Rental)
@@ -38,7 +37,6 @@ class RentalsController < ApplicationController
   end
 
   def edit
-    @rental = Rental.find(params[:id])
     authorize @rental
   end
 
@@ -55,6 +53,38 @@ class RentalsController < ApplicationController
     authorize @rental
     @rental.destroy
     redirect_to rentals_url, notice: 'Rental was successfully destroyed.'
+  end
+
+  def approve
+    authorize @rental
+    if @rental.update(status: 'approved')
+      Notification.create(
+        recipient: @rental.car.user,
+        actor: current_user,
+        notifiable: @rental,
+        message: "#{current_user.name} approved the rental request for #{@rental.car.car_name}",
+        read: false
+      )
+      redirect_to rentals_path, notice: 'Rental approved successfully.'
+    else
+      redirect_to rentals_path, alert: 'Failed to approve the rental.'
+    end
+  end
+
+  def reject
+    authorize @rental
+    if @rental.update(status: 'rejected')
+      Notification.create(
+        recipient: @rental.car.user,
+        actor: current_user,
+        notifiable: @rental,
+        message: "#{current_user.name} rejected the rental request for #{@rental.car.car_name}",
+        read: false
+      )
+      redirect_to rentals_path, notice: 'Rental rejected successfully.'
+    else
+      redirect_to rentals_path, alert: 'Failed to reject the rental.'
+    end
   end
 
   private

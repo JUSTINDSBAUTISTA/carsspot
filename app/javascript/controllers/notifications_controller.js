@@ -18,6 +18,6 @@ export default class extends Controller {
   }
 
   handleReceived(data) {
-    this.listTarget.insertAdjacentHTML('beforeend', data.html)
+    this.listTarget.insertAdjacentHTML('beforeend', data.notification)
   }
 }

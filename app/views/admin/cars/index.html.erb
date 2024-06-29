@@ -1,0 +1,16 @@
+<h1>Pending Approval</h1>
+
+<div class="cars-container">
+  <% @cars.each do |car| %>
+    <div class="car-item" id="<%= dom_id(car) %>">
+      <h2><%= car.car_name %></h2>
+      <p><strong>Make:</strong> <%= car.car_make %></p>
+      <p><strong>Price per Day:</strong> <%= car.price_per_day %></p>
+      <p><strong>Status:</strong> <%= car.status %></p>
+      <div class="admin-actions">
+        <%= link_to 'Approve', approve_admin_car_path(car), method: :patch, data: { turbo_method: :patch, confirm: 'Are you sure you want to approve this car?' }, class: 'btn btn-success' %>
+        <%= link_to 'Reject', reject_admin_car_path(car), method: :patch, data: { turbo_method: :patch, confirm: 'Are you sure you want to reject this car?' }, class: 'btn btn-danger' %>
+      </div>
+    </div>
+  <% end %>
+</div>

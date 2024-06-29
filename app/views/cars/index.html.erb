@@ -1,80 +1,82 @@
-<!-- app/views/cars/index.html.erb -->
 <h1>Cars</h1>
 
-<div class="cars-container">
-  <% @cars.each do |car| %>
-    <%= render partial: 'car_details', locals: { car: car } %>
-  <% end %>
+<div class="main-container">
+  <div class="cars-container">
+    <% @cars.each do |car| %>
+      <div class="car-item" id="car-<%= car.id %>">
+        <%= render partial: 'car_details', locals: { car: car } %>
+      </div>
+    <% end %>
+    <% if current_user %>
+      <%= link_to 'Add New Car', new_car_path, class: 'add-car-button' %>
+    <% end %>
+  </div>
+
+  <div class="map-container" data-controller="map" data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>" data-map-markers-value='<%= @markers.to_json %>'>
+    <div id="map" style="width: 100%; height: 100%;"></div>
+  </div>
 </div>
-
-<% if current_user %>
-  <%= link_to 'Add New Car', new_car_path, class: 'add-car-button' %>
-<% end %>
-
-<!-- app/views/cars/index.html.erb -->
-<div style="width: 100%; height: 600px;"
-  data-controller="map"
-  data-map-markers-value="<%= @markers.to_json %>"
-  data-map-api-key-value="<%= @mapbox_api_key %>">
-</div>
-
-
-
-<!-- Include your styles here -->
 
 
 <style>
-.cars-container {
+.main-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  height: 100vh;
 }
 
-.car {
+.cars-container {
+  width: 50%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.map-container {
+  width: 50%;
+  position: relative;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.car-item {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-width: 300px;
   padding: 20px;
   text-align: center;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 20px;
 }
 
-.car:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.car h2 {
+.car-item h2 {
   font-size: 1.5em;
   margin-bottom: 10px;
 }
 
-.car img.car-image {
+.car-item img.car-image {
   width: 100%;
   height: auto;
-  max-width: 250px; /* Adjust as needed */
+  max-width: 250px;
   margin-bottom: 15px;
 }
 
-.car p {
+.car-item p {
   font-size: 1em;
   margin: 5px 0;
 }
 
-.buttons {
+.car-item .buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
 }
 
-.car .btn {
+.car-item .btn {
   display: inline-block;
   padding: 10px 20px;
   border-radius: 5px;
@@ -87,23 +89,23 @@
   width: 100%;
 }
 
-.car .btn:hover {
+.car-item .btn:hover {
   background-color: #0056b3;
 }
 
-.car .btn.btn-secondary {
+.car-item .btn.btn-secondary {
   background-color: #6c757d;
 }
 
-.car .btn.btn-secondary:hover {
+.car-item .btn.btn-secondary:hover {
   background-color: #5a6268;
 }
 
-.car .btn.btn-danger {
+.car-item .btn.btn-danger {
   background-color: #dc3545;
 }
 
-.car .btn.btn-danger:hover {
+.car-item .btn.btn-danger:hover {
   background-color: #c82333;
 }
 
@@ -125,4 +127,11 @@
 .add-car-button:hover {
   background-color: #218838;
 }
+
+.highlight {
+  border: 2px solid #ff0000;
+  transition: border 0.3s ease-in-out;
+}
+
+
 </style>

@@ -15,14 +15,15 @@
     </div>
 
     <% if current_user == @notification.recipient && car.status == 'pending' %>
-      <div class="actions">
-        <%= link_to 'Approve', approve_notification_path(@notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
-        <%= link_to 'Reject', reject_notification_path(@notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
-      </div>
+      <% if current_user.admin? || current_user == car.user %>
+        <div class="actions">
+          <%= link_to 'Approve', approve_notification_path(@notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
+          <%= link_to 'Reject', reject_notification_path(@notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
+        </div>
+      <% end %>
     <% end %>
   <% end %>
 </div>
-
 
 <!-- Add some basic styling -->
 <style>

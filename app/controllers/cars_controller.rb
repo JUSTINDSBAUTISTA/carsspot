@@ -1,11 +1,12 @@
 class CarsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :set_car, only: [:show, :edit, :update, :destroy, :approve, :reject]
+  before_action :set_car, only: [:show, :edit, :update, :destroy]
 
   def index
-    @cars = policy_scope(Car)
+    @cars = policy_scope(Car).where(status: 'approved')
     @markers = @cars.map do |car|
       {
+        id: car.id,
         lat: car.latitude,
         lng: car.longitude,
         info_window_html: render_to_string(partial: "info_window", locals: { car: car })
@@ -25,9 +26,10 @@ class CarsController < ApplicationController
   def create
     @car = Car.new(car_params)
     @car.user = current_user
+    @car.status = 'pending'  # Set status to pending by default
     authorize @car
     if @car.save
-      redirect_to @car, notice: 'Car was successfully created.'
+      redirect_to @car, notice: 'Car was successfully created and is pending approval.'
     else
       render :new
     end
@@ -48,13 +50,10 @@ class CarsController < ApplicationController
 
   def destroy
     authorize @car
-    Rails.logger.debug "Attempting to destroy car: #{@car.inspect}"
     if @car.destroy
-      Rails.logger.debug "Successfully destroyed car: #{@car.inspect}"
       redirect_to cars_url, notice: 'Car was successfully destroyed.'
     else
-      Rails.logger.debug "Failed to destroy car: #{@car.errors.full_messages.join(', ')}"
-      redirect_to @car, alert: 'Car cannot be deleted while it is pending approval.'
+      redirect_to @car, alert: 'Car cannot be deleted.'
     end
   end
 
@@ -68,28 +67,13 @@ class CarsController < ApplicationController
     authorize @cars, :pending_approval?
   end
 
-  def approve
-    authorize @car
-    if @car.update(status: 'approved')
-      redirect_to pending_approval_cars_path, notice: 'Car was successfully approved.'
-    else
-      redirect_to pending_approval_cars_path, alert: 'Failed to approve the car.'
-    end
-  end
-
-  def reject
-    authorize @car
-    if @car.update(status: 'rejected')
-      redirect_to pending_approval_cars_path, notice: 'Car was successfully rejected.'
-    else
-      redirect_to pending_approval_cars_path, alert: 'Failed to reject the car.'
-    end
-  end
-
   private
 
   def set_car
-    @car = Car.find(params[:id])
+    @car = Car.find_by(id: params[:id])
+    unless @car
+      redirect_to cars_url, alert: "Car not found."
+    end
   end
 
   def car_params

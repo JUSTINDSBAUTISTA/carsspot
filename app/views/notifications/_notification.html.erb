@@ -1,3 +1,4 @@
+<!-- app/views/notifications/_notification.html.erb -->
 <div class="notification <%= 'unread' unless notification.read %> card">
   <p><strong>Message:</strong> <%= notification.message %></p>
 
@@ -11,13 +12,11 @@
       <p><strong>Price per Day:</strong> $<%= car.price_per_day %></p>
       <p><strong>Status:</strong> <%= car.status %></p>
     </div>
-
-    <% if current_user == notification.recipient && car.status == 'pending' %>
-      <%= link_to 'Approve', approve_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-success' %>
-      <%= link_to 'Reject', reject_notification_path(notification), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
-    <% end %>
   <% end %>
 </div>
+
+
+
 
 
 <style>
