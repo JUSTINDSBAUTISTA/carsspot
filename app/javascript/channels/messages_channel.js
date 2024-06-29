@@ -1,31 +1,28 @@
 // app/javascript/channels/messages_channel.js
 import consumer from "./consumer";
 
-// Create a single subscription to MessagesChannel with the necessary parameters
-consumer.subscriptions.create({channel: "MessagesChannel", recipient_id: "theRecipientId"}, {
-  connected() {
-    // Called when the subscription is ready for use on the server
-    console.log("Connected to the MessagesChannel with recipient_id: theRecipientId.");
-  },
+document.addEventListener("turbolinks:load", () => {
+  const messagesContainer = document.getElementById("messages-container");
 
-  disconnected() {
-    // Called when the subscription has been terminated by the server
-    console.log("Disconnected from the MessagesChannel.");
-  },
+  if (messagesContainer) {
+    const recipientId = messagesContainer.getAttribute("data-messages-recipient-id-value");
 
-  received(data) {
-    // Log the received data
-    console.log("Received data:", data);
+    consumer.subscriptions.create({ channel: "MessagesChannel", recipient_id: recipientId }, {
+      connected() {
+        console.log(`Connected to MessagesChannel with recipient_id: ${recipientId}`);
+      },
 
-    // Assuming 'data' is the HTML string of the message as per your log
-    // Select the chat box element
-    const chatBox = document.getElementById('chatBox');
+      disconnected() {
+        console.log("Disconnected from the MessagesChannel.");
+      },
 
-    // Append the received message HTML to the chat box
-    if (chatBox) {
-      chatBox.innerHTML += data; // Append the message
-    } else {
-      console.log("Chat box not found.");
-    }
+      received(data) {
+        console.log("Message received:", data);
+        const messages = document.getElementById('messages');
+        if (messages) {
+          messages.insertAdjacentHTML('beforeend', data.message);
+        }
+      }
+    });
   }
 });

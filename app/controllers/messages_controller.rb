@@ -19,8 +19,6 @@ class MessagesController < ApplicationController
     received_partners = current_user.received_messages.includes(:sender).map(&:sender).compact.uniq
     @chat_partners = (sent_partners + received_partners).compact.uniq
 
-    @chat_partners ||= [] # Ensure @chat_partners is an array
-
     @message = Message.new
   end
 

@@ -1,8 +1,65 @@
-<!-- app/views/cars/pending_approval.html.erb -->
 <h1>Pending Approval</h1>
 
 <div class="cars-container">
   <% @cars.each do |car| %>
-    <%= render partial: 'car_details', locals: { car: car } %>
+    <div class="car-item">
+      <%= render partial: 'car_details', locals: { car: car } %>
+      <div class="admin-actions">
+        <%= link_to 'Approve', approve_admin_car_path(car), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-success' %>
+        <%= link_to 'Reject', reject_admin_car_path(car), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </div>
+    </div>
   <% end %>
 </div>
+
+
+
+<style>
+.cars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.car-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.admin-actions {
+  margin-top: 10px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  margin: 5px;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+</style>>

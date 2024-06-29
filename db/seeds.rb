@@ -52,26 +52,28 @@ car_images = [
   'https://images.pexels.com/photos/70912/pexels-photo-70912.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
 ]
 
-# Create cars and assign them to users
-users.each do |user|
-  3.times do
-    address = Faker::Address.full_address
-    car = Car.new(
-      user: user,
-      car_name: Faker::Vehicle.model,
-      car_make: Faker::Vehicle.make,
-      price_per_day: Faker::Commerce.price(range: 50..150),
-      status: 'approved',
-      image: car_images.sample,
-      features: Faker::Vehicle.standard_specs.join(', '),
-      transmission: Faker::Vehicle.transmission,
-      fuel_type: Faker::Vehicle.fuel_type,
-      number_of_seat: Faker::Number.between(from: 2, to: 8),
-      rating: Faker::Number.between(from: 1, to: 5),
-      address: address
-    )
-    car.save!
-  end
+# Create 30 cars and assign them to users
+30.times do
+  address = Faker::Address.full_address
+  latitude = Faker::Address.latitude
+  longitude = Faker::Address.longitude
+  car = Car.new(
+    user: users.sample,
+    car_name: Faker::Vehicle.model,
+    car_make: Faker::Vehicle.make,
+    price_per_day: Faker::Commerce.price(range: 50..150),
+    status: ['approved', 'pending'].sample, # Randomly assign approved or pending status
+    image: car_images.sample,
+    features: Faker::Vehicle.standard_specs.join(', '),
+    transmission: Faker::Vehicle.transmission,
+    fuel_type: Faker::Vehicle.fuel_type,
+    number_of_seat: Faker::Number.between(from: 2, to: 8),
+    rating: Faker::Number.between(from: 1, to: 5),
+    address: address,
+    latitude: latitude,
+    longitude: longitude
+  )
+  car.save!
 end
 
 # Create rentals
@@ -114,10 +116,22 @@ users.each do |user|
   Notification.create!(
     recipient: user,
     actor: admin_user,
-    notifiable: Car.all.sample,
+    notifiable: Car.where(status: 'pending').sample,
     notifiable_type: 'Car',
-    message: Faker::Lorem.sentence,
+    message: "Your car is pending approval",
     read: [true, false].sample
+  )
+end
+
+# Create rental notifications for car owners
+Rental.where(status: 'pending').each do |rental|
+  Notification.create!(
+    recipient: rental.car.user,
+    actor: rental.user,
+    notifiable: rental,
+    notifiable_type: 'Rental',
+    message: "You have a new rental request",
+    read: false
   )
 end
 
