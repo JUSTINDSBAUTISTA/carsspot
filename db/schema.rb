@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_29_195744) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_30_044738) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,9 +46,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_29_195744) do
     t.integer "price_per_day"
     t.integer "rating"
     t.integer "number_of_seat"
-    t.string "status"
-    t.boolean "approved", default: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "latitude"
@@ -61,7 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_29_195744) do
     t.date "availability_end_date"
     t.text "owner_rules"
     t.string "country"
-    t.index ["user_id"], name: "index_cars_on_user_id"
+    t.string "status"
+    t.integer "user_id"
   end
 
   create_table "favorites", force: :cascade do |t|
@@ -148,7 +146,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_29_195744) do
   add_foreign_key "bookings", "users"
   add_foreign_key "car_views", "cars", on_delete: :cascade
   add_foreign_key "car_views", "users"
-  add_foreign_key "cars", "users"
   add_foreign_key "favorites", "cars"
   add_foreign_key "favorites", "users"
   add_foreign_key "messages", "users", column: "recipient_id"
