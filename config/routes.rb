@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       get :my_cars
       get :pending_approval
       get :search
+      get :filter # Add this line
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy] do
       member do
