@@ -1,4 +1,3 @@
-
 import { Controller } from "@hotwired/stimulus"
 import mapboxgl from "mapbox-gl"
 import process from "process"
@@ -17,7 +16,7 @@ export default class extends Controller {
   }
 
   initializeMap() {
-    this.element.innerHTML = "" // Ensure the container is empty
+    this.element.innerHTML = ""
 
     mapboxgl.accessToken = this.apiKeyValue
 
@@ -29,7 +28,6 @@ export default class extends Controller {
     })
 
     this.map.addControl(new mapboxgl.NavigationControl())
-    this.map.addControl(new mapboxgl.FullscreenControl())
   }
 
   addMarkersToMap() {
@@ -39,6 +37,7 @@ export default class extends Controller {
       console.log(`Adding marker for car ${marker.id}`) // Log marker addition
       const popup = new mapboxgl.Popup().setHTML(marker.info_window_html)
 
+      // Create a custom marker element
       const el = document.createElement('div')
       el.className = 'custom-marker'
       el.style.backgroundImage = 'url(https://cdn4.iconfinder.com/data/icons/map-pins-2/256/13-1024.png)'

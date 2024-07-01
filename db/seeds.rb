@@ -56,9 +56,6 @@ car_images = [
 # List of Canadian cities
 cities = ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
 
-# Car types
-car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
-
 # Create 30 cars and assign them to users
 30.times do
   address = "#{Faker::Address.street_address}, #{cities.sample}, Canada"
@@ -85,9 +82,7 @@ car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convert
     availability_start_date: Faker::Date.between(from: Date.today, to: 1.year.from_now),
     availability_end_date: Faker::Date.between(from: 1.year.from_now, to: 2.years.from_now),
     owner_rules: Faker::Lorem.sentence,
-    country: 'Canada',
-    mileage: Faker::Number.between(from: 1000, to: 100000),
-    car_type: car_types.sample # Adding car type
+    country: 'Canada'
   )
   car.save!
 end

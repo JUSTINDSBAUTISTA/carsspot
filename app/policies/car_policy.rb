@@ -10,7 +10,7 @@ class CarPolicy < ApplicationPolicy
   end
 
   def show?
-    record.status == 'approved' || (user.present? && (record.user == user || user.admin?))
+    user.present? && (record.user == user || user.admin? || record.status == 'approved')
   end
 
   def create?

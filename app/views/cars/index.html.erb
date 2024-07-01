@@ -1,98 +1,146 @@
 <h1>Cars</h1>
+
 <p><%= pluralize(@cars.count, 'car') %> found</p>
 
-<div class="filter-container" data-controller="date-picker">
-  <input type="text" class="search-input" placeholder="Specific address, station, subway station...">
-
-  <div class="calendar-container">
-    <div class="calendar-item">
-      <div class="icon"></div>
-      <div class="text">
-        <span class="label">Pickup</span>
-        <input type="text" data-date-picker-target="startDate" class="date-input" placeholder="Date">
-        <input type="text" data-date-picker-target="startTime" class="time-input" placeholder="Time">
-      </div>
-    </div>
-    <div class="calendar-item">
-      <div class="icon"></div>
-      <div class="text">
-        <span class="label">Return</span>
-        <input type="text" data-date-picker-target="endDate" class="date-input" placeholder="Date">
-        <input type="text" data-date-picker-target="endTime" class="time-input" placeholder="Time">
-      </div>
-    </div>
-  </div>
-
-  <div data-controller="car">
-    <button class="filter-button dropdown-toggle" data-action="click->car#toggle">Vehicle type</button>
-    <div class="dropdown-menu" data-car-target="menu">
-      <h3>VEHICLE TYPE</h3>
-      <div class="vehicle-types">
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Commercial">
-          <i class="fas fa-truck"></i> Commercial
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="City">
-          <i class="fas fa-car"></i> City
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Sedan">
-          <i class="fas fa-car-side"></i> Sedan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Family">
-          <i class="fas fa-caravan"></i> Family
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Minibus">
-          <i class="fas fa-shuttle-van"></i> Minibus
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="4x4">
-          <i class="fas fa-car"></i> 4x4
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Convertible">
-          <i class="fas fa-car"></i> Convertible
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Coupe">
-          <i class="fas fa-car"></i> Coupe
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Antique">
-          <i class="fas fa-car"></i> Antique
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Campervan">
-          <i class="fas fa-caravan"></i> Campervan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="SUV">
-          <i class="fas fa-car"></i> SUV
-        </button>
-      </div>
-      <div class="dropdown-actions">
-        <button class="reset-button" data-action="click->car#resetFilters">Reset</button>
-        <button class="apply-button" data-action="click->car#applyTypes">Apply</button>
-      </div>
-    </div>
-  </div>
-  <button class="filter-button">Reserved parking</button>
-  <button class="filter-button">More filters</button>
-</div>
-
 <div class="main-container">
-  <div class="cars-list-container">
-    <div class="cars-container">
-      <% @cars.each do |car| %>
-        <div class="car-item" id="car-<%= car.id %>" onclick="location.href='<%= car_path(car) %>'">
-          <div class="car-details">
-            <%= image_tag car.image, alt: car.car_name, class: "car-image" if car.image.present? %>
-            <div class="car-info">
-              <h2 class="car-name"><%= car.car_name %></h2>
-              <p class="car-make"><%= car.car_make %></p>
-              <p class="car-type"><%= car.car_type %></p>
-              <p class="car-rating"><span class="star">★</span> <%= car.rating %>/5</p>
-              <p class="car-mileage"><%= car.mileage %> km</p>
-              <p class="car-price"><%= number_to_currency(car.price_per_day) %>/day</p>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
+  <div class="cars-container">
+    <% @cars.each do |car| %>
+      <div class="car-item" id="car-<%= car.id %>">
+        <%= render partial: 'car_details', locals: { car: car } %>
+      </div>
+    <% end %>
+    <% if current_user %>
+      <%= link_to 'Add New Car', new_car_path, class: 'add-car-button' %>
+    <% end %>
   </div>
+
   <div class="map-container" data-controller="map" data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>" data-map-markers-value='<%= @markers.to_json %>'>
-    <div id="map"></div>
+    <div id="map" style="width: 100%; height: 100%;"></div>
   </div>
 </div>
+
+
+
+<style>
+
+    .search-results-count {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #555;
+  }
+.main-container {
+  display: flex;
+  height: 100vh;
+}
+
+.cars-container {
+  width: 50%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.map-container {
+  width: 50%;
+  position: relative;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.car-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.car-item h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.car-item img.car-image {
+  width: 100%;
+  height: auto;
+  max-width: 250px;
+  margin-bottom: 15px;
+}
+
+.car-item p {
+  font-size: 1em;
+  margin: 5px 0;
+}
+
+.car-item .buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.car-item .btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  width: 100%;
+}
+
+.car-item .btn:hover {
+  background-color: #0056b3;
+}
+
+.car-item .btn.btn-secondary {
+  background-color: #6c757d;
+}
+
+.car-item .btn.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.car-item .btn.btn-danger {
+  background-color: #dc3545;
+}
+
+.car-item .btn.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.add-car-button {
+  display: block;
+  margin: 30px auto;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-car-button:hover {
+  background-color: #218838;
+}
+
+.highlight {
+  border: 2px solid #ff0000;
+  transition: border 0.3s ease-in-out;
+}
+
+
+</style>
