@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.0.2",
+    "mapbox-gl": "^3.4.0",
     "process": "^0.11.10"
   }
 }

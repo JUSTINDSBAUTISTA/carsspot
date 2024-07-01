@@ -79,19 +79,15 @@ class CarsController < ApplicationController
     if params[:location].present?
       @cars = @cars.where("address ILIKE ?", "%#{params[:location]}%")
     end
-    @cars = @cars.where("availability_start_date <= ?", params[:pickup_date]) if params[:pickup_date].present?
-    @cars = @cars.where("availability_end_date >= ?", params[:return_date]) if params[:return_date].present?
-
-    if params[:location].blank? && params[:pickup_date].blank? && params[:return_date].blank?
-      @cars = Car.where(country: "Canada")
+    if params[:pickup_date].present?
+      @cars = @cars.where("availability_start_date <= ?", params[:pickup_date])
     end
-
-    # Debugging statements
-    puts "Location: #{params[:location]}"
-    puts "Pickup Date: #{params[:pickup_date]}"
-    puts "Return Date: #{params[:return_date]}"
-    puts "Number of Cars Found: #{@cars.count}"
-    puts "SQL Query: #{@cars.to_sql}"
+    if params[:return_date].present?
+      @cars = @cars.where("availability_end_date >= ?", params[:return_date])
+    end
+    if params[:car_types].present?
+      @cars = @cars.where(car_type: params[:car_types].split(','))
+    end
 
     @markers = @cars.map do |car|
       {
@@ -104,6 +100,7 @@ class CarsController < ApplicationController
     render :index
   end
 
+
   private
 
   def set_car
@@ -114,6 +111,7 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :country, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_start_date, :availability_end_date, :owner_rules)
+    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :country, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_start_date, :availability_end_date, :owner_rules, :car_type)
   end
+
 end

@@ -8,6 +8,7 @@ class Car < ApplicationRecord
   has_many :reviews, dependent: :destroy
 
   validates :status, inclusion: { in: %w[pending approved rejected] }
+  validates :mileage, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   after_initialize :set_default_status, if: :new_record?
   after_create :notify_admins
