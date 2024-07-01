@@ -1,0 +1,16 @@
+<!-- app/views/cars/_car_list.html.erb -->
+<% cars.each do |car| %>
+  <div class="car-item" id="car-<%= car.id %>" onclick="location.href='<%= car_path(car) %>'">
+    <div class="car-details">
+      <%= image_tag car.image, alt: car.car_name, class: "car-image" if car.image.present? %>
+      <div class="car-info">
+        <h2 class="car-name"><%= car.car_name %></h2>
+        <p class="car-make"><%= car.car_make %></p>
+        <p class="car-type"><%= car.car_type %></p>
+        <p class="car-rating"><span class="star">★</span> <%= car.rating %>/5</p>
+        <p class="car-mileage"><%= car.mileage %> km</p>
+        <p class="car-price"><%= number_to_currency(car.price_per_day) %>/day</p>
+      </div>
+    </div>
+  </div>
+<% end %>

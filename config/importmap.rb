@@ -16,3 +16,4 @@ pin "process", to: "https://ga.jspm.io/npm:@jspm/core@2.0.1/nodelibs/browser/pro
 # Ensure you pin the CSS for mapbox-gl as well
 pin "mapbox-gl/dist/mapbox-gl.css", to: "https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css"
 pin "@rails/ujs", to: "rails-ujs.js", preload: true
+pin "flatpickr", to: "https://ga.jspm.io/npm:flatpickr@4.6.9/dist/flatpickr.js"

@@ -1,4 +1,3 @@
-# app/models/car.rb
 class Car < ApplicationRecord
   belongs_to :user
   has_many :notifications, as: :notifiable, dependent: :destroy
@@ -8,6 +7,7 @@ class Car < ApplicationRecord
   has_many :reviews, dependent: :destroy
 
   validates :status, inclusion: { in: %w[pending approved rejected] }
+  validates :car_type, presence: true # Add this validation
 
   after_initialize :set_default_status, if: :new_record?
   after_create :notify_admins
