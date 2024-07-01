@@ -1,8 +1,5 @@
-<!-- app/views/cars/my_cars.html.erb -->
-<h1>My Cars</h1>
-
 <div class="cars-container">
   <% @cars.each do |car| %>
-    <%= render partial: 'car_details', locals: { car: car } %>
+    <%= render partial: 'cars/car_details', locals: { car: car } %>
   <% end %>
 </div>
