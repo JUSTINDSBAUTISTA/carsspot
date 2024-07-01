@@ -1,7 +1,7 @@
 <h1>Cars</h1>
 <p><%= pluralize(@cars.count, 'car') %> found</p>
 
-<div class="filter-container" data-controller="date-picker car">
+<div class="filter-container" data-controller="date-picker car filter">
   <input type="text" class="search-input" placeholder="Specific address, station, subway station...">
   <div class="date-time-picker">
     <input type="text" data-date-picker-target="startDate" class="date-input" placeholder="Pickup Date">
@@ -16,39 +16,7 @@
     <div class="dropdown-menu" data-car-target="menu">
       <h3>VEHICLE TYPE</h3>
       <div class="vehicle-types">
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Commercial">
-          <i class="fas fa-truck"></i> Commercial
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="City">
-          <i class="fas fa-car"></i> City
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Sedan">
-          <i class="fas fa-car-side"></i> Sedan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Family">
-          <i class="fas fa-caravan"></i> Family
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Minibus">
-          <i class="fas fa-shuttle-van"></i> Minibus
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="4x4">
-          <i class="fas fa-car"></i> 4x4
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Convertible">
-          <i class="fas fa-car"></i> Convertible
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Coupe">
-          <i class="fas fa-car"></i> Coupe
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Antique">
-          <i class="fas fa-car"></i> Antique
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Campervan">
-          <i class="fas fa-caravan"></i> Campervan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="SUV">
-          <i class="fas fa-car"></i> SUV
-        </button>
+        <!-- Vehicle Type Buttons -->
       </div>
       <div class="dropdown-actions">
         <button class="reset-button" data-action="click->car#resetFilters">Reset</button>
@@ -57,7 +25,7 @@
     </div>
   </div>
   <button class="filter-button">Reserved parking</button>
-  <button class="filter-button">More filters</button>
+  <button class="filter-button" data-action="click->filter#toggle">More filters</button>
 </div>
 
 <div class="main-container">
@@ -73,3 +41,270 @@
     <div id="map"></div>
   </div>
 </div>
+
+<!-- Filters Modal -->
+<div id="filters-modal" class="modal cobalt-modal__overlay" data-controller="filter">
+  <div class="modal-content cobalt-modal">
+    <div class="modal-header cobalt-modal-header">
+      <h2 class="cobalt-modal-header__title">Filters</h2>
+      <button type="button" class="close cobalt-modal-header__close-button" data-action="click->filter#close">
+        <span aria-hidden="true"><i class="fas fa-times"></i></span>
+      </button>
+    </div>
+    <div class="modal-body cobalt-modal-body cobalt-modal-body--bodySpacing cobalt-modal-body--hasHeader cobalt-modal-body--hasFooter">
+      <h3>Instant Booking</h3>
+      <label class="switch cobalt-ToggleSwitchField cobalt-ToggleSwitchField--standalone">
+        <input type="checkbox" id="instant-booking" class="cobalt-ToggleSwitchField__Input">
+        <span class="slider round cobalt-ToggleSwitchField__ToggleSwitch">
+          <span class="cobalt-ToggleSwitchField__ToggleSwitchSlider"></span>
+        </span>
+      </label>
+
+      <h3>Number of Places</h3>
+      <div>
+        <label>Minimum number of places.</label>
+        <div class="quantity cobalt-Stepper">
+          <button class="quantity-minus cobalt-Stepper__ActionButton cob-Button cob-Button__default"><span class="cob-Button__content">-</span></button>
+          <input type="number" id="number-of-places" value="2" min="1" class="cobalt-Stepper__ContentWrapper">
+          <button class="quantity-plus cobalt-Stepper__ActionButton cob-Button cob-Button__default"><span class="cob-Button__content">+</span></button>
+        </div>
+      </div>
+
+      <h3>Recent Cars Only</h3>
+      <label class="switch cobalt-ToggleSwitchField cobalt-ToggleSwitchField--standalone">
+        <input type="checkbox" id="recent-cars" class="cobalt-ToggleSwitchField__Input">
+        <span class="slider round cobalt-ToggleSwitchField__ToggleSwitch">
+          <span class="cobalt-ToggleSwitchField__ToggleSwitchSlider"></span>
+        </span>
+      </label>
+
+      <h3>Equipment</h3>
+      <div class="equipment cobalt-CheckablePillsGroup">
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-baby-carriage cobalt-Icon"></i> Baby seat</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-map-marked-alt cobalt-Icon"></i> GPS</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-snowflake cobalt-Icon"></i> Air conditioner</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-bicycle cobalt-Icon"></i> Bike rack</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-suitcase cobalt-Icon"></i> Coffre de toit</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-tachometer-alt cobalt-Icon"></i> Régulateur de vitesse</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-snowman cobalt-Icon"></i> Pneus neige</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-link cobalt-Icon"></i> Chaines</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fab fa-apple cobalt-Icon"></i> Apple CarPlay</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fab fa-android cobalt-Icon"></i> Android Auto</button>
+        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-car cobalt-Icon"></i> Quatre roues motrices</button>
+      </div>
+
+      <h3>Gearbox</h3>
+      <div class="gearbox cobalt-ChoiceList">
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="all" checked class="cobalt-CheckmarkField__Input"> All</label>
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="manual" class="cobalt-CheckmarkField__Input"> Manual gearbox</label>
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="automatic" class="cobalt-CheckmarkField__Input"> Automatic box</label>
+      </div>
+
+      <h3>Engine</h3>
+      <div class="engine cobalt-ChoiceList">
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-electric" class="cobalt-CheckmarkField__Input"> Electric</label>
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-hybrid" class="cobalt-CheckmarkField__Input"> Hybrid</label>
+        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-combustion" class="cobalt-CheckmarkField__Input"> Combustion</label>
+      </div>
+
+      <h3>Brand</h3>
+      <div class="brand cobalt-CheckablePillsGroup">
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Renault</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Peugeot</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mercedes-Benz</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Audi</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Alfa-Romeo</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">BMW</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Chevrolet</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Citroen</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Dacia</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Fiat</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Ford</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Honda</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Hyundai</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Kia</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Land-Rover</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mazda</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mini</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mitsubishi</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Nissan</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Opel</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Seat</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Skoda</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Smart</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Suzuki</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Tesla</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Toyota</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Volkswagen</button>
+        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Volvo</button>
+      </div>
+    </div>
+    <div class="modal-footer cobalt-modal-footer">
+      <button class="apply-button cob-Button cob-Button__default cob-Button__default--primary" data-action="click->filter#applyFilters">Apply Filters</button>
+    </div>
+  </div>
+</div>
+ <style>
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 30px;
+  border: none;
+  width: 50%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e3e2e8;
+  margin-bottom: 20px;
+}
+
+.cobalt-modal-header__title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.cobalt-ToggleSwitchField {
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.cobalt-ToggleSwitchField__Input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.cobalt-ToggleSwitchField__ToggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: 0.4s;
+}
+
+.cobalt-ToggleSwitchField__ToggleSwitchSlider {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .cobalt-ToggleSwitchField__ToggleSwitch {
+  background-color: #2196F3;
+}
+
+input:checked + .cobalt-ToggleSwitchField__ToggleSwitchSlider {
+  transform: translateX(26px);
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+}
+
+.cobalt-Stepper__ActionButton {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cobalt-Stepper__ActionButton:hover {
+  background-color: #ddd;
+}
+
+.cobalt-Stepper__ContentWrapper {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+
+.equipment, .gearbox, .engine, .brand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cobalt-CheckablePillField {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.cobalt-CheckablePillField i {
+  margin-right: 10px;
+}
+
+.cobalt-CheckablePillField:hover {
+  background-color: #ddd;
+}
+
+.apply-button, .reset-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.apply-button:hover, .reset-button:hover {
+  background-color: #45a049;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); }
+  to { transform: translateY(0); }
+}
+</style>
