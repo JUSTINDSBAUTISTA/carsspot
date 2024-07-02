@@ -1,4 +1,3 @@
-// app/javascript/controllers/notifications_controller.js
 import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 

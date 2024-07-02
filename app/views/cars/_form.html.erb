@@ -16,29 +16,33 @@
   </div>
 
   <div class="form-group">
+    <%= form.label :car_type, class: "form-label" %>
+    <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input" %>
+  </div>
+
+  <div class="form-group">
     <%= form.label :features, class: "form-label" %>
     <div class="feature-options">
       <label class="feature-option">
-        <%= form.check_box :features, { multiple: true }, 'Air Conditioning', nil %>
+        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Air Conditioning') }, 'Air Conditioning', nil %>
         <i class="fas fa-snowflake"></i> Air Conditioning
       </label>
       <label class="feature-option">
-        <%= form.check_box :features, { multiple: true }, 'GPS', nil %>
+        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('GPS') }, 'GPS', nil %>
         <i class="fas fa-map-marker-alt"></i> GPS
       </label>
       <label class="feature-option">
-        <%= form.check_box :features, { multiple: true }, 'Bluetooth', nil %>
+        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bluetooth') }, 'Bluetooth', nil %>
         <i class="fas fa-bluetooth"></i> Bluetooth
       </label>
       <label class="feature-option">
-        <%= form.check_box :features, { multiple: true }, 'Cruise Control', nil %>
+        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Cruise Control') }, 'Cruise Control', nil %>
         <i class="fas fa-tachometer-alt"></i> Cruise Control
       </label>
       <label class="feature-option">
-        <%= form.check_box :features, { multiple: true }, 'Backup Camera', nil %>
+        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Backup Camera') }, 'Backup Camera', nil %>
         <i class="fas fa-camera"></i> Backup Camera
       </label>
-      <!-- Add more feature options as needed -->
     </div>
   </div>
 
@@ -46,11 +50,11 @@
     <%= form.label :transmission, class: "form-label" %>
     <div class="feature-options">
       <label class="feature-option">
-        <%= form.radio_button :transmission, 'Automatic' %>
+        <%= form.radio_button :transmission, 'Automatic', checked: @car.transmission == 'Automatic' %>
         <i class="fas fa-cogs"></i> Automatic
       </label>
       <label class="feature-option">
-        <%= form.radio_button :transmission, 'Manual' %>
+        <%= form.radio_button :transmission, 'Manual', checked: @car.transmission == 'Manual' %>
         <i class="fas fa-cog"></i> Manual
       </label>
     </div>
@@ -60,19 +64,19 @@
     <%= form.label :fuel_type, class: "form-label" %>
     <div class="feature-options">
       <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Petrol' %>
+        <%= form.radio_button :fuel_type, 'Petrol', checked: @car.fuel_type == 'Petrol' %>
         <i class="fas fa-gas-pump"></i> Petrol
       </label>
       <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Diesel' %>
+        <%= form.radio_button :fuel_type, 'Diesel', checked: @car.fuel_type == 'Diesel' %>
         <i class="fas fa-oil-can"></i> Diesel
       </label>
       <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Electric' %>
+        <%= form.radio_button :fuel_type, 'Electric', checked: @car.fuel_type == 'Electric' %>
         <i class="fas fa-charging-station"></i> Electric
       </label>
       <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Hybrid' %>
+        <%= form.radio_button :fuel_type, 'Hybrid', checked: @car.fuel_type == 'Hybrid' %>
         <i class="fas fa-leaf"></i> Hybrid
       </label>
     </div>
@@ -101,11 +105,6 @@
   <div class="form-group">
     <%= form.label :number_of_seat, class: "form-label" %>
     <%= form.number_field :number_of_seat, class: "form-input" %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :status, class: "form-label" %>
-    <%= form.text_field :status, class: "form-input" %>
   </div>
 
   <div class="form-group">
@@ -147,6 +146,7 @@
     <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
 
 <style>
   .car-form {
@@ -210,14 +210,16 @@
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    position: relative;
   }
 
   .feature-option input[type="checkbox"] {
-    display: none;
+    position: absolute;
+    left: -9999px;
   }
 
-  .feature-option i {
-    font-size: 1.5em;
+  .feature-option input[type="checkbox"]:checked + i {
+    color: #007bff;
   }
 
   .actions {

@@ -39,10 +39,14 @@ class CarsController < ApplicationController
     @car.user = current_user
     @car.status = 'pending'  # Set status to pending by default
     authorize @car
+
+    Rails.logger.debug "Car Params: #{car_params.inspect}"
+
     if @car.save
       redirect_to @car, notice: 'Car was successfully created and is pending approval.'
     else
-      render :new
+      Rails.logger.debug "Car Save Errors: #{@car.errors.full_messages.join(', ')}"
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -52,10 +56,14 @@ class CarsController < ApplicationController
 
   def update
     authorize @car
+
+    Rails.logger.debug "Car Params: #{car_params.inspect}"
+
     if @car.update(car_params)
       redirect_to @car, notice: 'Car was successfully updated.'
     else
-      render :edit
+      Rails.logger.debug "Car Update Errors: #{@car.errors.full_messages.join(', ')}"
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -120,6 +128,12 @@ class CarsController < ApplicationController
   end
 
   def car_params
-    params.require(:car).permit(:car_name, :features, :transmission, :fuel_type, :car_make, :image, :price_per_day, :rating, :number_of_seat, :status, :address, :country, :min_rental_duration, :min_advance_notice, :max_rental_duration, :availability_start_date, :availability_end_date, :owner_rules, :car_type)
+    params.require(:car).permit(
+      :car_name, :transmission, :fuel_type, :car_make, :image,
+      :price_per_day, :rating, :number_of_seat, :address, :country,
+      :min_rental_duration, :min_advance_notice, :max_rental_duration,
+      :availability_start_date, :availability_end_date, :owner_rules,
+      :car_type, features: []
+    )
   end
 end
