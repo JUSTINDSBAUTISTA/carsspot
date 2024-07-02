@@ -1,7 +1,7 @@
 <h1>Cars</h1>
 <p><%= pluralize(@cars.count, 'car') %> found</p>
 
-<div class="filter-container" data-controller="date-picker car filter">
+<div class="filter-container" data-controller="date-picker car dropdown modal">
   <input type="text" class="search-input" placeholder="Specific address, station, subway station...">
   <div class="date-time-picker">
     <input type="text" data-date-picker-target="startDate" class="date-input" placeholder="Pickup Date">
@@ -12,24 +12,169 @@
     <input type="text" data-date-picker-target="endTime" class="time-input" placeholder="Return Time">
   </div>
   <div>
-    <button class="filter-button dropdown-toggle" onclick="toggleDropdown()">Vehicle type</button>
-    <div class="dropdown-menu" id="vehicleTypeDropdown">
+    <button class="filter-button dropdown-toggle" data-action="click->dropdown#toggleDropdown">Vehicle type</button>
+    <div class="dropdown-menu" id="vehicleTypeDropdown" data-dropdown-target="dropdown">
       <h3>VEHICLE TYPE</h3>
       <div class="vehicle-types">
         <% @car_types.each do |type| %>
-          <button class="vehicle-type" data-type="<%= type %>" onclick="selectType(event)">
+          <button class="vehicle-type" data-type="<%= type %>" data-action="click->dropdown#selectType" data-dropdown-target="vehicleTypeButton">
             <i class="fas fa-car"></i> <%= type %>
           </button>
         <% end %>
       </div>
       <div class="dropdown-actions">
-        <button class="reset-button" onclick="resetFilters()">Reset</button>
-        <button class="apply-button" onclick="applyTypes()">Apply</button>
+        <button class="reset-button" data-action="click->dropdown#resetFilters">Reset</button>
+        <button class="apply-button" data-action="click->dropdown#applyTypes">Apply</button>
       </div>
     </div>
   </div>
   <button class="filter-button">Reserved parking</button>
-  <button class="filter-button" onclick="toggleModal()">More filters</button>
+  <button class="filter-button" data-action="click->modal#toggleModal">More filters</button>
+  
+  <!-- Filters Modal should be inside the same controller scope -->
+  <%= form_with url: cars_path, method: :get, local: true do |form| %>
+    <div id="filters-modal" class="modal" data-modal-target="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Filters</h2>
+          <button type="button" class="close" data-action="click->modal#closeModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <h3>Instant Booking</h3>
+          <div class="checkbox-wrapper-9">
+            <%= form.check_box :instant_booking, class: "tgl tgl-flat", id: "cb-instant-booking" %>
+            <label class="tgl-btn" for="cb-instant-booking"></label>
+          </div>
+          <hr>
+          <h3>Number of Places</h3>
+          <div>
+            <label>Minimum number of places.</label>
+            <div class="quantity">
+              <button class="minus" aria-label="Decrease">&minus;</button>
+              <%= form.number_field :number_of_places, value: 2, min: 1, class: "input-box" %>
+              <button class="plus" aria-label="Increase">&plus;</button>
+            </div>
+          </div>
+          <hr>
+          <h3>Recent Cars Only</h3>
+          <div class="checkbox-wrapper-9">
+            <%= form.check_box :recent_cars, class: "tgl tgl-flat", id: "cb-recent-cars" %>
+            <label class="tgl-btn" for="cb-recent-cars"></label>
+          </div>
+          <hr>
+          <h3>Equipment</h3>
+          <div class="equipment">
+            <% ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de toit', 'Régulateur de vitesse', 'Pneus neige', 'Chaines', 'Apple CarPlay', 'Android Auto', 'Quatre roues motrices'].each do |equipment| %>
+              <div class="checkbox-wrapper-33">
+                <label class="checkbox">
+                  <%= check_box_tag "equipment[]", equipment, false, class: "checkbox__trigger visuallyhidden" %>
+                  <span class="checkbox__symbol">
+                    <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 14l8 7L24 7"></path>
+                    </svg>
+                  </span>
+                  <p class="checkbox__textwrapper"><%= equipment %></p>
+                </label>
+              </div>
+            <% end %>
+          </div>
+          <hr>
+          <h3>Gearbox</h3>
+          <div class="gearbox">
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "gearbox[]", "All", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">All</p>
+              </label>
+            </div>
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "gearbox[]", "Manual gearbox", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">Manual gearbox</p>
+              </label>
+            </div>
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "gearbox[]", "Automatic box", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">Automatic box</p>
+              </label>
+            </div>
+          </div>
+          <hr>
+          <h3>Engine</h3>
+          <div class="engine">
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "engine[]", "Electric", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">Electric</p>
+              </label>
+            </div>
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "engine[]", "Hybrid", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">Hybrid</p>
+              </label>
+            </div>
+            <div class="checkbox-wrapper-33">
+              <label class="checkbox">
+                <%= check_box_tag "engine[]", "Combustion", false, class: "checkbox__trigger visuallyhidden" %>
+                <span class="checkbox__symbol">
+                  <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 14l8 7L24 7"></path>
+                  </svg>
+                </span>
+                <p class="checkbox__textwrapper">Combustion</p>
+              </label>
+            </div>
+          </div>
+          <hr>
+          <h3>Brand</h3>
+          <div class="brand">
+            <% ['Renault', 'Peugeot', 'Mercedes-Benz', 'Audi', 'Alfa-Romeo', 'BMW', 'Chevrolet', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Land-Rover', 'Mazda', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Seat', 'Skoda', 'Smart', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'].each do |brand| %>
+              <div class="checkbox-wrapper-33">
+                <label class="checkbox">
+                  <%= check_box_tag "brand[]", brand, false, class: "checkbox__trigger visuallyhidden" %>
+                  <span class="checkbox__symbol">
+                    <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 14l8 7L24 7"></path>
+                    </svg>
+                  </span>
+                  <p class="checkbox__textwrapper"><%= brand %></p>
+                </label>
+              </div>
+            <% end %>
+          </div>
+          <hr>
+          <button class="apply-button" type="submit">Apply Filters</button>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <div class="main-container">
@@ -46,239 +191,7 @@
   </div>
 </div>
 
-<!-- Filters Modal -->
-<%= form_with url: cars_path, method: :get, local: true do |form| %>
-<div id="filters-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="modal-title">Filters</h2>
-      <button type="button" class="close" onclick="closeModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <h3>Instant Booking</h3>
-      <div class="checkbox-wrapper-9">
-        <%= form.check_box :instant_booking, class: "tgl tgl-flat", id: "cb-instant-booking" %>
-        <label class="tgl-btn" for="cb-instant-booking"></label>
-      </div>
-      <hr>
 
-      <h3>Number of Places</h3>
-      <div>
-        <label>Minimum number of places.</label>
-        <div class="quantity">
-          <button class="minus" aria-label="Decrease">&minus;</button>
-          <%= form.number_field :number_of_places, value: 2, min: 1, class: "input-box" %>
-          <button class="plus" aria-label="Increase">&plus;</button>
-        </div>
-      </div>
-      <hr>
-
-      <h3>Recent Cars Only</h3>
-      <div class="checkbox-wrapper-9">
-        <%= form.check_box :recent_cars, class: "tgl tgl-flat", id: "cb-recent-cars" %>
-        <label class="tgl-btn" for="cb-recent-cars"></label>
-      </div>
-      <hr>
-
-      <h3>Equipment</h3>
-      <div class="equipment">
-        <% ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de toit', 'Régulateur de vitesse', 'Pneus neige', 'Chaines', 'Apple CarPlay', 'Android Auto', 'Quatre roues motrices'].each do |equipment| %>
-          <div class="checkbox-wrapper-33">
-            <label class="checkbox">
-              <%= check_box_tag "equipment[]", equipment, false, class: "checkbox__trigger visuallyhidden" %>
-              <span class="checkbox__symbol">
-                <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 14l8 7L24 7"></path>
-                </svg>
-              </span>
-              <p class="checkbox__textwrapper"><%= equipment %></p>
-            </label>
-          </div>
-        <% end %>
-      </div>
-      <hr>
-
-      <h3>Gearbox</h3>
-      <div class="gearbox">
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "gearbox[]", "All", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">All</p>
-          </label>
-        </div>
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "gearbox[]", "Manual gearbox", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">Manual gearbox</p>
-          </label>
-        </div>
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "gearbox[]", "Automatic box", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">Automatic box</p>
-          </label>
-        </div>
-      </div>
-      <hr>
-
-      <h3>Engine</h3>
-      <div class="engine">
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "engine[]", "Electric", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">Electric</p>
-          </label>
-        </div>
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "engine[]", "Hybrid", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">Hybrid</p>
-          </label>
-        </div>
-        <div class="checkbox-wrapper-33">
-          <label class="checkbox">
-            <%= check_box_tag "engine[]", "Combustion", false, class: "checkbox__trigger visuallyhidden" %>
-            <span class="checkbox__symbol">
-              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14l8 7L24 7"></path>
-              </svg>
-            </span>
-            <p class="checkbox__textwrapper">Combustion</p>
-          </label>
-        </div>
-      </div>
-      <hr>
-
-      <h3>Brand</h3>
-      <div class="brand">
-        <% ['Renault', 'Peugeot', 'Mercedes-Benz', 'Audi', 'Alfa-Romeo', 'BMW', 'Chevrolet', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Land-Rover', 'Mazda', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Seat', 'Skoda', 'Smart', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'].each do |brand| %>
-          <div class="checkbox-wrapper-33">
-            <label class="checkbox">
-              <%= check_box_tag "brand[]", brand, false, class: "checkbox__trigger visuallyhidden" %>
-              <span class="checkbox__symbol">
-                <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 14l8 7L24 7"></path>
-                </svg>
-              </span>
-              <p class="checkbox__textwrapper"><%= brand %></p>
-            </label>
-          </div>
-        <% end %>
-      </div>
-      <hr>
-
-      <button class="apply-button" type="submit">Apply Filters</button>
-    </div>
-  </div>
-</div>
-<% end %>
-
-<script>
-(function() {
-  if (window.selectedTypesInitialized) return;
-  window.selectedTypesInitialized = true;
-
-  let selectedTypes = [];
-
-  window.toggleDropdown = function() {
-    const dropdown = document.getElementById("vehicleTypeDropdown");
-    dropdown.classList.toggle("show");
-  }
-
-  window.toggleModal = function() {
-    const modal = document.getElementById("filters-modal");
-    modal.style.display = "block";
-  }
-
-  window.closeModal = function() {
-    const modal = document.getElementById("filters-modal");
-    modal.style.display = "none";
-  }
-
-  window.selectType = function(event) {
-    const button = event.currentTarget;
-    const type = button.getAttribute("data-type");
-    if (selectedTypes.includes(type)) {
-      selectedTypes = selectedTypes.filter(t => t !== type);
-      button.classList.remove("selected");
-    } else {
-      selectedTypes.push(type);
-      button.classList.add("selected");
-    }
-  }
-
-  window.applyTypes = function() {
-    const params = new URLSearchParams(window.location.search);
-    params.set('car_types', selectedTypes.join(','));
-    window.location.search = params.toString();
-  }
-
-  window.resetFilters = function() {
-    selectedTypes = [];
-    document.querySelectorAll('.vehicle-type.selected').forEach(button => {
-      button.classList.remove('selected');
-    });
-    const params = new URLSearchParams(window.location.search);
-    params.delete('car_types');
-    window.history.replaceState({}, document.title, `${window.location.pathname}?${params.toString()}`);
-  }
-
-  window.onclick = function(event) {
-    const modal = document.getElementById("filters-modal");
-    const dropdown = document.getElementById("vehicleTypeDropdown");
-
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-
-    if (!event.target.matches('.filter-button.dropdown-toggle')) {
-      if (dropdown && dropdown.classList.contains('show')) {
-        dropdown.classList.remove('show');
-      }
-    }
-  }
-
-  // Maintain selected types on page reload
-  window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('car_types')) {
-      selectedTypes = params.get('car_types').split(',');
-      selectedTypes.forEach(type => {
-        const button = document.querySelector(`.vehicle-type[data-type="${type}"]`);
-        if (button) {
-          button.classList.add('selected');
-        }
-      });
-    }
-  }
-})();
-
-</script>
 
 
 <style>
