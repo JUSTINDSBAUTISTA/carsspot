@@ -10,8 +10,12 @@ export default class extends Controller {
 
   connect() {
     this.initializeMap()
-    this.addMarkersToMap()
-    this.fitMapToMarkers()
+    if (this.markersValue.length > 0) {
+      this.addMarkersToMap()
+      this.fitMapToMarkers()
+    } else {
+      console.log("No markers to display")
+    }
     this.addHoverListeners()
   }
 
@@ -34,30 +38,49 @@ export default class extends Controller {
     this.markersMap = {}
 
     this.markersValue.forEach((marker) => {
-      console.log(`Adding marker for car ${marker.id}`) // Log marker addition
-      const popup = new mapboxgl.Popup().setHTML(marker.info_window_html)
+      if (marker.lng && marker.lat) {  // Ensure marker has valid lng and lat
+        console.log(`Adding marker for car ${marker.id}`) // Log marker addition
+        const popup = new mapboxgl.Popup().setHTML(marker.info_window_html)
 
-      // Create a custom marker element
-      const el = document.createElement('div')
-      el.className = 'custom-marker'
-      el.style.backgroundImage = 'url(https://cdn4.iconfinder.com/data/icons/map-pins-2/256/13-1024.png)'
-      el.style.width = '50px'
-      el.style.height = '50px'
-      el.style.backgroundSize = 'cover'
+        // Create a custom marker element
+        const el = document.createElement('div')
+        el.className = 'custom-marker'
+        el.style.backgroundImage = 'url(https://cdn4.iconfinder.com/data/icons/map-pins-2/256/13-1024.png)'
+        el.style.width = '50px'
+        el.style.height = '50px'
+        el.style.backgroundSize = 'cover'
 
-      const mapMarker = new mapboxgl.Marker(el)
-        .setLngLat([marker.lng, marker.lat])
-        .setPopup(popup)
-        .addTo(this.map)
+        const mapMarker = new mapboxgl.Marker(el)
+          .setLngLat([marker.lng, marker.lat])
+          .setPopup(popup)
+          .addTo(this.map)
 
-      this.markersMap[marker.id] = mapMarker
+        this.markersMap[marker.id] = mapMarker
+      } else {
+        console.log(`Skipping marker for car ${marker.id} due to invalid coordinates`)
+      }
     })
     console.log('All markers:', this.markersMap) // Log all markers
   }
 
   fitMapToMarkers() {
+    if (this.markersValue.length === 0) {
+      console.log("No markers to fit bounds to")
+      return // Do nothing if there are no markers
+    }
+
     const bounds = new mapboxgl.LngLatBounds()
-    this.markersValue.forEach(marker => bounds.extend([marker.lng, marker.lat]))
+    this.markersValue.forEach(marker => {
+      if (marker.lng && marker.lat) { // Ensure marker has valid lng and lat
+        bounds.extend([marker.lng, marker.lat])
+      }
+    })
+    
+    if (bounds.isEmpty()) {
+      console.log("Bounds are empty, not fitting map")
+      return // Prevent fitting map to empty bounds
+    }
+    
     this.map.fitBounds(bounds, { padding: 70, maxZoom: 15, duration: 0 })
   }
 

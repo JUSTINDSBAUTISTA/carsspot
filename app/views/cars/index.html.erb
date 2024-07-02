@@ -12,52 +12,24 @@
     <input type="text" data-date-picker-target="endTime" class="time-input" placeholder="Return Time">
   </div>
   <div>
-    <button class="filter-button dropdown-toggle" data-action="click->car#toggle">Vehicle type</button>
-    <div class="dropdown-menu" data-car-target="menu">
+    <button class="filter-button dropdown-toggle" onclick="toggleDropdown()">Vehicle type</button>
+    <div class="dropdown-menu" id="vehicleTypeDropdown">
       <h3>VEHICLE TYPE</h3>
       <div class="vehicle-types">
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Commercial">
-          <i class="fas fa-truck"></i> Commercial
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="City">
-          <i class="fas fa-car"></i> City
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Sedan">
-          <i class="fas fa-car-side"></i> Sedan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Family">
-          <i class="fas fa-caravan"></i> Family
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Minibus">
-          <i class="fas fa-shuttle-van"></i> Minibus
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="4x4">
-          <i class="fas fa-car"></i> 4x4
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Convertible">
-          <i class="fas fa-car"></i> Convertible
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Coupe">
-          <i class="fas fa-car"></i> Coupe
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Antique">
-          <i class="fas fa-car"></i> Antique
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="Campervan">
-          <i class="fas fa-caravan"></i> Campervan
-        </button>
-        <button class="vehicle-type" data-action="click->car#selectType" data-type="SUV">
-          <i class="fas fa-car"></i> SUV
-        </button>
+        <% @car_types.each do |type| %>
+          <button class="vehicle-type" data-type="<%= type %>" onclick="selectType(event)">
+            <i class="fas fa-car"></i> <%= type %>
+          </button>
+        <% end %>
       </div>
       <div class="dropdown-actions">
-        <button class="reset-button" data-action="click->car#resetFilters">Reset</button>
-        <button class="apply-button" data-action="click->car#applyTypes">Apply</button>
+        <button class="reset-button" onclick="resetFilters()">Reset</button>
+        <button class="apply-button" onclick="applyTypes()">Apply</button>
       </div>
     </div>
   </div>
   <button class="filter-button">Reserved parking</button>
-  <button class="filter-button" data-action="click->filter#toggle">More filters</button>
+  <button class="filter-button" onclick="toggleModal()">More filters</button>
 </div>
 
 <div class="main-container">
@@ -73,5 +45,592 @@
     <div id="map"></div>
   </div>
 </div>
-<%= render 'shared/filters_modal' %>
 
+<!-- Filters Modal -->
+<%= form_with url: cars_path, method: :get, local: true do |form| %>
+<div id="filters-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">Filters</h2>
+      <button type="button" class="close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>Instant Booking</h3>
+      <div class="checkbox-wrapper-9">
+        <%= form.check_box :instant_booking, class: "tgl tgl-flat", id: "cb-instant-booking" %>
+        <label class="tgl-btn" for="cb-instant-booking"></label>
+      </div>
+      <hr>
+
+      <h3>Number of Places</h3>
+      <div>
+        <label>Minimum number of places.</label>
+        <div class="quantity">
+          <button class="minus" aria-label="Decrease">&minus;</button>
+          <%= form.number_field :number_of_places, value: 2, min: 1, class: "input-box" %>
+          <button class="plus" aria-label="Increase">&plus;</button>
+        </div>
+      </div>
+      <hr>
+
+      <h3>Recent Cars Only</h3>
+      <div class="checkbox-wrapper-9">
+        <%= form.check_box :recent_cars, class: "tgl tgl-flat", id: "cb-recent-cars" %>
+        <label class="tgl-btn" for="cb-recent-cars"></label>
+      </div>
+      <hr>
+
+      <h3>Equipment</h3>
+      <div class="equipment">
+        <% ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de toit', 'Régulateur de vitesse', 'Pneus neige', 'Chaines', 'Apple CarPlay', 'Android Auto', 'Quatre roues motrices'].each do |equipment| %>
+          <div class="checkbox-wrapper-33">
+            <label class="checkbox">
+              <%= check_box_tag "equipment[]", equipment, false, class: "checkbox__trigger visuallyhidden" %>
+              <span class="checkbox__symbol">
+                <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 14l8 7L24 7"></path>
+                </svg>
+              </span>
+              <p class="checkbox__textwrapper"><%= equipment %></p>
+            </label>
+          </div>
+        <% end %>
+      </div>
+      <hr>
+
+      <h3>Gearbox</h3>
+      <div class="gearbox">
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "gearbox[]", "All", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">All</p>
+          </label>
+        </div>
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "gearbox[]", "Manual gearbox", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">Manual gearbox</p>
+          </label>
+        </div>
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "gearbox[]", "Automatic box", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">Automatic box</p>
+          </label>
+        </div>
+      </div>
+      <hr>
+
+      <h3>Engine</h3>
+      <div class="engine">
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "engine[]", "Electric", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">Electric</p>
+          </label>
+        </div>
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "engine[]", "Hybrid", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">Hybrid</p>
+          </label>
+        </div>
+        <div class="checkbox-wrapper-33">
+          <label class="checkbox">
+            <%= check_box_tag "engine[]", "Combustion", false, class: "checkbox__trigger visuallyhidden" %>
+            <span class="checkbox__symbol">
+              <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14l8 7L24 7"></path>
+              </svg>
+            </span>
+            <p class="checkbox__textwrapper">Combustion</p>
+          </label>
+        </div>
+      </div>
+      <hr>
+
+      <h3>Brand</h3>
+      <div class="brand">
+        <% ['Renault', 'Peugeot', 'Mercedes-Benz', 'Audi', 'Alfa-Romeo', 'BMW', 'Chevrolet', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Land-Rover', 'Mazda', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Seat', 'Skoda', 'Smart', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo'].each do |brand| %>
+          <div class="checkbox-wrapper-33">
+            <label class="checkbox">
+              <%= check_box_tag "brand[]", brand, false, class: "checkbox__trigger visuallyhidden" %>
+              <span class="checkbox__symbol">
+                <svg aria-hidden="true" class="icon-checkbox" width="28px" height="28px" viewBox="0 0 28 28" version="1" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 14l8 7L24 7"></path>
+                </svg>
+              </span>
+              <p class="checkbox__textwrapper"><%= brand %></p>
+            </label>
+          </div>
+        <% end %>
+      </div>
+      <hr>
+
+      <button class="apply-button" type="submit">Apply Filters</button>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script>
+(function() {
+  if (window.selectedTypesInitialized) return;
+  window.selectedTypesInitialized = true;
+
+  let selectedTypes = [];
+
+  window.toggleDropdown = function() {
+    const dropdown = document.getElementById("vehicleTypeDropdown");
+    dropdown.classList.toggle("show");
+  }
+
+  window.toggleModal = function() {
+    const modal = document.getElementById("filters-modal");
+    modal.style.display = "block";
+  }
+
+  window.closeModal = function() {
+    const modal = document.getElementById("filters-modal");
+    modal.style.display = "none";
+  }
+
+  window.selectType = function(event) {
+    const button = event.currentTarget;
+    const type = button.getAttribute("data-type");
+    if (selectedTypes.includes(type)) {
+      selectedTypes = selectedTypes.filter(t => t !== type);
+      button.classList.remove("selected");
+    } else {
+      selectedTypes.push(type);
+      button.classList.add("selected");
+    }
+  }
+
+  window.applyTypes = function() {
+    const params = new URLSearchParams(window.location.search);
+    params.set('car_types', selectedTypes.join(','));
+    window.location.search = params.toString();
+  }
+
+  window.resetFilters = function() {
+    selectedTypes = [];
+    document.querySelectorAll('.vehicle-type.selected').forEach(button => {
+      button.classList.remove('selected');
+    });
+    const params = new URLSearchParams(window.location.search);
+    params.delete('car_types');
+    window.history.replaceState({}, document.title, `${window.location.pathname}?${params.toString()}`);
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("filters-modal");
+    const dropdown = document.getElementById("vehicleTypeDropdown");
+
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+
+    if (!event.target.matches('.filter-button.dropdown-toggle')) {
+      if (dropdown && dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+      }
+    }
+  }
+
+  // Maintain selected types on page reload
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('car_types')) {
+      selectedTypes = params.get('car_types').split(',');
+      selectedTypes.forEach(type => {
+        const button = document.querySelector(`.vehicle-type[data-type="${type}"]`);
+        if (button) {
+          button.classList.add('selected');
+        }
+      });
+    }
+  }
+})();
+
+</script>
+
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 80%;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+
+  .modal-title {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin: 0;
+  }
+
+  .close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+  }
+
+  h3 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  .quantity {
+    display: flex;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+  }
+
+  .quantity button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+
+  .quantity button:hover {
+    background-color: #388E3C;
+  }
+
+  .input-box {
+    width: 50px;
+    text-align: center;
+    border: none;
+    padding: 8px 0;
+    font-size: 16px;
+    outline: none;
+    height: 30px;
+  }
+
+  /* Hide the number input spin buttons */
+  .input-box::-webkit-inner-spin-button,
+  .input-box::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .input-box[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .checkbox-wrapper-33 {
+    --s-xsmall: 0.625em;
+    --s-small: 1.2em;
+    --border-width: 1px;
+    --c-primary: #4CAF50;
+    --c-primary-20-percent-opacity: rgb(76 175 80 / 20%);
+    --c-primary-10-percent-opacity: rgb(76 175 80 / 10%);
+    --t-base: 0.4s;
+    --t-fast: 0.2s;
+    --e-in: ease-in;
+    --e-out: cubic-bezier(.11, .29, .18, .98);
+  }
+
+  .checkbox-wrapper-33 .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .checkbox-wrapper-33 .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .checkbox-wrapper-33 .checkbox + .checkbox {
+    margin-top: var(--s-small);
+  }
+
+  .checkbox-wrapper-33 .checkbox__symbol {
+    display: inline-block;
+    display: flex;
+    margin-right: calc(var(--s-small) * 0.7);
+    border: var(--border-width) solid var(--c-primary);
+    position: relative;
+    border-radius: 0.1em;
+    width: 1.5em;
+    height: 1.5em;
+    transition: box-shadow var(--t-base) var(--e-out), background-color var(--t-base);
+    box-shadow: 0 0 0 0 var(--c-primary-10-percent-opacity);
+  }
+
+  .checkbox-wrapper-33 .checkbox__symbol:after {
+    content: "";
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    width: 0.25em;
+    height: 0.25em;
+    background-color: var(--c-primary-20-percent-opacity);
+    opacity: 0;
+    border-radius: 3em;
+    transform: scale(1);
+    transform-origin: 50% 50%;
+  }
+
+  .checkbox-wrapper-33 .checkbox .icon-checkbox {
+    width: 1em;
+    height: 1em;
+    margin: auto;
+    fill: none;
+    stroke-width: 3;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-miterlimit: 10;
+    color: var(--c-primary);
+    display: inline-block;
+  }
+
+  .checkbox-wrapper-33 .checkbox .icon-checkbox path {
+    transition: stroke-dashoffset var(--t-fast) var(--e-in);
+    stroke-dasharray: 30px, 31px;
+    stroke-dashoffset: 31px;
+  }
+
+  .checkbox-wrapper-33 .checkbox__textwrapper {
+    margin: 0;
+  }
+
+  .checkbox-wrapper-33 .checkbox__trigger:checked + .checkbox__symbol:after {
+    -webkit-animation: ripple-33 1.5s var(--e-out);
+    animation: ripple-33 1.5s var(--e-out);
+  }
+
+  .checkbox-wrapper-33 .checkbox__trigger:checked + .checkbox__symbol .icon-checkbox path {
+    transition: stroke-dashoffset var(--t-base) var(--e-out);
+    stroke-dashoffset: 0px;
+  }
+
+  .checkbox-wrapper-33 .checkbox__trigger:focus + .checkbox__symbol {
+    box-shadow: 0 0 0 0.25em var(--c-primary-20-percent-opacity);
+  }
+
+  @-webkit-keyframes ripple-33 {
+    from {
+      transform: scale(0);
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      transform: scale(20);
+    }
+  }
+
+  @keyframes ripple-33 {
+    from {
+      transform: scale(0);
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      transform: scale(20);
+    }
+  }
+
+  .checkbox-wrapper-9 .tgl {
+    display: none;
+  }
+
+  .checkbox-wrapper-9 .tgl,
+  .checkbox-wrapper-9 .tgl:after,
+  .checkbox-wrapper-9 .tgl:before,
+  .checkbox-wrapper-9 .tgl *,
+  .checkbox-wrapper-9 .tgl *:after,
+  .checkbox-wrapper-9 .tgl *:before,
+  .checkbox-wrapper-9 .tgl + .tgl-btn {
+    box-sizing: border-box;
+  }
+
+  .checkbox-wrapper-9 .tgl::-moz-selection,
+  .checkbox-wrapper-9 .tgl:after::-moz-selection,
+  .checkbox-wrapper-9 .tgl:before::-moz-selection,
+  .checkbox-wrapper-9 .tgl *::-moz-selection,
+  .checkbox-wrapper-9 .tgl *:after::-moz-selection,
+  .checkbox-wrapper-9 .tgl *:before::-moz-selection,
+  .checkbox-wrapper-9 .tgl + .tgl-btn::-moz-selection,
+  .checkbox-wrapper-9 .tgl::selection,
+  .checkbox-wrapper-9 .tgl:after::selection,
+  .checkbox-wrapper-9 .tgl:before::selection,
+  .checkbox-wrapper-9 .tgl *::selection,
+  .checkbox-wrapper-9 .tgl *:after::selection,
+  .checkbox-wrapper-9 .tgl *:before::selection,
+  .checkbox-wrapper-9 .tgl + .tgl-btn::selection {
+    background: none;
+  }
+
+  .checkbox-wrapper-9 .tgl + .tgl-btn {
+    outline: 0;
+    display: block;
+    width: 4em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .checkbox-wrapper-9 .tgl + .tgl-btn:after,
+  .checkbox-wrapper-9 .tgl + .tgl-btn:before {
+    position: relative;
+    display: block;
+    content: "";
+    width: 50%;
+    height: 100%;
+  }
+
+  .checkbox-wrapper-9 .tgl + .tgl-btn:after {
+    left: 0;
+  }
+
+  .checkbox-wrapper-9 .tgl + .tgl-btn:before {
+    display: none;
+  }
+
+  .checkbox-wrapper-9 .tgl:checked + .tgl-btn:after {
+    left: 50%;
+  }
+
+  .checkbox-wrapper-9 .tgl-flat + .tgl-btn {
+    padding: 2px;
+    transition: all 0.2s ease;
+    background: #fff;
+    border: 4px solid #f2f2f2;
+    border-radius: 2em;
+  }
+
+  .checkbox-wrapper-9 .tgl-flat + .tgl-btn:after {
+    transition: all 0.2s ease;
+    background: #f2f2f2;
+    content: "";
+    border-radius: 1em;
+  }
+
+  .checkbox-wrapper-9 .tgl-flat:checked + .tgl-btn {
+    border: 4px solid #7FC6A6;
+  }
+
+  .checkbox-wrapper-9 .tgl-flat:checked + .tgl-btn:after {
+    left: 50%;
+    background: #7FC6A6;
+  }
+
+  .brand-button {
+    background-color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5px;
+  }
+
+  .brand-button:hover {
+    background-color: #f0f0f0;
+  }
+
+  .apply-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+
+  .dropdown-menu {
+    display: none;
+  }
+
+  .dropdown-menu.show {
+    display: block;
+  }
+
+  .vehicle-type.selected {
+    background-color: #4CAF50;
+    color: white;
+  }
+</style>

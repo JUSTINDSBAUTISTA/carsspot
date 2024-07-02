@@ -59,6 +59,9 @@ cities = ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
 # Car types
 car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
 
+# Features list
+features_list = ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de toit', 'Régulateur de vitesse', 'Pneus neige', 'Chaines', 'Apple CarPlay', 'Android Auto', 'Quatre roues motrices']
+
 # Create 30 cars and assign them to users
 30.times do
   address = "#{Faker::Address.street_address}, #{cities.sample}, Canada"
@@ -71,9 +74,9 @@ car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convert
     price_per_day: Faker::Commerce.price(range: 50..150),
     status: ['approved', 'pending'].sample, # Randomly assign approved or pending status
     image: car_images.sample,
-    features: Faker::Vehicle.standard_specs.join(', '),
-    transmission: Faker::Vehicle.transmission,
-    fuel_type: Faker::Vehicle.fuel_type,
+    features: features_list.sample(rand(5..features_list.size)), # Randomly select a subset of features
+    transmission: ['Manual gearbox', 'Automatic box'].sample,
+    fuel_type: ['Electric', 'Hybrid', 'Combustion'].sample,
     number_of_seat: Faker::Number.between(from: 2, to: 8),
     rating: Faker::Number.between(from: 1, to: 5),
     address: address,
@@ -87,7 +90,8 @@ car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convert
     owner_rules: Faker::Lorem.sentence,
     country: 'Canada',
     mileage: Faker::Number.between(from: 1000, to: 100000),
-    car_type: car_types.sample # Adding car type
+    car_type: car_types.sample, # Adding car type
+    instant_booking: [true, false].sample # Randomly assign instant booking status
   )
   car.save!
 end
