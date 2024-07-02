@@ -1,70 +1,40 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu"]
+  static targets = ["modal"]
 
   connect() {
-    this.resetCarTypesOnLoad()
-    document.addEventListener('click', this.handleClickOutside.bind(this))
-  }
-
-  disconnect() {
-    document.removeEventListener('click', this.handleClickOutside.bind(this))
-  }
-
-  handleClickOutside(event) {
-    if (!this.element.contains(event.target)) {
-      this.menuTarget.classList.remove("show")
-    }
+    this.modal = document.getElementById('filters-modal')
   }
 
   toggle() {
-    this.menuTarget.classList.toggle("show")
+    this.modal.style.display = "block"
   }
 
-  selectType(event) {
-    event.currentTarget.classList.toggle("selected")
+  close() {
+    this.modal.style.display = "none"
   }
 
-  resetTypes() {
-    this.menuTarget.querySelectorAll('.selected').forEach(el => {
-      el.classList.remove('selected')
-    })
-  }
+  applyFilters() {
+    // Get filter values
+    const instantBooking = document.getElementById('instant-booking').checked
+    const numberOfPlaces = document.getElementById('number-of-places').value
+    const recentCars = document.getElementById('recent-cars').checked
 
-  applyTypes() {
-    const selectedTypes = Array.from(this.menuTarget.querySelectorAll('.selected'))
-      .map(el => el.dataset.type)
+    // Construct filter query params
+    const params = new URLSearchParams()
+    if (instantBooking) params.append('instant_booking', instantBooking)
+    if (numberOfPlaces) params.append('number_of_places', numberOfPlaces)
+    if (recentCars) params.append('recent_cars', recentCars)
 
-    const params = new URLSearchParams(window.location.search)
-    params.set('car_types', selectedTypes.join(','))
+    // Redirect with filter params
     window.location.search = params.toString()
+
+    // Close modal
+    this.close()
   }
 
-  resetFilters() {
-    this.resetTypes()
-    const params = new URLSearchParams(window.location.search)
-    params.delete('car_types')
-    window.history.replaceState({}, document.title, `${window.location.pathname}?${params.toString()}`)
-    this.clearCarFilters()
-  }
-
-  resetCarTypesOnLoad() {
-    const params = new URLSearchParams(window.location.search)
-    if (params.has('car_types')) {
-      params.delete('car_types')
-      window.history.replaceState({}, document.title, `${window.location.pathname}?${params.toString()}`)
-    }
-  }
-
-  clearCarFilters() {
-    fetch(`${window.location.pathname}?${new URLSearchParams(window.location.search)}`)
-      .then(response => response.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const newCarsContainer = doc.querySelector('.cars-container');
-        document.querySelector('.cars-container').innerHTML = newCarsContainer.innerHTML;
-      })
+  toggleMoreEquipment() {
+    // Logic to toggle more equipment
   }
 }

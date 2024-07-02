@@ -16,7 +16,39 @@
     <div class="dropdown-menu" data-car-target="menu">
       <h3>VEHICLE TYPE</h3>
       <div class="vehicle-types">
-        <!-- Vehicle Type Buttons -->
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Commercial">
+          <i class="fas fa-truck"></i> Commercial
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="City">
+          <i class="fas fa-car"></i> City
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Sedan">
+          <i class="fas fa-car-side"></i> Sedan
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Family">
+          <i class="fas fa-caravan"></i> Family
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Minibus">
+          <i class="fas fa-shuttle-van"></i> Minibus
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="4x4">
+          <i class="fas fa-car"></i> 4x4
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Convertible">
+          <i class="fas fa-car"></i> Convertible
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Coupe">
+          <i class="fas fa-car"></i> Coupe
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Antique">
+          <i class="fas fa-car"></i> Antique
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="Campervan">
+          <i class="fas fa-caravan"></i> Campervan
+        </button>
+        <button class="vehicle-type" data-action="click->car#selectType" data-type="SUV">
+          <i class="fas fa-car"></i> SUV
+        </button>
       </div>
       <div class="dropdown-actions">
         <button class="reset-button" data-action="click->car#resetFilters">Reset</button>
@@ -43,104 +75,65 @@
 </div>
 
 <!-- Filters Modal -->
-<div id="filters-modal" class="modal cobalt-modal__overlay" data-controller="filter">
-  <div class="modal-content cobalt-modal">
-    <div class="modal-header cobalt-modal-header">
-      <h2 class="cobalt-modal-header__title">Filters</h2>
-      <button type="button" class="close cobalt-modal-header__close-button" data-action="click->filter#close">
-        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-      </button>
-    </div>
-    <div class="modal-body cobalt-modal-body cobalt-modal-body--bodySpacing cobalt-modal-body--hasHeader cobalt-modal-body--hasFooter">
-      <h3>Instant Booking</h3>
-      <label class="switch cobalt-ToggleSwitchField cobalt-ToggleSwitchField--standalone">
-        <input type="checkbox" id="instant-booking" class="cobalt-ToggleSwitchField__Input">
-        <span class="slider round cobalt-ToggleSwitchField__ToggleSwitch">
-          <span class="cobalt-ToggleSwitchField__ToggleSwitchSlider"></span>
-        </span>
-      </label>
+<div id="filters-modal" class="modal" data-controller="filter">
+  <div class="modal-content">
+    <span class="close" data-action="click->filter#close">&times;</span>
+    <h2>Filters</h2>
 
-      <h3>Number of Places</h3>
-      <div>
-        <label>Minimum number of places.</label>
-        <div class="quantity cobalt-Stepper">
-          <button class="quantity-minus cobalt-Stepper__ActionButton cob-Button cob-Button__default"><span class="cob-Button__content">-</span></button>
-          <input type="number" id="number-of-places" value="2" min="1" class="cobalt-Stepper__ContentWrapper">
-          <button class="quantity-plus cobalt-Stepper__ActionButton cob-Button cob-Button__default"><span class="cob-Button__content">+</span></button>
-        </div>
-      </div>
+    <h3>Instant Booking</h3>
+    <label class="switch">
+      <input type="checkbox" id="instant-booking">
+      <span class="slider round"></span>
+    </label>
 
-      <h3>Recent Cars Only</h3>
-      <label class="switch cobalt-ToggleSwitchField cobalt-ToggleSwitchField--standalone">
-        <input type="checkbox" id="recent-cars" class="cobalt-ToggleSwitchField__Input">
-        <span class="slider round cobalt-ToggleSwitchField__ToggleSwitch">
-          <span class="cobalt-ToggleSwitchField__ToggleSwitchSlider"></span>
-        </span>
-      </label>
-
-      <h3>Equipment</h3>
-      <div class="equipment cobalt-CheckablePillsGroup">
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-baby-carriage cobalt-Icon"></i> Baby seat</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-map-marked-alt cobalt-Icon"></i> GPS</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-snowflake cobalt-Icon"></i> Air conditioner</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-bicycle cobalt-Icon"></i> Bike rack</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-suitcase cobalt-Icon"></i> Coffre de toit</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-tachometer-alt cobalt-Icon"></i> Régulateur de vitesse</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-snowman cobalt-Icon"></i> Pneus neige</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-link cobalt-Icon"></i> Chaines</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fab fa-apple cobalt-Icon"></i> Apple CarPlay</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fab fa-android cobalt-Icon"></i> Android Auto</button>
-        <button class="equipment-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon"><i class="fas fa-car cobalt-Icon"></i> Quatre roues motrices</button>
-      </div>
-
-      <h3>Gearbox</h3>
-      <div class="gearbox cobalt-ChoiceList">
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="all" checked class="cobalt-CheckmarkField__Input"> All</label>
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="manual" class="cobalt-CheckmarkField__Input"> Manual gearbox</label>
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="radio" name="gearbox" value="automatic" class="cobalt-CheckmarkField__Input"> Automatic box</label>
-      </div>
-
-      <h3>Engine</h3>
-      <div class="engine cobalt-ChoiceList">
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-electric" class="cobalt-CheckmarkField__Input"> Electric</label>
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-hybrid" class="cobalt-CheckmarkField__Input"> Hybrid</label>
-        <label class="cobalt-CheckmarkField__LabelWrapper"><input type="checkbox" id="engine-combustion" class="cobalt-CheckmarkField__Input"> Combustion</label>
-      </div>
-
-      <h3>Brand</h3>
-      <div class="brand cobalt-CheckablePillsGroup">
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Renault</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Peugeot</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mercedes-Benz</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Audi</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Alfa-Romeo</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">BMW</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Chevrolet</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Citroen</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Dacia</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Fiat</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Ford</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Honda</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Hyundai</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Kia</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Land-Rover</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mazda</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mini</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Mitsubishi</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Nissan</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Opel</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Seat</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Skoda</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Smart</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Suzuki</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Tesla</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Toyota</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Volkswagen</button>
-        <button class="brand-button cobalt-CheckablePillField cobalt-CheckablePillField--with-icon">Volvo</button>
+    <h3>Number of Places</h3>
+    <div>
+      <label>Minimum number of places.</label>
+      <div class="quantity">
+        <button class="quantity-minus">-</button>
+        <input type="number" id="number-of-places" value="2" min="1">
+        <button class="quantity-plus">+</button>
       </div>
     </div>
-    <div class="modal-footer cobalt-modal-footer">
-      <button class="apply-button cob-Button cob-Button__default cob-Button__default--primary" data-action="click->filter#applyFilters">Apply Filters</button>
+
+    <h3>Recent Cars Only</h3>
+    <label class="switch">
+      <input type="checkbox" id="recent-cars">
+      <span class="slider round"></span>
+    </label>
+
+    <h3>Equipment</h3>
+    <div class="equipment">
+      <button class="vehicle-type"><i class="fas fa-baby"></i> Baby seat</button>
+      <button class="vehicle-type"><i class="fas fa-route"></i> GPS</button>
+      <button class="vehicle-type"><i class="fas fa-snowflake"></i> Air conditioner</button>
+      <button class="vehicle-type"><i class="fas fa-bicycle"></i> Bike rack</button>
+      <!-- Add more equipment buttons as needed -->
+      <button class="vehicle-type see-more" data-action="click->filter#toggleMoreEquipment">See more</button>
     </div>
+
+    <h3>Gearbox</h3>
+    <div class="gearbox">
+      <label><input type="radio" name="gearbox" value="all" checked> All</label>
+      <label><input type="radio" name="gearbox" value="manual"> Manual gearbox</label>
+      <label><input type="radio" name="gearbox" value="automatic"> Automatic box</label>
+    </div>
+
+    <h3>Engine</h3>
+    <div class="engine">
+      <label><input type="checkbox" id="electric"> Electric</label>
+      <label><input type="checkbox" id="hybrid"> Hybrid</label>
+      <label><input type="checkbox" id="combustion"> Combustion</label>
+    </div>
+
+    <h3>Brand</h3>
+    <div class="brand">
+      <button class="vehicle-type">Renault</button>
+      <button class="vehicle-type">Peugeot</button>
+      <button class="vehicle-type">Mercedes-Benz</button>
+      <!-- Add more brand buttons as needed -->
+    </div>
+
+    <button class="apply-button" data-action="click->filter#applyFilters">To research</button>
   </div>
 </div>
