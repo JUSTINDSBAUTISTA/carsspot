@@ -17,6 +17,15 @@ class Car < ApplicationRecord
 
   before_destroy :check_pending_status, prepend: true
 
+  # Scopes for filtering
+  scope :filter_by_instant_booking, -> (instant_booking) { where(instant_booking: instant_booking) }
+  scope :filter_by_number_of_places, -> (number_of_places) { where('number_of_seat >= ?', number_of_places) }
+  scope :filter_by_recent, -> (recent_cars) { where('created_at >= ?', 5.years.ago) if recent_cars == '1' }
+  scope :filter_by_equipment, -> (equipment) { where('features @> ARRAY[?]::text[]', equipment.map(&:to_s)) }
+  scope :filter_by_gearbox, -> (gearbox) { where(transmission: gearbox) }
+  scope :filter_by_engine, -> (engine) { where(fuel_type: engine) }
+  scope :filter_by_brand, -> (brand) { where(car_make: brand) }
+
   def image_url
     if image.present? && image.match?(URI::regexp(%w[http https]))
       image

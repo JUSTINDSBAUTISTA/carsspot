@@ -3,11 +3,17 @@ class CarsController < ApplicationController
   before_action :set_car, only: [:show, :edit, :update, :destroy]
 
   def index
+    @car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
     @cars = policy_scope(Car).where(status: 'approved')
 
-    if params[:car_types].present?
-      @cars = @cars.where(car_type: params[:car_types].split(','))
-    end
+    @cars = @cars.filter_by_instant_booking(params[:instant_booking]) if params[:instant_booking].present?
+    @cars = @cars.filter_by_number_of_places(params[:number_of_places]) if params[:number_of_places].present?
+    @cars = @cars.filter_by_recent(params[:recent_cars]) if params[:recent_cars].present?
+    @cars = @cars.filter_by_equipment(params[:equipment]) if params[:equipment].present?
+    @cars = @cars.filter_by_gearbox(params[:gearbox]) if params[:gearbox].present?
+    @cars = @cars.filter_by_engine(params[:engine]) if params[:engine].present?
+    @cars = @cars.filter_by_brand(params[:brand]) if params[:brand].present?
+    @cars = @cars.where(car_type: params[:car_types].split(',')) if params[:car_types].present?
 
     @markers = @cars.map do |car|
       {
@@ -88,6 +94,8 @@ class CarsController < ApplicationController
 
   def search
     authorize Car
+    @car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
+
     if params[:location].present? && !params[:location].downcase.include?("canada")
       redirect_to root_path, alert: "We don't operate in this country yet."
       return
