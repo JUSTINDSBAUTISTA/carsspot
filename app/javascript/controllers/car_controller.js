@@ -4,15 +4,15 @@ export default class extends Controller {
   static targets = ["modal"]
 
   connect() {
-    this.modal = document.getElementById('filters-modal')
+    this.modalTarget = document.getElementById('filters-modal')
   }
 
   toggle() {
-    this.modal.style.display = "block"
+    this.modalTarget.style.display = "block"
   }
 
   close() {
-    this.modal.style.display = "none"
+    this.modalTarget.style.display = "none"
   }
 
   applyFilters() {
