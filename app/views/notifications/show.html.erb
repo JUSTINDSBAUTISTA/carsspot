@@ -1,3 +1,4 @@
+<!-- app/views/notifications/show.html.erb -->
 <h1>Notification Details</h1>
 
 <div class="notification-details card">
@@ -5,7 +6,6 @@
 
   <% if @notification.notifiable_type == 'Car' %>
     <% car = @notification.notifiable %>
-
     <div class="car-info card">
       <h2>Car Information</h2>
       <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
@@ -24,6 +24,7 @@
     <% end %>
   <% end %>
 </div>
+
 
 <!-- Add some basic styling -->
 <style>

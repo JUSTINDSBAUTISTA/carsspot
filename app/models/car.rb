@@ -7,7 +7,8 @@ class Car < ApplicationRecord
   has_many :reviews, dependent: :destroy
 
   validates :status, inclusion: { in: %w[pending approved rejected] }
-  validates :car_type, presence: true # Add this validation
+  validates :car_type, presence: true
+  validates :image, presence: true
 
   after_initialize :set_default_status, if: :new_record?
   after_create :notify_admins
@@ -15,6 +16,16 @@ class Car < ApplicationRecord
   scope :pending_approval, -> { where(status: 'pending') }
 
   before_destroy :check_pending_status, prepend: true
+
+  def image_url
+    if image.present? && image.match?(URI::regexp(%w[http https]))
+      image
+    else
+      ActionController::Base.helpers.asset_path('fallback_image.png')
+    end
+  rescue
+    ActionController::Base.helpers.asset_path('fallback_image.png')
+  end
 
   private
 

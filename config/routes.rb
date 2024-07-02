@@ -1,14 +1,13 @@
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
-  get "up" => "rails/health#show", as: :rails_health_check
 
   resources :cars do
     collection do
       get :my_cars
       get :pending_approval
       get :search
-      get :filter # Add this line
+      get :filter
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy] do
       member do
@@ -42,6 +41,5 @@ Rails.application.routes.draw do
     end
   end
 
-  # Mount ActionCable server
   mount ActionCable.server => '/cable'
 end

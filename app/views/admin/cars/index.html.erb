@@ -4,9 +4,7 @@
   <% @cars.each do |car| %>
     <div class="car-pending-admin" id="<%= dom_id(car) %>">
       <h2><%= car.car_name %></h2>
-      <% if car.image.present? %>
-        <img src="<%= car.image %>" alt="<%= car.car_name %>">
-      <% end %>
+      <img src="<%= car.image_url %>" alt="<%= car.car_name %>">
       <p><strong>Make:</strong> <%= car.car_make %></p>
       <p><strong>Transmission:</strong> <%= car.transmission %></p>
       <p><strong>Fuel Type:</strong> <%= car.fuel_type %></p>
@@ -19,8 +17,8 @@
       <p><strong>Owner Email:</strong> <%= car.user.email %></p>
       <p><strong>Owner Phone:</strong> <%= car.user.phone_number %></p>
       <div class="admin-actions">
-        <%= link_to 'Approve', approve_admin_car_path(car), method: :patch, data: { turbo_method: :patch, confirm: 'Are you sure you want to approve this car?' }, class: 'btn btn-success' %>
-        <%= link_to 'Reject', reject_admin_car_path(car), method: :patch, data: { turbo_method: :patch, confirm: 'Are you sure you want to reject this car?' }, class: 'btn btn-danger' %>
+        <%= link_to 'Approve', approve_admin_car_path(car), method: :patch, data: { turbo_method: :patch, turbo_action: 'remove', confirm: 'Are you sure you want to approve this car?' }, class: 'btn btn-success' %>
+        <%= link_to 'Reject', reject_admin_car_path(car), method: :patch, data: { turbo_method: :patch, turbo_action: 'remove', confirm: 'Are you sure you want to reject this car?' }, class: 'btn btn-danger' %>
       </div>
     </div>
   <% end %>

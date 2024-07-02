@@ -2,7 +2,11 @@
 <% cars.each do |car| %>
   <div class="car-item" id="car-<%= car.id %>" onclick="location.href='<%= car_path(car) %>'">
     <div class="car-details">
-      <%= image_tag car.image, alt: car.car_name, class: "car-image" if car.image.present? %>
+      <% if car.image.present? %>
+        <%= image_tag car.image, alt: car.car_name, class: "car-image" rescue image_tag('fallback_image.png', alt: 'Fallback Image', class: 'car-image') %>
+      <% else %>
+        <%= image_tag 'fallback_image.png', alt: 'Fallback Image', class: 'car-image' %>
+      <% end %>
       <div class="car-info">
         <h2 class="car-name"><%= car.car_name %></h2>
         <p class="car-make"><%= car.car_make %></p>

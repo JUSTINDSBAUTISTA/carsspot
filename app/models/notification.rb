@@ -11,6 +11,11 @@ class Notification < ApplicationRecord
   end
 
   def url
+    unless notifiable.present?
+      Rails.logger.debug "Notifiable object is missing for notification ID: #{id}"
+      return Rails.application.routes.url_helpers.root_path
+    end
+
     generated_url = case notifiable
                     when Car
                       Rails.application.routes.url_helpers.car_path(notifiable)
@@ -22,7 +27,7 @@ class Notification < ApplicationRecord
                       Rails.application.routes.url_helpers.root_path
                     end
 
-    Rails.logger.debug "Generated URL for notification: #{generated_url}"
+    Rails.logger.debug "Generated URL for notification ID: #{id}, URL: #{generated_url}"
     generated_url
   end
 end

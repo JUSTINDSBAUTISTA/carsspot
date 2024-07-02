@@ -1,20 +1,21 @@
-<!-- app/views/notifications/_notification.html.erb -->
 <div class="notification <%= 'unread' unless notification.read %>">
   <p><strong>Message:</strong> <%= notification.message %></p>
 
   <% if notification.notifiable_type == 'Car' %>
     <% car = notification.notifiable %>
-
-    <div class="car-pending-admin">
-      <h2>Car Information</h2>
-      <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
-      <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
-      <p><strong>Price per Day:</strong> $<%= car.price_per_day %></p>
-      <p><strong>Status:</strong> <%= car.status %></p>
-    </div>
+    <% if car %>
+      <div class="car-pending-admin">
+        <h2>Car Information</h2>
+        <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
+        <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
+        <p><strong>Price per Day:</strong> $<%= car.price_per_day %></p>
+        <p><strong>Status:</strong> <%= car.status %></p>
+      </div>
+    <% else %>
+      <p>Car information not available.</p>
+    <% end %>
   <% end %>
 </div>
-
 
 <style>
  /* Notifications Page CSS (Admin Style) */
