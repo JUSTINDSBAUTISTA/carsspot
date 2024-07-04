@@ -8,6 +8,8 @@
     <p><strong>Driving License:</strong> <%= rental.driving_license %></p>
     <p><strong>ID Proof:</strong> <%= rental.id_proof %></p>
     <p><strong>Status:</strong> <%= rental.status %></p>
+    <p><strong>User Name:</strong> <%= rental.user.name %></p>
+    <p><strong>User Email:</strong> <%= rental.user.email %></p>
     <%= link_to 'Edit', edit_rental_path(rental), class: 'btn btn-secondary' %>
     <%= link_to 'Delete', rental, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
   </div>

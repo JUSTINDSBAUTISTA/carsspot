@@ -1,10 +1,21 @@
 <h1>Rental Details</h1>
 
+<p><strong>Today's Date:</strong> <%= Date.today %></p>
 <p><strong>Car Name:</strong> <%= @rental.car&.car_name || 'No car selected' %></p>
 <p><strong>Start Date:</strong> <%= @rental.start_date %></p>
 <p><strong>End Date:</strong> <%= @rental.end_date %></p>
 <p><strong>Driving License:</strong> <%= @rental.driving_license %></p>
 <p><strong>ID Proof:</strong> <%= @rental.id_proof %></p>
+<p><strong>User Name:</strong> <%= @rental.user&.name || 'No user assigned' %></p>
+<p><strong>User Email:</strong> <%= @rental.user&.email || 'No user assigned' %></p>
 
-<%= link_to 'Edit', edit_rental_path(@rental) %> |
-<%= link_to 'Back', rentals_path %>
+<% if current_user == @rental.user %>
+  <%= link_to 'Edit', edit_rental_path(@rental), class: 'btn btn-primary' %>
+<% end %>
+
+<% if current_user == @rental.car.user && @rental.status == 'pending' %>
+  <%= link_to 'Approve', approve_car_rental_path(@rental.car, @rental), method: :patch, class: 'btn btn-success', data: { confirm: 'Are you sure you want to approve this rental?' } %>
+  <%= link_to 'Reject', reject_car_rental_path(@rental.car, @rental), method: :patch, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to reject this rental?' } %>
+<% end %>
+
+<%= link_to 'View All Rentals', rentals_path, class: 'btn btn-secondary' %>

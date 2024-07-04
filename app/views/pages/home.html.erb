@@ -13,39 +13,35 @@
   </div>
 
 <!-- app/views/home/index.html.erb -->
-<div class="search-bar">
-  <div class="input-group">
-    <div class="input-item">
-      <i class="fas fa-map-marker-alt"></i>
-      <div class="input-wrapper">
-        <label for="location">Location</label>
-        <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", class: "location-input" %>
+<%= form_with url: search_cars_path, method: :get, id: "search-form" do %>
+  <div class="search-bar">
+    <div class="input-group">
+      <div class="input-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <div class="input-wrapper">
+          <label for="location">Location</label>
+          <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", name: "location", class: "location-input", data: { address_target: "address" } %>
+        </div>
       </div>
-    </div>
-    <div class="input-item">
-      <i class="fas fa-calendar-alt"></i>
-      <div class="input-wrapper">
-        <label for="pickup_date">Pickup date</label>
-        <%= date_field_tag :pickup_date, nil, placeholder: "Pickup date", id: "pickup_date" %>
+      <div class="input-item">
+        <i class="fas fa-calendar-alt"></i>
+        <div class="input-wrapper">
+          <label for="pickup_date">Pickup date</label>
+          <%= date_field_tag :pickup_date, nil, placeholder: "Pickup date", id: "pickup_date", name: "pickup_date" %>
+        </div>
       </div>
-    </div>
-    <div class="input-item">
-      <i class="fas fa-calendar-alt"></i>
-      <div class="input-wrapper">
-        <label for="return_date">Return date</label>
-        <%= date_field_tag :return_date, nil, placeholder: "Return date", id: "return_date" %>
+      <div class="input-item">
+        <i class="fas fa-calendar-alt"></i>
+        <div class="input-wrapper">
+          <label for="return_date">Return date</label>
+          <%= date_field_tag :return_date, nil, placeholder: "Return date", id: "return_date", name: "return_date" %>
+        </div>
       </div>
-    </div>
-    <div class="input-item search-button-wrapper">
-      <%= button_tag "Search", class: "search-button", form: "search-form" %>
+      <div class="input-item search-button-wrapper">
+        <%= button_tag "Search", class: "search-button" %>
+      </div>
     </div>
   </div>
-</div>
-
-<%= form_with url: search_cars_path, method: :get, id: "search-form" do %>
-  <%= hidden_field_tag :location %>
-  <%= hidden_field_tag :pickup_date %>
-  <%= hidden_field_tag :return_date %>
 <% end %>
 
 
@@ -120,22 +116,7 @@
       </div>
     </div>
   </div>
-
-  <div class="popular-rental-deals">
-    <h2>Most popular cars rental deals</h2>
-    <div class="car-deals">
-      <% @cars.each do |car| %>
-        <div class="car-deal">
-          <%= image_tag car.image, alt: car.car_name %>
-          <h3><%= car.car_name %></h3>
-          <p>Price: $<%= car.price_per_day %>/day</p>
-          <p>Rating: <%= car.rating %></p>
-          <%= link_to "Rent now", new_rental_path(car_id: car.id), class: "rent-button" %>
-        </div>
-      <% end %>
-    </div>
-    <%= link_to "Show all cars", all_cars_path, class: "show-all-button" %>
-  </div>
+<%= render 'pages/popular_rental_deals' %>
 
   <div class="testimonials">
     <h2>What people say about us?</h2>
