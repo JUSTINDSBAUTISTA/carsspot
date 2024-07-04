@@ -1,7 +1,3 @@
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-}
 
 .navbar-lewagon {
   background-color: white;
@@ -48,11 +44,18 @@ body {
 .navbar-nav .nav-item .dropdown-menu {
   border-radius: 5px;
   border: 1px solid #ccc;
+  max-width: 300px; /* Limit the width of the dropdown */
+  word-wrap: break-word; /* Ensure long text wraps within the dropdown */
+  z-index: 1050; /* Ensure dropdown appears on top of other elements */
+  overflow: hidden; /* Ensure content doesn't overflow */
 }
 
 .navbar-nav .nav-item .dropdown-menu .dropdown-item {
   color: #333;
   padding: 10px 20px;
+  white-space: normal; /* Allow text to wrap within the item */
+  word-wrap: break-word; /* Ensure long words break and wrap within the item */
+  overflow-wrap: break-word; /* Ensure long words break and wrap within the item */
 }
 
 .navbar-nav .nav-item .dropdown-menu .dropdown-item:hover {
@@ -99,4 +102,10 @@ body {
 .navbar-nav .nav-item {
   position: relative;
   margin-right: 20px; /* Adjust to create more space between items */
+}
+
+/* Additional styling for the dropdown to ensure it appears on top */
+.dropdown-menu {
+  position: absolute;
+  z-index: 1050; /* Ensure dropdown appears on top of other elements */
 }

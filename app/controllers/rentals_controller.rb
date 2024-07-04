@@ -22,7 +22,9 @@ class RentalsController < ApplicationController
     @rental.car = @car
     authorize @rental
 
-    if @rental.save
+    if @car.user == current_user
+      redirect_to @car, alert: 'You cannot rent your own car.'
+    elsif @rental.save
       Notification.create(
         recipient: @car.user,
         actor: current_user,
@@ -56,34 +58,42 @@ class RentalsController < ApplicationController
   end
 
   def approve
-    authorize @rental
-    if @rental.update(status: 'approved')
-      Notification.create(
-        recipient: @rental.car.user,
-        actor: current_user,
-        notifiable: @rental,
-        message: "#{current_user.name} approved the rental request for #{@rental.car.car_name}",
-        read: false
-      )
-      redirect_to rentals_path, notice: 'Rental approved successfully.'
+    authorize @rental, :approve?
+    if @rental.status == 'pending'
+      if @rental.update(status: 'approved')
+        Notification.create(
+          recipient: @rental.user,
+          actor: current_user,
+          notifiable: @rental,
+          message: "Your rental request for #{@rental.car.car_name} has been approved.",
+          read: false
+        )
+        redirect_to notifications_path, notice: 'Rental approved successfully.'
+      else
+        redirect_to notifications_path, alert: 'Failed to approve the rental.'
+      end
     else
-      redirect_to rentals_path, alert: 'Failed to approve the rental.'
+      redirect_to notifications_path, alert: 'Rental has already been processed.'
     end
   end
 
   def reject
-    authorize @rental
-    if @rental.update(status: 'rejected')
-      Notification.create(
-        recipient: @rental.car.user,
-        actor: current_user,
-        notifiable: @rental,
-        message: "#{current_user.name} rejected the rental request for #{@rental.car.car_name}",
-        read: false
-      )
-      redirect_to rentals_path, notice: 'Rental rejected successfully.'
+    authorize @rental, :reject?
+    if @rental.status == 'pending'
+      if @rental.update(status: 'rejected')
+        Notification.create(
+          recipient: @rental.user,
+          actor: current_user,
+          notifiable: @rental,
+          message: "Your rental request for #{@rental.car.car_name} has been rejected.",
+          read: false
+        )
+        redirect_to notifications_path, notice: 'Rental rejected successfully.'
+      else
+        redirect_to notifications_path, alert: 'Failed to reject the rental.'
+      end
     else
-      redirect_to rentals_path, alert: 'Failed to reject the rental.'
+      redirect_to notifications_path, alert: 'Rental has already been processed.'
     end
   end
 

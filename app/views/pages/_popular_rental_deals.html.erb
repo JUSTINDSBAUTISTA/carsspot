@@ -1,0 +1,15 @@
+  <div class="popular-rental-deals">
+    <h2>Most popular cars rental deals</h2>
+    <div class="car-deals">
+      <% @cars.each do |car| %>
+        <div class="car-deal">
+          <%= image_tag car.image, alt: car.car_name %>
+          <h3><%= car.car_name %></h3>
+          <p>Price: $<%= car.price_per_day %>/day</p>
+          <p>Rating: <%= car.rating %></p>
+          <%= link_to "Rent now", new_rental_path(car_id: car.id), class: "rent-button" %>
+        </div>
+      <% end %>
+    </div>
+    <%= link_to "Show all cars", all_cars_path, class: "show-all-button" %>
+  </div>

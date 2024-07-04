@@ -4,7 +4,7 @@ class RentalPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    user == record.user || user == record.car.user
   end
 
   def create?
@@ -16,7 +16,7 @@ class RentalPolicy < ApplicationPolicy
   end
 
   def update?
-    user == record.user
+    user == record.user || user == record.car.user
   end
 
   def edit?
@@ -27,9 +27,21 @@ class RentalPolicy < ApplicationPolicy
     user == record.user
   end
 
+  def approve?
+    user == record.car.user
+  end
+
+  def reject?
+    user == record.car.user
+  end
+
   class Scope < Scope
     def resolve
-      scope.all
+      if user.admin?
+        scope.all
+      else
+        scope.where("user_id = ? OR car_id IN (?)", user.id, user.cars.pluck(:id))
+      end
     end
   end
 end

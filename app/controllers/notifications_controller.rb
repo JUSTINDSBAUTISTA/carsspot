@@ -26,26 +26,23 @@ class NotificationsController < ApplicationController
     if @notification
       authorize @notification
       notifiable = @notification.notifiable
-      if notifiable.is_a?(Car)
+      if notifiable.is_a?(Rental) && current_user == notifiable.car.user
         if notifiable.update(status: 'approved')
           @notification.update(read: true)
-          create_status_notification(notifiable, 'approved')
-          redirect_to notifications_path, notice: 'Car was successfully approved.'
-        else
-          Rails.logger.error "Failed to approve car: #{notifiable.errors.full_messages.join(', ')}"
-          redirect_to notifications_path, alert: 'Unable to approve car.'
-        end
-      elsif notifiable.is_a?(Rental)
-        if notifiable.update(status: 'approved')
-          @notification.update(read: true)
-          create_status_notification(notifiable, 'approved')
+          Notification.create!(
+            recipient: notifiable.user,
+            actor: current_user,
+            notifiable: notifiable,
+            message: "Your rental request for #{notifiable.car.car_name} has been approved.",
+            read: false
+          )
           redirect_to notifications_path, notice: 'Rental was successfully approved.'
         else
           Rails.logger.error "Failed to approve rental: #{notifiable.errors.full_messages.join(', ')}"
           redirect_to notifications_path, alert: 'Unable to approve rental.'
         end
       else
-        Rails.logger.error "Notifiable is neither a Car nor a Rental: #{notifiable.class.name}"
+        Rails.logger.error "Notifiable is not a Rental or unauthorized action: #{notifiable.class.name}"
         redirect_to notifications_path, alert: 'Unable to approve item.'
       end
     else
@@ -58,26 +55,23 @@ class NotificationsController < ApplicationController
     if @notification
       authorize @notification
       notifiable = @notification.notifiable
-      if notifiable.is_a?(Car)
+      if notifiable.is_a?(Rental) && current_user == notifiable.car.user
         if notifiable.update(status: 'rejected')
           @notification.update(read: true)
-          create_status_notification(notifiable, 'rejected')
-          redirect_to notifications_path, notice: 'Car was successfully rejected.'
-        else
-          Rails.logger.error "Failed to reject car: #{notifiable.errors.full_messages.join(', ')}"
-          redirect_to notifications_path, alert: 'Unable to reject car.'
-        end
-      elsif notifiable.is_a?(Rental)
-        if notifiable.update(status: 'rejected')
-          @notification.update(read: true)
-          create_status_notification(notifiable, 'rejected')
+          Notification.create!(
+            recipient: notifiable.user,
+            actor: current_user,
+            notifiable: notifiable,
+            message: "Your rental request for #{notifiable.car.car_name} has been rejected.",
+            read: false
+          )
           redirect_to notifications_path, notice: 'Rental was successfully rejected.'
         else
           Rails.logger.error "Failed to reject rental: #{notifiable.errors.full_messages.join(', ')}"
           redirect_to notifications_path, alert: 'Unable to reject rental.'
         end
       else
-        Rails.logger.error "Notifiable is neither a Car nor a Rental: #{notifiable.class.name}"
+        Rails.logger.error "Notifiable is not a Rental or unauthorized action: #{notifiable.class.name}"
         redirect_to notifications_path, alert: 'Unable to reject item.'
       end
     else
@@ -94,14 +88,5 @@ class NotificationsController < ApplicationController
       Rails.logger.warn "Notification with ID #{params[:id]} not found"
       redirect_to notifications_path, alert: 'Notification not found.'
     end
-  end
-
-  def create_status_notification(notifiable, status)
-    Notification.create!(
-      recipient: notifiable.user,
-      actor: current_user,
-      notifiable: notifiable,
-      message: "Your #{notifiable.class.name.downcase} (#{notifiable.try(:car_name) || notifiable.try(:name)}) has been #{status}."
-    )
   end
 end

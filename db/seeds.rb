@@ -63,11 +63,12 @@ car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convert
 features_list = ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de toit', 'Régulateur de vitesse', 'Pneus neige', 'Chaines', 'Apple CarPlay', 'Android Auto', 'Quatre roues motrices']
 
 # Create 30 cars and assign them to users
+cars = []
 30.times do
   address = "#{Faker::Address.street_address}, #{cities.sample}, Canada"
   latitude = Faker::Address.latitude
   longitude = Faker::Address.longitude
-  car = Car.new(
+  car = Car.create!(
     user: users.sample,
     car_name: Faker::Vehicle.model,
     car_make: Faker::Vehicle.make,
@@ -93,15 +94,15 @@ features_list = ['Baby seat', 'GPS', 'Air conditioner', 'Bike rack', 'Coffre de 
     car_type: car_types.sample, # Adding car type
     instant_booking: [true, false].sample # Randomly assign instant booking status
   )
-  car.save!
+  cars << car
 end
 
 # Create rentals
-Rental.create!([
-  { user: users[1], car: Car.first, start_date: '2024-07-01', end_date: '2024-07-10', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
-  { user: users[2], car: Car.second, start_date: '2024-07-05', end_date: '2024-07-12', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
-  { user: users[3], car: Car.third, start_date: '2024-07-15', end_date: '2024-07-20', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
-  { user: users[0], car: Car.fourth, start_date: '2024-07-18', end_date: '2024-07-25', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city }
+rentals = Rental.create!([
+  { user: users[1], car: cars[0], start_date: '2024-07-01', end_date: '2024-07-10', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
+  { user: users[2], car: cars[1], start_date: '2024-07-05', end_date: '2024-07-12', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
+  { user: users[3], car: cars[2], start_date: '2024-07-15', end_date: '2024-07-20', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city },
+  { user: users[0], car: cars[3], start_date: '2024-07-18', end_date: '2024-07-25', driving_license: Faker::DrivingLicence.british_driving_licence, id_proof: Faker::IdNumber.valid, status: 'pending', location: Faker::Address.city }
 ])
 
 # Create messages
@@ -116,7 +117,7 @@ Message.create!([
 users.each do |user|
   Favorite.create!(
     user: user,
-    car: Car.all.sample,
+    car: cars.sample,
     shared_with: Faker::Internet.email
   )
 end
@@ -125,7 +126,7 @@ end
 users.each do |user|
   Review.create!(
     user: user,
-    car: Car.all.sample,
+    car: cars.sample,
     rating: Faker::Number.between(from: 1, to: 5),
     comment: Faker::Lorem.sentence
   )
@@ -145,12 +146,14 @@ end
 
 # Create rental notifications for car owners
 Rental.where(status: 'pending').each do |rental|
+  next if rental.car.user == rental.user # Ensure car owner does not get notified for their own rental
+
   Notification.create!(
     recipient: rental.car.user,
     actor: rental.user,
     notifiable: rental,
     notifiable_type: 'Rental',
-    message: "You have a new rental request",
+    message: "You have a new rental request from #{rental.user.name} for your car #{rental.car.car_name}",
     read: false
   )
 end
