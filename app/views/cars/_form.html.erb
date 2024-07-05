@@ -1,4 +1,4 @@
-<%= form_with(model: @car, local: true, html: { class: "car-form" }) do |form| %>
+<%= form_with(model: @car, local: true, html: { class: "car-form", data: { controller: "form" } }) do |form| %>
   <% if @car.errors.any? %>
     <div id="error_explanation" class="error-explanation">
       <h2><%= pluralize(@car.errors.count, "error") %> prohibited this car from being saved:</h2>
@@ -10,140 +10,228 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <%= form.label :car_name, class: "form-label" %>
-    <%= form.text_field :car_name, class: "form-input" %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :car_type, class: "form-label" %>
-    <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input" %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :features, class: "form-label" %>
-    <div class="feature-options">
-      <label class="feature-option">
-        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Air Conditioning') }, 'Air Conditioning', nil %>
-        <i class="fas fa-snowflake"></i> Air Conditioning
-      </label>
-      <label class="feature-option">
-        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('GPS') }, 'GPS', nil %>
-        <i class="fas fa-map-marker-alt"></i> GPS
-      </label>
-      <label class="feature-option">
-        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bluetooth') }, 'Bluetooth', nil %>
-        <i class="fas fa-bluetooth"></i> Bluetooth
-      </label>
-      <label class="feature-option">
-        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Cruise Control') }, 'Cruise Control', nil %>
-        <i class="fas fa-tachometer-alt"></i> Cruise Control
-      </label>
-      <label class="feature-option">
-        <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Backup Camera') }, 'Backup Camera', nil %>
-        <i class="fas fa-camera"></i> Backup Camera
-      </label>
+  <div class="form-step form-step-active" data-form-target="step">
+    <div class="form-group">
+      <%= form.label :car_name, class: "form-label" %>
+      <%= form.text_field :car_name, class: "form-input" %>
     </div>
-  </div>
 
-  <div class="form-group">
-    <%= form.label :transmission, class: "form-label" %>
-    <div class="feature-options">
-      <label class="feature-option">
-        <%= form.radio_button :transmission, 'Automatic', checked: @car.transmission == 'Automatic' %>
-        <i class="fas fa-cogs"></i> Automatic
-      </label>
-      <label class="feature-option">
-        <%= form.radio_button :transmission, 'Manual', checked: @car.transmission == 'Manual' %>
-        <i class="fas fa-cog"></i> Manual
-      </label>
+    <div class="form-group">
+      <%= form.label :car_type, class: "form-label" %>
+      <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input" %>
     </div>
+
+    <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
   </div>
 
-  <div class="form-group">
-    <%= form.label :fuel_type, class: "form-label" %>
-    <div class="feature-options">
-      <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Petrol', checked: @car.fuel_type == 'Petrol' %>
-        <i class="fas fa-gas-pump"></i> Petrol
-      </label>
-      <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Diesel', checked: @car.fuel_type == 'Diesel' %>
-        <i class="fas fa-oil-can"></i> Diesel
-      </label>
-      <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Electric', checked: @car.fuel_type == 'Electric' %>
-        <i class="fas fa-charging-station"></i> Electric
-      </label>
-      <label class="feature-option">
-        <%= form.radio_button :fuel_type, 'Hybrid', checked: @car.fuel_type == 'Hybrid' %>
-        <i class="fas fa-leaf"></i> Hybrid
-      </label>
+  <div class="form-step" data-form-target="step">
+    <div class="form-group">
+      <%= form.label :car_brand, "Brand", class: "form-label" %>
+      <%= form.select :car_brand, options_for_select(['Renault', 'Peugeot', 'Mercedes-Benz', 'Audi', 'Alfa-Romeo', 'BMW', 'Chevrolet', 'Citroen', 'Dacia', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Land-Rover', 'Mazda', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Seat', 'Skoda', 'Smart', 'Suzuki', 'Tesla', 'Toyota', 'Volkswagen', 'Volvo']), {}, class: "form-input" %>
     </div>
+
+    <div class="form-group">
+      <%= form.label :features, class: "form-label" %>
+      <div class="feature-options">
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Air Conditioning') }, 'Air Conditioning', nil %>
+          <i class="fas fa-snowflake"></i> Air Conditioning
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Cruise Control') }, 'Cruise Control', nil %>
+          <i class="fas fa-tachometer-alt"></i> Cruise Control
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('GPS') }, 'GPS', nil %>
+          <i class="fas fa-map-marker-alt"></i> GPS
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Baby Seat') }, 'Baby Seat', nil %>
+          <i class="fas fa-child"></i> Baby Seat
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Roof Box') }, 'Roof Box', nil %>
+          <i class="fas fa-car-top"></i> Roof Box
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bike Rack') }, 'Bike Rack', nil %>
+          <i class="fas fa-bicycle"></i> Bike Rack
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Winter Tires') }, 'Winter Tires', nil %>
+          <i class="fas fa-snowflake"></i> Winter Tires
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Snow Chains') }, 'Snow Chains', nil %>
+          <i class="fas fa-snowflake"></i> Snow Chains
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Ski Racks') }, 'Ski Racks', nil %>
+          <i class="fas fa-skiing"></i> Ski Racks
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Audio / iPod Input') }, 'Audio / iPod Input', nil %>
+          <i class="fas fa-music"></i> Audio / iPod Input
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bluetooth Audio') }, 'Bluetooth Audio', nil %>
+          <i class="fas fa-bluetooth"></i> Bluetooth Audio
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Hitch') }, 'Hitch', nil %>
+          <i class="fas fa-trailer"></i> Hitch
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Wheelchair Accessible') }, 'Wheelchair Accessible', nil %>
+          <i class="fas fa-wheelchair"></i> Wheelchair Accessible
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Apple CarPlay') }, 'Apple CarPlay', nil %>
+          <i class="fas fa-car"></i> Apple CarPlay
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Android Auto') }, 'Android Auto', nil %>
+          <i class="fab fa-android"></i> Android Auto
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Dashcam') }, 'Dashcam', nil %>
+          <i class="fas fa-video"></i> Dashcam
+        </label>
+        <label class="feature-option">
+          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Four-wheel Drive') }, 'Four-wheel Drive', nil %>
+          <i class="fas fa-car"></i> Four-wheel Drive
+        </label>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
+    <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
   </div>
 
-  <div class="form-group">
-    <%= form.label :car_make, class: "form-label" %>
-    <%= form.text_field :car_make, class: "form-input" %>
+  <div class="form-step" data-form-target="step">
+    <div class="form-group">
+      <%= form.label :transmission, class: "form-label" %>
+      <div class="feature-options">
+        <label class="feature-option">
+          <%= form.radio_button :transmission, 'Automatic', checked: @car.transmission == 'Automatic' %>
+          <i class="fas fa-cogs"></i> Automatic
+        </label>
+        <label class="feature-option">
+          <%= form.radio_button :transmission, 'Manual', checked: @car.transmission == 'Manual' %>
+          <i class="fas fa-cog"></i> Manual
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :fuel_type, class: "form-label" %>
+      <div class="feature-options">
+        <label class="feature-option">
+          <%= form.radio_button :fuel_type, 'Petrol', checked: @car.fuel_type == 'Petrol' %>
+          <i class="fas fa-gas-pump"></i> Petrol
+        </label>
+        <label class="feature-option">
+          <%= form.radio_button :fuel_type, 'Diesel', checked: @car.fuel_type == 'Diesel' %>
+          <i class="fas fa-oil-can"></i> Diesel
+        </label>
+        <label class="feature-option">
+          <%= form.radio_button :fuel_type, 'Electric', checked: @car.fuel_type == 'Electric' %>
+          <i class="fas fa-charging-station"></i> Electric
+        </label>
+        <label class="feature-option">
+          <%= form.radio_button :fuel_type, 'Hybrid', checked: @car.fuel_type == 'Hybrid' %>
+          <i class="fas fa-leaf"></i> Hybrid
+        </label>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
+    <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
   </div>
 
-  <div class="form-group">
-    <%= form.label :image, class: "form-label" %>
-    <%= form.text_field :image, class: "form-input" %>
+  <div class="form-step" data-form-target="step">
+    <div class="form-group">
+      <%= form.label :car_make, class: "form-label" %>
+      <%= form.text_field :car_make, class: "form-input" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :plate_number, class: "form-label" %>
+      <%= form.text_field :plate_number, class: "form-input" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :mileage, class: "form-label" %>
+      <%= form.select :mileage, options_for_select(['0-15,000 km', '15-50,000 km', '50-100,000 km', '100-150,000 km', '150-200,000 km', '+200,000 km']), {}, class: "form-input" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :number_of_doors, "Number of Doors", class: "form-label" %>
+      <%= form.select :number_of_doors, options_for_select(['2', '3', '4', '5', '6', '7+']), {}, class: "form-input" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :number_of_seat, "Number of Seats", class: "form-label" %>
+      <%= form.select :number_of_seat, options_for_select(['2', '3', '4', '5', '6', '7', '8', '9+']), {}, class: "form-input" %>
+    </div>
+
+    <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
+    <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
   </div>
 
-  <div class="form-group">
-    <%= form.label :price_per_day, class: "form-label" %>
-    <%= form.number_field :price_per_day, class: "form-input" %>
-  </div>
+  <div class="form-step" data-form-target="step">
+    <div class="form-group">
+      <%= form.label :image, class: "form-label" %>
+      <%= form.text_field :image, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :rating, class: "form-label" %>
-    <%= form.number_field :rating, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :price_per_day, class: "form-label" %>
+      <%= form.number_field :price_per_day, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :number_of_seat, class: "form-label" %>
-    <%= form.number_field :number_of_seat, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :rating, class: "form-label" %>
+      <%= form.number_field :rating, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :address, class: "form-label" %>
-    <%= form.text_field :address, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :address, class: "form-label" %>
+      <%= form.text_field :address, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :min_rental_duration, "Minimum Rental Duration (days)", class: "form-label" %>
-    <%= form.number_field :min_rental_duration, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :min_rental_duration, "Minimum Rental Duration (days)", class: "form-label" %>
+      <%= form.number_field :min_rental_duration, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :max_rental_duration, "Maximum Rental Duration (days)", class: "form-label" %>
-    <%= form.number_field :max_rental_duration, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :max_rental_duration, "Maximum Rental Duration (days)", class: "form-label" %>
+      <%= form.number_field :max_rental_duration, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :min_advance_notice, "Minimum Advance Notice (days)", class: "form-label" %>
-    <%= form.number_field :min_advance_notice, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :min_advance_notice, "Minimum Advance Notice (days)", class: "form-label" %>
+      <%= form.number_field :min_advance_notice, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :availability_start_date, class: "form-label" %>
-    <%= form.date_field :availability_start_date, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :availability_start_date, class: "form-label" %>
+      <%= form.date_field :availability_start_date, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :availability_end_date, class: "form-label" %>
-    <%= form.date_field :availability_end_date, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :availability_end_date, class: "form-label" %>
+      <%= form.date_field :availability_end_date, class: "form-input" %>
+    </div>
 
-  <div class="form-group">
-    <%= form.label :owner_rules, class: "form-label" %>
-    <%= form.text_area :owner_rules, class: "form-input" %>
-  </div>
+    <div class="form-group">
+      <%= form.label :owner_rules, class: "form-label" %>
+      <%= form.text_area :owner_rules, class: "form-input" %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
+    <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
+    <%= form.submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
 
@@ -247,4 +335,78 @@
   .btn-primary:hover {
     background-color: #0056b3;
   }
+
+
+
+.form-step {
+  display: none;
+}
+
+.form-step-active {
+  display: block;
+}
+
+.car-form .form-group {
+  margin-bottom: 15px;
+}
+
+.car-form .form-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.car-form .form-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.car-form .feature-options {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.car-form .feature-option {
+  flex: 1 1 30%;
+  margin-bottom: 10px;
+}
+
+.car-form .btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.car-form .btn:hover {
+  background-color: #0056b3;
+}
+
+.car-form .btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.car-form .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.car-form .btn-primary {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.car-form .btn-primary:hover {
+  background-color: #0056b3;
+}
+
 </style>

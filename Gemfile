@@ -53,6 +53,9 @@ gem "sassc-rails"
 gem "pundit"
 gem "faker"
 gem "flatpickr"
+# Gemfile
+gem 'geocoder'
+
 
 group :development, :test do
   gem "dotenv-rails"
@@ -78,3 +81,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+# Gemfile

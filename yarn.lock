@@ -386,6 +386,11 @@ gl-matrix@^3.4.3:
   resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.4.3.tgz#fc1191e8320009fd4d20e9339595c6041ddc22c9"
   integrity sha512-wcCp8vu8FT22BnvKVPjXa/ICBWRq/zjFfdofZy1WSpQZpphblv12/bOQLBC1rMM7SGOFS9ltVmKOHil5+Ml7gA==
 
+gmaps@^0.4.25:
+  version "0.4.25"
+  resolved "https://registry.yarnpkg.com/gmaps/-/gmaps-0.4.25.tgz#ea98fa83668fb07b879b47d989b5ee1504d33455"
+  integrity sha512-a2qZl3SMbfGow02WUWWH9+Cc0kVrUCnhSh+b13P7XTi8pauLHpa0A/8rYK9x4C/iPdkfAY0FAOyuwqHnLPHi4w==
+
 got@^11.8.5:
   version "11.8.6"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.6.tgz#276e827ead8772eddbcfc97170590b841823233a"

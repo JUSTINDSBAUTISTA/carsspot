@@ -13,14 +13,14 @@
   </div>
 
 <!-- app/views/home/index.html.erb -->
-<%= form_with url: search_cars_path, method: :get, id: "search-form" do %>
+<%= form_with url: search_cars_path, method: :get, id: "search-form", data: { controller: "places-autocomplete" } do %>
   <div class="search-bar">
     <div class="input-group">
       <div class="input-item">
         <i class="fas fa-map-marker-alt"></i>
         <div class="input-wrapper">
           <label for="location">Location</label>
-          <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", name: "location", class: "location-input", data: { address_target: "address" } %>
+          <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", class: "location-input", data: { places_autocomplete_target: "input" } %>
         </div>
       </div>
       <div class="input-item">
@@ -48,6 +48,7 @@
 
 
 
+
   <div class="how-it-works">
     <h2>Rent with following 3 working steps</h2>
     <div class="steps">
@@ -69,6 +70,7 @@
     </div>
   </div>
 
+
   <div class="brand-logos">
     <img src="https://purepng.com/public/uploads/large/purepng.com-honda-car-logologocar-brand-logoscarshonda-car-logo-1701527428101lhn2z.png" alt="Honda">
     <img src="https://purepng.com/public/uploads/large/purepng.com-jaguar-car-logologocar-brand-logoscarsjaguar-car-logo-1701527428194ju6al.png" alt="Jaguar">
@@ -78,94 +80,119 @@
     <img src="https://purepng.com/public/uploads/large/purepng.com-mercedes-benz-car-logologocar-brand-logoscarsmercedes-benz-car-logo-1701527428463n3kha.png" alt="Mercedes">
   </div>
 
-  <div class="why-choose-us">
-    <div class="feature-image">
-      <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Audi R8">
-    </div>
-    <div class="why-choose-us-content">
-      <h2>Why Choose Us</h2>
-      <div class="features">
-        <div class="feature">
-          <i class="fas fa-tags"></i>
-          <div class="feature-text">
-            <h3>Best price guaranteed</h3>
-            <p>Find a lower price? We'll refund you 100% of the difference.</p>
-          </div>
+<div class="why-choose-us" data-aos="fade-up">
+  <div class="feature-image" data-aos="zoom-in">
+    <img src="https://pngimg.com/uploads/audi/audi_PNG1769.png" alt="Audi R8">
+  </div>
+  <div class="why-choose-us-content">
+    <h2>Why Choose Us</h2>
+    <div class="features">
+      <div class="feature" data-aos="fade-right" data-aos-delay="200">
+        <i class="fas fa-tags"></i>
+        <div class="feature-text">
+          <h3>Best price guaranteed</h3>
+          <p>Find a lower price? We'll refund you 100% of the difference.</p>
         </div>
-        <div class="feature">
-          <i class="fas fa-user-tie"></i>
-          <div class="feature-text">
-            <h3>Experience driver</h3>
-            <p>Don't have a driver? Don't worry, we have many experienced drivers for you.</p>
-          </div>
+      </div>
+      <div class="feature" data-aos="fade-right" data-aos-delay="400">
+        <i class="fas fa-user-tie"></i>
+        <div class="feature-text">
+          <h3>Experience driver</h3>
+          <p>Don't have a driver? Don't worry, we have many experienced drivers for you.</p>
         </div>
-        <div class="feature">
-          <i class="fas fa-car-side"></i>
-          <div class="feature-text">
-            <h3>24 hour car delivery</h3>
-            <p>Book your car anytime and we will deliver it directly to you.</p>
-          </div>
+      </div>
+      <div class="feature" data-aos="fade-right" data-aos-delay="600">
+        <i class="fas fa-car-side"></i>
+        <div class="feature-text">
+          <h3>24 hour car delivery</h3>
+          <p>Book your car anytime and we will deliver it directly to you.</p>
         </div>
-        <div class="feature">
-          <i class="fas fa-headset"></i>
-          <div class="feature-text">
-            <h3>24/7 technical support</h3>
-            <p>Have a question? Contact Rentcars support any time when you have a problem.</p>
-          </div>
+      </div>
+      <div class="feature" data-aos="fade-right" data-aos-delay="800">
+        <i class="fas fa-headset"></i>
+        <div class="feature-text">
+          <h3>24/7 technical support</h3>
+          <p>Have a question? Contact Rentcars support any time when you have a problem.</p>
         </div>
       </div>
     </div>
   </div>
-<%= render 'pages/popular_rental_deals' %>
+</div>
 
-  <div class="testimonials">
-    <h2>What people say about us?</h2>
-    <div class="testimonial">
-      <p>"Excellent service and great cars!"</p>
-      <p>- John Doe</p>
+
+  <div class="popular-rental-deals" data-aos="fade-up">
+  <h2>Most popular cars rental deals</h2>
+  <div class="car-deals">
+    <% @cars.each do |car| %>
+      <div class="car-deal" data-aos="zoom-in">
+        <%= image_tag car.image, alt: car.car_name %>
+        <div class="description">
+          <h3><%= car.car_name %></h3>
+          <p>Price: $<%= car.price_per_day %>/day</p>
+          <p>Rating: <%= car.rating %></p>
+        </div>
+        <%= link_to "Rent now", new_rental_path(car_id: car.id), class: "rent-button" %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "Show all cars", all_cars_path, class: "show-all-button" %>
+</div>
+
+<div class="testimonials" data-aos="fade-up">
+  <h2>What people say about us?</h2>
+  <div class="testimonial" data-aos="fade-right">
+    <p>"Excellent service and great cars!"</p>
+    <p>- John Doe</p>
+  </div>
+  <div class="testimonial" data-aos="fade-right">
+    <p>"I loved the experience. Will rent again."</p>
+    <p>- Jane Smith</p>
+  </div>
+  <div class="testimonial" data-aos="fade-right">
+    <p>"Highly recommend for anyone needing a rental car."</p>
+    <p>- David Wilson</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-content" data-aos="fade-up">
+    <div class="footer-section">
+      <h3>Rentcars</h3>
+      <p>123 Main Street, Anytown, USA</p>
+      <p>Email: info@rentcars.com</p>
+      <p>Phone: (123) 456-7890</p>
     </div>
-    <div class="testimonial">
-      <p>"I loved the experience. Will rent again."</p>
-      <p>- Jane Smith</p>
+    <div class="footer-section">
+      <h3>Our Product</h3>
+      <ul>
+        <li><a href="#">Cars</a></li>
+        <li><a href="#">Deals</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
     </div>
-    <div class="testimonial">
-      <p>"Highly recommend for anyone needing a rental car."</p>
-      <p>- David Wilson</p>
+    <div class="footer-section">
+      <h3>Resources</h3>
+      <ul>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <i class="fab fa-facebook-f"></i>
+        <i class="fab fa-twitter"></i>
+        <i class="fab fa-instagram"></i>
+        <i class="fab fa-linkedin-in"></i>
+      </div>
     </div>
   </div>
+</footer>
 
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Rentcars</h3>
-        <p>123 Main Street, Anytown, USA</p>
-        <p>Email: info@rentcars.com</p>
-        <p>Phone: (123) 456-7890</p>
-      </div>
-      <div class="footer-section">
-        <h3>Our Product</h3>
-        <ul>
-          <li><a href="#">Cars</a></li>
-          <li><a href="#">Deals</a></li>
-          <li><a href="#">Support</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Resources</h3>
-        <ul>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">FAQ</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Follow Us</h3>
-        <div class="social-icons">
-          <i class="fab fa-facebook-f"></i>
-          <i class="fab fa-twitter"></i>
-          <i class="fab fa-instagram"></i>
-          <i class="fab fa-linkedin-in"></i>
-        </div>
-      </div>
-    </div>
-  </footer>
+
+<script>
+  AOS.init({
+    duration: 1200, // Animation duration
+  });
+</script>
