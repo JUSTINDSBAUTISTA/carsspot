@@ -7,17 +7,16 @@ class Car < ApplicationRecord
   has_many :reviews, dependent: :destroy
 
   validates :status, inclusion: { in: %w[pending approved rejected] }
-  validates :car_type, presence: true
-  validates :image, presence: true
+  validates :car_type, :image, :car_name, presence: true
+  validates :features, :transmission, :fuel_type, :car_make, :plate_number, :mileage, :number_of_doors, :number_of_seat, presence: false
+
+  geocoded_by :address
+  after_validation :geocode, if: :will_save_change_to_address?
 
   after_initialize :set_default_status, if: :new_record?
   after_create :notify_admins
 
   scope :pending_approval, -> { where(status: 'pending') }
-
-  before_destroy :check_pending_status, prepend: true
-
-  # Scopes for filtering
   scope :filter_by_instant_booking, -> (instant_booking) { where(instant_booking: instant_booking) }
   scope :filter_by_number_of_places, -> (number_of_places) { where('number_of_seat >= ?', number_of_places) }
   scope :filter_by_recent, -> (recent_cars) { where('created_at >= ?', 5.years.ago) if recent_cars == '1' }
