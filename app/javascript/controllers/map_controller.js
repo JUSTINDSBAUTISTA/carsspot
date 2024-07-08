@@ -55,6 +55,12 @@ export default class extends Controller {
           .setPopup(popup)
           .addTo(this.map)
 
+        // Add click event to open location in Google Maps
+        mapMarker.getElement().addEventListener('click', () => {
+          const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${marker.lat},${marker.lng}`
+          window.open(googleMapsUrl, '_blank')
+        })
+
         this.markersMap[marker.id] = mapMarker
       } else {
         console.log(`Skipping marker for car ${marker.id} due to invalid coordinates`)

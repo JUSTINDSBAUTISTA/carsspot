@@ -6,8 +6,9 @@ Rails.application.routes.draw do
     collection do
       get :my_cars
       get :pending_approval
-      get :search
+      get :search, to: 'cars#index'
       get :filter
+      get :confirm_vin  # Add this line to configure the route
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy] do
       member do

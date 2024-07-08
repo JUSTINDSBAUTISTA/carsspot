@@ -1,46 +1,228 @@
-<h1><%= @car.car_name %></h1>
+<div class="car-detail-container">
+  <div class="car-images">
+    <% if @car.image.present? %>
+      <img src="<%= @car.image %>" alt="<%= @car.car_name %>" class="car-main-image" />
+    <% else %>
+      <img src="default_image_path.jpg" alt="Default Image" class="car-main-image" />
+    <% end %>
+  </div>
 
-<% if @car.image.present? %>
-  <img src="<%= @car.image %>" alt="<%= @car.car_name %>" class="car-show-image" />
-<% else %>
-  <img src="default_image_path.jpg" alt="Default Image" class="car-show-image" />
-<% end %>
+  <div class="car-info">
+    <h1 class="car-title"><%= @car.car_name %></h1>
+    <div class="car-rating">
+      <span><%= @car.rating %></span>
+      <span>★</span>
+      <span>(<%= @car.reviews.count %> reviews)</span>
+    </div>
 
-<p><strong>Make:</strong> <%= @car.car_make %></p>
-<p><strong>Price per Day:</strong> <%= @car.price_per_day %></p>
-<p><strong>Status:</strong> <%= @car.status %></p>
-<p><strong>Minimum Rental Duration:</strong> <%= @car.min_rental_duration %> days</p>
-<p><strong>Maximum Rental Duration:</strong> <%= @car.max_rental_duration %> days</p>
-<p><strong>Minimum Advance Notice:</strong> <%= @car.min_advance_notice %> days</p>
-<p><strong>Availability:</strong> <%= @car.availability_start_date %> to <%= @car.availability_end_date %></p>
-<p><strong>Owner Rules:</strong> <%= @car.owner_rules %></p>
+    <div class="car-summary">
+      <p><strong>Price:</strong> $<%= @car.price_per_day %> per day</p>
+      <p><strong>Status:</strong> <%= @car.status %></p>
+      <p><strong>Fuel Type:</strong> <%= @car.fuel_type %></p>
+      <p><strong>Seats:</strong> <%= @car.number_of_seat %></p>
+      <p><strong>Minimum Rental Duration:</strong> <%= @car.min_rental_duration %> days</p>
+      <p><strong>Maximum Rental Duration:</strong> <%= @car.max_rental_duration %> days</p>
+      <p><strong>Minimum Advance Notice:</strong> <%= @car.min_advance_notice %> days</p>
+      <p><strong>Availability:</strong> <%= @car.availability_start_date %> to <%= @car.availability_end_date %></p>
+      <p><strong>Owner Rules:</strong> <%= @car.owner_rules %></p>
+      <p><strong>Make:</strong> <%= @car.car_make %></p>
+      <p><strong>Transmission:</strong> <%= @car.transmission %></p>
+      <p><strong>Mileage:</strong> <%= @car.mileage %> miles</p>
+      <p><strong>Doors:</strong> <%= @car.number_of_doors %></p>
+    </div>
 
-<%= link_to 'Back', cars_path, class: 'btn btn-primary' %>
+    <div class="features-section">
+      <h3>Features</h3>
+      <ul class="features-list">
+        <% @car.features.each do |feature| %>
+          <li>
+            <% case feature %>
+            <% when 'Air Conditioning' %>
+              <i class="fas fa-snowflake"></i> Air Conditioning
+            <% when 'GPS' %>
+              <i class="fas fa-map-marked-alt"></i> GPS
+            <% when 'Bluetooth' %>
+              <i class="fas fa-bluetooth"></i> Bluetooth
+            <% when 'Heated Seats' %>
+              <i class="fas fa-chair"></i> Heated Seats
+            <% when 'Sunroof' %>
+              <i class="fas fa-sun"></i> Sunroof
+            <% when 'Backup Camera' %>
+              <i class="fas fa-camera"></i> Backup Camera
+            <% else %>
+              <i class="fas fa-car"></i> <%= feature %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
 
-<% if user_signed_in? && @car.user != current_user %>
-  <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
-  <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
-<% end %>
+    <div class="trip-details">
+      <h3>Trip Details</h3>
+      <div class="trip-dates">
+        <label for="trip-start">Trip Start</label>
+        <input type="date" id="trip-start" name="trip[start_date]" class="trip-date-input" value="<%= params[:start_date] %>">
+        <label for="trip-end">Trip End</label>
+        <input type="date" id="trip-end" name="trip[end_date]" class="trip-date-input" value="<%= params[:end_date] %>">
+      </div>
+    </div>
 
-<% if current_user.admin? && @car.status == 'pending' %>
-  <%= link_to 'Approve', approve_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-success' %>
-  <%= link_to 'Reject', reject_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
-<% end %>
+    <div class="btn-group">
+      <%= link_to 'Back', cars_path, class: 'btn btn-primary' %>
+
+      <% if user_signed_in? && @car.user != current_user %>
+        <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
+        <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
+        <%= link_to "Favorite", favorite_car_path(@car), method: :post, class: "btn btn-secondary" %>
+      <% end %>
+
+      <% if current_user.admin? && @car.status == 'pending' %>
+        <%= link_to 'Approve', approve_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-success' %>
+        <%= link_to 'Reject', reject_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="map-container">
+  <div id="map" data-controller="single-car-map"
+       data-single-car-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>"
+       data-single-car-map-latitude-value="<%= @car.latitude %>"
+       data-single-car-map-longitude-value="<%= @car.longitude %>"
+       style="width: 100%; height: 400px;">
+  </div>
+</div>
 
 <style>
-.car-show-image {
+.car-detail-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #fff;
+}
+
+.car-images {
+  grid-column: 1 / 2;
+}
+
+.car-main-image {
   width: 100%;
-  height: auto;
+  border-radius: 8px;
+}
+
+.car-info {
+  grid-column: 2 / 3;
+}
+
+.car-title {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.car-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   margin-bottom: 20px;
 }
 
-.car-details p {
-  font-size: 1em;
+.car-rating span {
+  font-size: 1.2em;
+}
+
+.car-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.car-summary p {
   margin: 5px 0;
 }
 
-.btn {
-  margin: 10px 0;
+.features-section {
+  margin-top: 20px;
 }
 
+.features-list {
+  list-style: none;
+  padding: 0;
+}
+
+.features-list li {
+  margin: 5px 0;
+}
+
+.trip-details {
+  margin-top: 20px;
+}
+
+.trip-dates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.trip-date-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #565e64;
+}
+
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.map-container {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: #fff;
+}
 </style>

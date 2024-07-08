@@ -1,4 +1,3 @@
-// app/javascript/controllers/dropdown_controller.js
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
@@ -9,7 +8,9 @@ export default class extends Controller {
     this.initializeSelectedTypes()
   }
 
-  toggleDropdown() {
+  toggleDropdown(event) {
+    event.preventDefault(); // Prevent form submission
+    event.stopPropagation();
     this.dropdownTarget.classList.toggle("show")
   }
 

@@ -55,6 +55,9 @@ gem "faker"
 gem "flatpickr"
 # Gemfile
 gem 'geocoder'
+gem 'httparty'
+gem 'http'
+
 
 
 group :development, :test do
