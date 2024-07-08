@@ -1,10 +1,25 @@
 class CarsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :search]
+  before_action :authenticate_user!, except: [:index, :show, :search, :confirm_vin]
   before_action :set_car, only: [:show, :edit, :update, :destroy]
+  before_action :set_car_types, only: [:index, :new, :create, :edit, :update, :search]
+  after_action :verify_authorized, except: [:index, :show, :search, :confirm_vin]
 
   def index
-    @car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
     @cars = policy_scope(Car).where(status: 'approved')
+
+    # Filter by search query
+    if params[:location].present?
+      @cars = @cars.where("address ILIKE ?", "%#{params[:location]}%")
+    end
+    if params[:pickup_date].present?
+      @cars = @cars.where("availability_start_date <= ?", params[:pickup_date])
+    end
+    if params[:return_date].present?
+      @cars = @cars.where("availability_end_date >= ?", params[:return_date])
+    end
+    if params[:car_types].present?
+      @cars = @cars.where(car_type: params[:car_types].split(','))
+    end
 
     @cars = @cars.filter_by_instant_booking(params[:instant_booking]) if params[:instant_booking].present?
     @cars = @cars.filter_by_number_of_places(params[:number_of_places]) if params[:number_of_places].present?
@@ -13,7 +28,6 @@ class CarsController < ApplicationController
     @cars = @cars.filter_by_gearbox(params[:gearbox]) if params[:gearbox].present?
     @cars = @cars.filter_by_engine(params[:engine]) if params[:engine].present?
     @cars = @cars.filter_by_brand(params[:brand]) if params[:brand].present?
-    @cars = @cars.where(car_type: params[:car_types].split(',')) if params[:car_types].present?
 
     @markers = @cars.map do |car|
       {
@@ -33,6 +47,14 @@ class CarsController < ApplicationController
   def show
     authorize @car
     CarView.find_or_create_by(user: current_user, car: @car) if user_signed_in?
+
+    respond_to do |format|
+      format.html { render :show }
+      format.js {
+        logger.debug "Rendering car details for car ID: #{@car.id}"
+        render partial: 'cars/car_details', locals: { car: @car }
+      }
+    end
   end
 
   def new
@@ -94,7 +116,6 @@ class CarsController < ApplicationController
 
   def search
     authorize Car
-    @car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
 
     if params[:location].present? && !params[:location].downcase.include?("canada")
       redirect_to root_path, alert: "We don't operate in this country yet."
@@ -125,6 +146,33 @@ class CarsController < ApplicationController
     end
     render :index
   end
+  def confirm_vin
+    vin = params[:vin]
+    url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/#{vin}?format=json"
+    response = HTTP.get(url)
+    data = response.parse["Results"].first
+
+    make = data["Make"]
+    model = data["Model"]
+    transmission = data["TransmissionStyle"]
+    fuel_type = data["FuelTypePrimary"]
+    number_of_doors = data["Doors"]
+
+    render json: { car_name: model || "Not available", car_brand: make || "Not available", transmission: transmission || "Not available", fuel_type: fuel_type || "Not available", number_of_doors: number_of_doors || "Not available" }
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   private
 
@@ -135,13 +183,18 @@ class CarsController < ApplicationController
     end
   end
 
+  def set_car_types
+    @car_types = ['Commercial', 'City', 'Sedan', 'Family', 'Minibus', '4x4', 'Convertible', 'Coupe', 'Antique', 'Campervan', 'SUV']
+  end
+
   def car_params
     params.require(:car).permit(
-      :car_name, :transmission, :fuel_type, :car_make, :image,
-      :price_per_day, :rating, :number_of_seat, :address, :country,
-      :min_rental_duration, :min_advance_notice, :max_rental_duration,
-      :availability_start_date, :availability_end_date, :owner_rules,
-      :car_type, features: []
+      :car_name, :car_brand, :vin, :transmission, :fuel_type, :car_make,
+      :image, :price_per_day, :rating, :number_of_seat, :status, :approved,
+      :user_id, :latitude, :longitude, :address, :min_rental_duration,
+      :max_rental_duration, :min_advance_notice, :availability_start_date,
+      :availability_end_date, :owner_rules, :country, :car_type, :mileage,
+      :features, :number_of_doors, :instant_booking
     )
   end
 end

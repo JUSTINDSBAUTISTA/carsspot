@@ -9,6 +9,7 @@ class Car < ApplicationRecord
   validates :status, inclusion: { in: %w[pending approved rejected] }
   validates :car_type, :image, :car_name, presence: true
   validates :features, :transmission, :fuel_type, :car_make, :plate_number, :mileage, :number_of_doors, :number_of_seat, presence: false
+  validates :number_of_doors, presence: true
 
   geocoded_by :address
   after_validation :geocode, if: :will_save_change_to_address?

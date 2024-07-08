@@ -13,28 +13,28 @@
   </div>
 
 <!-- app/views/home/index.html.erb -->
-<%= form_with url: search_cars_path, method: :get, id: "search-form", data: { controller: "places-autocomplete" } do %>
+<%= form_with url: cars_path, method: :get, id: "search-form", data: { controller: "places-autocomplete date-picker" } do %>
   <div class="search-bar">
     <div class="input-group">
       <div class="input-item">
         <i class="fas fa-map-marker-alt"></i>
         <div class="input-wrapper">
           <label for="location">Location</label>
-          <%= text_field_tag :location, nil, placeholder: "Search your location", id: "location", class: "location-input", data: { places_autocomplete_target: "input" } %>
+          <%= text_field_tag :location, params[:location], placeholder: "Search your location", id: "location", class: "location-input", data: { places_autocomplete_target: "homeInput" } %>
         </div>
       </div>
       <div class="input-item">
         <i class="fas fa-calendar-alt"></i>
         <div class="input-wrapper">
           <label for="pickup_date">Pickup date</label>
-          <%= date_field_tag :pickup_date, nil, placeholder: "Pickup date", id: "pickup_date", name: "pickup_date" %>
+          <%= date_field_tag :pickup_date, params[:pickup_date], placeholder: "Pickup date", id: "pickup_date", name: "pickup_date", data: { date_picker_target: "startDate" } %>
         </div>
       </div>
       <div class="input-item">
         <i class="fas fa-calendar-alt"></i>
         <div class="input-wrapper">
           <label for="return_date">Return date</label>
-          <%= date_field_tag :return_date, nil, placeholder: "Return date", id: "return_date", name: "return_date" %>
+          <%= date_field_tag :return_date, params[:return_date], placeholder: "Return date", id: "return_date", name: "return_date", data: { date_picker_target: "endDate" } %>
         </div>
       </div>
       <div class="input-item search-button-wrapper">
@@ -43,6 +43,15 @@
     </div>
   </div>
 <% end %>
+
+
+
+
+
+
+
+
+
 
 
 

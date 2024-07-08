@@ -18,3 +18,6 @@ pin "mapbox-gl/dist/mapbox-gl.css", to: "https://api.mapbox.com/mapbox-gl-js/v2.
 pin "@rails/ujs", to: "rails-ujs.js", preload: true
 pin "flatpickr", to: "https://ga.jspm.io/npm:flatpickr@4.6.9/dist/flatpickr.js"
 pin "@mapbox/mapbox-gl-geocoder", to: "https://cdn.skypack.dev/@mapbox/mapbox-gl-geocoder@v5.0.0"
+# config/importmap.rb
+
+# config/importmap.rb
