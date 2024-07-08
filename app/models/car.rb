@@ -6,8 +6,10 @@ class Car < ApplicationRecord
   has_many :rentals, dependent: :destroy
   has_many :reviews, dependent: :destroy
 
+  has_one_attached :image # Add this line for Active Storage
+
   validates :status, inclusion: { in: %w[pending approved rejected] }
-  validates :car_type, :image, :car_name, presence: true
+  validates :car_type, :car_name, presence: true
   validates :features, :transmission, :fuel_type, :car_make, :plate_number, :mileage, :number_of_doors, :number_of_seat, presence: false
   validates :number_of_doors, presence: true
 
@@ -25,16 +27,6 @@ class Car < ApplicationRecord
   scope :filter_by_gearbox, -> (gearbox) { where(transmission: gearbox) }
   scope :filter_by_engine, -> (engine) { where(fuel_type: engine) }
   scope :filter_by_brand, -> (brand) { where(car_make: brand) }
-
-  def image_url
-    if image.present? && image.match?(URI::regexp(%w[http https]))
-      image
-    else
-      ActionController::Base.helpers.asset_path('fallback_image.png')
-    end
-  rescue
-    ActionController::Base.helpers.asset_path('fallback_image.png')
-  end
 
   private
 

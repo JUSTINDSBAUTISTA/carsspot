@@ -57,7 +57,8 @@ gem "flatpickr"
 gem 'geocoder'
 gem 'httparty'
 gem 'http'
-
+gem "cloudinary"
+gem 'sidekiq'
 
 
 group :development, :test do

@@ -1,4 +1,3 @@
-<!-- app/views/cars/_car_list.html.erb -->
 <% cars.each do |car| %>
   <div class="car-item" id="car-<%= car.id %>" onclick="location.href='<%= car_path(car) %>'">
     <div class="car-details">

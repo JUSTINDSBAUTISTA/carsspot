@@ -1,4 +1,4 @@
-<%= form_with(model: @car, local: true, html: { class: "car-form", data: { controller: "form car-vin" } }) do |form| %>
+<%= form_with(model: @car, local: true, html: { class: "car-form", data: { controller: "form car-vin" } }, multipart: true) do |form| %>
   <% if @car.errors.any? %>
     <div id="error_explanation" class="error-explanation">
       <h2><%= pluralize(@car.errors.count, "error") %> prohibited this car from being saved:</h2>
@@ -18,13 +18,6 @@
     </div>
     <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
   </div>
-
-
-
-
-
-
-
 
   <!-- Step 2: VIN Verification -->
   <div class="form-step" data-form-target="step">
@@ -81,75 +74,31 @@
     <div class="form-group">
       <%= form.label :features, class: "form-label" %>
       <div class="feature-options">
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Air Conditioning') }, 'Air Conditioning', nil %>
-          <i class="fas fa-snowflake"></i> Air Conditioning
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Cruise Control') }, 'Cruise Control', nil %>
-          <i class="fas fa-tachometer-alt"></i> Cruise Control
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('GPS') }, 'GPS', nil %>
-          <i class="fas fa-map-marker-alt"></i> GPS
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Baby Seat') }, 'Baby Seat', nil %>
-          <i class="fas fa-child"></i> Baby Seat
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Roof Box') }, 'Roof Box', nil %>
-          <i class="fas fa-car-top"></i> Roof Box
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bike Rack') }, 'Bike Rack', nil %>
-          <i class="fas fa-bicycle"></i> Bike Rack
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Winter Tires') }, 'Winter Tires', nil %>
-          <i class="fas fa-snowflake"></i> Winter Tires
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Snow Chains') }, 'Snow Chains', nil %>
-          <i class="fas fa-snowflake"></i> Snow Chains
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Ski Racks') }, 'Ski Racks', nil %>
-          <i class="fas fa-skiing"></i> Ski Racks
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Audio / iPod Input') }, 'Audio / iPod Input', nil %>
-          <i class="fas fa-music"></i> Audio / iPod Input
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Bluetooth Audio') }, 'Bluetooth Audio', nil %>
-          <i class="fas fa-bluetooth"></i> Bluetooth Audio
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Hitch') }, 'Hitch', nil %>
-          <i class="fas fa-trailer"></i> Hitch
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Wheelchair Accessible') }, 'Wheelchair Accessible', nil %>
-          <i class="fas fa-wheelchair"></i> Wheelchair Accessible
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Apple CarPlay') }, 'Apple CarPlay', nil %>
-          <i class="fas fa-car"></i> Apple CarPlay
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Android Auto') }, 'Android Auto', nil %>
-          <i class="fab fa-android"></i> Android Auto
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Dashcam') }, 'Dashcam', nil %>
-          <i class="fas fa-video"></i> Dashcam
-        </label>
-        <label class="feature-option">
-          <%= form.check_box :features, { multiple: true, checked: @car.features.include?('Four-wheel Drive') }, 'Four-wheel Drive', nil %>
-          <i class="fas fa-car"></i> Four-wheel Drive
-        </label>
-        <!-- Add more feature options here -->
+        <% features = {
+          'Air Conditioning' => 'fa-snowflake',
+          'Cruise Control' => 'fa-tachometer-alt',
+          'GPS' => 'fa-map-marker-alt',
+          'Baby Seat' => 'fa-child',
+          'Roof Box' => 'fa-car-top',
+          'Bike Rack' => 'fa-bicycle',
+          'Winter Tires' => 'fa-snowflake',
+          'Snow Chains' => 'fa-snowflake',
+          'Ski Racks' => 'fa-skiing',
+          'Audio / iPod Input' => 'fa-music',
+          'Bluetooth Audio' => 'fa-bluetooth',
+          'Hitch' => 'fa-trailer',
+          'Wheelchair Accessible' => 'fa-wheelchair',
+          'Apple CarPlay' => 'fa-car',
+          'Android Auto' => 'fa-android',
+          'Dashcam' => 'fa-video',
+          'Four-wheel Drive' => 'fa-car'
+        } %>
+        <% features.each do |feature, icon| %>
+          <label class="feature-option">
+            <%= form.check_box :features, { multiple: true, checked: @car.features.include?(feature) }, feature, nil %>
+            <i class="fas <%= icon %>"></i> <%= feature %>
+          </label>
+        <% end %>
       </div>
     </div>
     <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
@@ -206,7 +155,7 @@
 
     <div class="form-group">
       <%= form.label :image, class: "form-label", for: "car_image" %>
-      <%= form.text_field :image, class: "form-input", id: "car_image" %>
+      <%= form.file_field :image, class: "form-input", id: "car_image" %>
     </div>
 
     <div class="form-group">
@@ -264,7 +213,6 @@
     <%= form.submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
-
 
 <style>
   .car-form {
