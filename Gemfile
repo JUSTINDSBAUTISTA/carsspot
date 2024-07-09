@@ -60,6 +60,9 @@ gem 'http'
 gem "cloudinary"
 gem 'sidekiq'
 
+gem 'terser'
+
+
 
 group :development, :test do
   gem "dotenv-rails"
