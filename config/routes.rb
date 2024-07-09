@@ -1,3 +1,9 @@
+require 'sidekiq/web'
+
+Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+  username == ENV["SIDEKIQ_WEB_USERNAME"] && password == ENV["SIDEKIQ_WEB_PASSWORD"]
+end if Rails.env.production?
+
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
@@ -8,7 +14,7 @@ Rails.application.routes.draw do
       get :pending_approval
       get :search, to: 'cars#index'
       get :filter
-      get :confirm_vin  # Add this line to configure the route
+      get :confirm_vin  # Route for VIN confirmation
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy] do
       member do
@@ -43,4 +49,9 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
+
+  # Add Sidekiq web UI with authentication
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 end

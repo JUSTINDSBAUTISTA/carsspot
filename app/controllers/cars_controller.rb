@@ -71,8 +71,11 @@ class CarsController < ApplicationController
     Rails.logger.debug "Car Params: #{car_params.inspect}"
 
     if @car.save
-      # Enqueue the Cloudinary upload job
-      CloudinaryUploadWorker.perform_async(@car.id)
+      if @car.image.attached?
+        # Enqueue a Cloudinary upload job with the URL of the image
+        CloudinaryUploadWorker.perform_async(url_for(@car.image))
+      end
+
       redirect_to @car, notice: 'Car was successfully created and is pending approval.'
     else
       Rails.logger.debug "Car Save Errors: #{@car.errors.full_messages.join(', ')}"
@@ -90,8 +93,6 @@ class CarsController < ApplicationController
     Rails.logger.debug "Car Params: #{car_params.inspect}"
 
     if @car.update(car_params)
-      # Enqueue the Cloudinary upload job
-      CloudinaryUploadWorker.perform_async(@car.id)
       redirect_to @car, notice: 'Car was successfully updated.'
     else
       Rails.logger.debug "Car Update Errors: #{@car.errors.full_messages.join(', ')}"
@@ -186,7 +187,8 @@ class CarsController < ApplicationController
       :user_id, :latitude, :longitude, :address, :min_rental_duration,
       :max_rental_duration, :min_advance_notice, :availability_start_date,
       :availability_end_date, :owner_rules, :country, :car_type, :mileage,
-      :features, :number_of_doors, :instant_booking
+      :number_of_doors, :instant_booking, features: []
     )
   end
+
 end
