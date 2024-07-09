@@ -7,7 +7,11 @@
       <div class="car-pending-admin">
         <h2>Car Information</h2>
         <p><strong>Car:</strong> <%= car.car_name %> (<%= car.car_make %>)</p>
-        <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
+        <% if car.image.present? %>
+          <img src="<%= car.image %>" alt="<%= car.car_name %> image" class="car-image">
+        <% else %>
+          <img src="fallback_image.png" alt="Fallback Image" class="car-image">
+        <% end %>
         <p><strong>Price per Day:</strong> $<%= car.price_per_day %></p>
         <p><strong>Status:</strong> <%= car.status %></p>
       </div>
@@ -16,6 +20,7 @@
     <% end %>
   <% end %>
 </div>
+
 
 <style>
  /* Notifications Page CSS (Admin Style) */

@@ -1,7 +1,7 @@
 <div class="car">
   <h2><%= link_to car.car_name, car_path(car) %></h2>
-  <% if car.image.present? %>
-    <img src="<%= car.image %>" alt="<%= car.car_name %>" class="car-image" />
+  <% if car.image.attached? %>
+    <%= cl_image_tag car.image.key, alt: car.car_name, class: "car-image" %>
   <% else %>
     <img src="default_image_path.jpg" alt="Default Image" class="car-image" />
   <% end %>
@@ -23,6 +23,7 @@
     <% end %>
   </div>
 </div>
+
 
 
 

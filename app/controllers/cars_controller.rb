@@ -71,6 +71,8 @@ class CarsController < ApplicationController
     Rails.logger.debug "Car Params: #{car_params.inspect}"
 
     if @car.save
+      # Enqueue the Cloudinary upload job
+      CloudinaryUploadWorker.perform_async(@car.id)
       redirect_to @car, notice: 'Car was successfully created and is pending approval.'
     else
       Rails.logger.debug "Car Save Errors: #{@car.errors.full_messages.join(', ')}"
@@ -88,6 +90,8 @@ class CarsController < ApplicationController
     Rails.logger.debug "Car Params: #{car_params.inspect}"
 
     if @car.update(car_params)
+      # Enqueue the Cloudinary upload job
+      CloudinaryUploadWorker.perform_async(@car.id)
       redirect_to @car, notice: 'Car was successfully updated.'
     else
       Rails.logger.debug "Car Update Errors: #{@car.errors.full_messages.join(', ')}"
@@ -146,6 +150,7 @@ class CarsController < ApplicationController
     end
     render :index
   end
+
   def confirm_vin
     vin = params[:vin]
     url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/#{vin}?format=json"
@@ -160,19 +165,6 @@ class CarsController < ApplicationController
 
     render json: { car_name: model || "Not available", car_brand: make || "Not available", transmission: transmission || "Not available", fuel_type: fuel_type || "Not available", number_of_doors: number_of_doors || "Not available" }
   end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   private
 

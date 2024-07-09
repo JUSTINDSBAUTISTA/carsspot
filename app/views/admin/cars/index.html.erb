@@ -4,7 +4,11 @@
   <% @cars.each do |car| %>
     <div class="car-pending-admin" id="<%= dom_id(car) %>">
       <h2><%= car.car_name %></h2>
-      <img src="<%= car.image_url %>" alt="<%= car.car_name %>">
+      <% if car.image.present? %>
+        <img src="<%= car.image %>" alt="<%= car.car_name %>">
+      <% else %>
+        <img src="fallback_image.png" alt="Fallback Image">
+      <% end %>
       <p><strong>Make:</strong> <%= car.car_make %></p>
       <p><strong>Transmission:</strong> <%= car.transmission %></p>
       <p><strong>Fuel Type:</strong> <%= car.fuel_type %></p>
