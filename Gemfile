@@ -26,6 +26,7 @@ gem "http"
 gem "cloudinary"
 gem "terser"
 gem "sidekiq"
+gem "bootsnap", require: false # Ensure bootsnap is included
 
 group :development, :test do
   gem "dotenv-rails"
@@ -44,4 +45,3 @@ end
 
 # Include the following to handle sessions with Redis
 gem 'redis-actionpack'
-
