@@ -24,7 +24,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  config.assets.compile = true
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
@@ -53,12 +53,24 @@ Rails.application.configure do
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Use Redis as the cache store in production.
+  config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
 
-  # Use a real queuing backend for Active Job (and separate queues per environment)
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "carsspot_#{Rails.env}"
+  # Use Redis for session storage.
+  config.session_store :redis_store, {
+    servers: [
+      {
+        url: ENV['REDIS_URL'],
+        serializer: JSON,
+        namespace: 'session'
+      },
+    ],
+    expire_after: 90.minutes,
+    key: "_#{Rails.application.class.parent_name.downcase}_session"
+  }
+
+  # Use Sidekiq for background jobs.
+  config.active_job.queue_adapter = :sidekiq
 
   config.action_mailer.perform_caching = false
 
@@ -79,4 +91,7 @@ Rails.application.configure do
   end
 
   config.active_record.dump_schema_after_migration = false
+
+  config.action_mailer.default_url_options = { host: 'carsspot-1286c883ae12.herokuapp.com' }
+  Rails.application.routes.default_url_options[:host] = 'carsspot-1286c883ae12.herokuapp.com'
 end
