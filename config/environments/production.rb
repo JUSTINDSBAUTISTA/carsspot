@@ -61,7 +61,7 @@ Rails.application.configure do
     servers: [
       {
         url: ENV['REDIS_URL'],
-        serializer: :json,  # Correct serializer usage
+        serializer: JSON,  # Correct serializer usage
         namespace: 'session'
       },
     ],
