@@ -79,4 +79,8 @@ Rails.application.configure do
   end
 
   config.active_record.dump_schema_after_migration = false
+
+  # Set the host for URL generation
+  config.action_mailer.default_url_options = { host: 'carsspot-1286c883ae12.herokuapp.com' }
+  Rails.application.routes.default_url_options[:host] = 'carsspot-1286c883ae12.herokuapp.com'
 end
