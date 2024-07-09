@@ -9,10 +9,6 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   resources :cars do
-    member do
-      post 'favorite'
-    end
-
     collection do
       get :my_cars
       get :pending_approval
