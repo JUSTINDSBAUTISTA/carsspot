@@ -78,13 +78,11 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  adapter: postgresql
-  encoding: unicode
-  pool: 5
-  database: d7rnsgf5of0mub
-  username: uciof0kqlarmc9
-  password: pe66156de0d85a0f11b180dcaa4c93467270202de6ae5983c849090d7457111b1
-  host: c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
-  port: 5432
+  <<: *default
+  database: <%= ENV['DATABASE_NAME'] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] %>
+  port: <%= ENV['DATABASE_PORT'] %>
   sslmode: require
   connect_timeout: 30
