@@ -42,16 +42,16 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
 
   # Use Redis for session storage.
-  config.middleware.use ActionDispatch::Session::CacheStore, {
-    expire_after: 90.minutes,
-    key: "_#{Rails.application.class.module_parent_name.downcase}_session",
+  config.session_store :redis_store, {
     servers: [
       {
         url: ENV['REDIS_URL'],
         serializer: JSON,
         namespace: 'session'
       }
-    ]
+    ],
+    expire_after: 90.minutes,
+    key: "_#{Rails.application.class.module_parent_name.downcase}_session"
   }
 
   # Use Sidekiq for background jobs.
