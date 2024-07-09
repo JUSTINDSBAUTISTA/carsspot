@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
-  mount Rails.application.routes.default_url_options[:host] => 'https://carsspot-1286c883ae12.herokuapp.com'
+
 
   # Add Sidekiq web UI with authentication
   authenticate :user, lambda { |u| u.admin? } do
