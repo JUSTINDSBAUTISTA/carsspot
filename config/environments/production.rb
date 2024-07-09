@@ -1,3 +1,4 @@
+
 Rails.application.configure do
   # Ensure the master key is available
   config.require_master_key = true
@@ -61,12 +62,12 @@ Rails.application.configure do
     servers: [
       {
         url: ENV['REDIS_URL'],
-        serializer: JSON,  # Correct serializer usage
         namespace: 'session'
       },
     ],
     expire_after: 90.minutes,
-    key: "_#{Rails.application.class.module_parent_name.downcase}_session"
+    key: "_#{Rails.application.class.module_parent_name.downcase}_session",
+    serializer: :json # Correct serializer usage
   }
 
   # Use Sidekiq for background jobs.
