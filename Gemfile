@@ -10,6 +10,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
 gem "redis", ">= 4.0.1"
+
 gem "redis-rails" # Ensure this is included for Redis session store
 gem "bootstrap", "~> 5.2"
 gem "devise"
