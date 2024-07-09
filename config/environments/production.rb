@@ -23,8 +23,8 @@ Rails.application.configure do
   config.assets.js_compressor = Terser.new
   # config.assets.css_compressor = :sass
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  # Fallback to the assets pipeline if a precompiled asset is missed.
+  config.assets.compile = true  # Change this to true
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
