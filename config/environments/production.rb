@@ -1,3 +1,4 @@
+# config/environments/production.rb
 Rails.application.configure do
   # Ensure the master key is available
   config.require_master_key = true
