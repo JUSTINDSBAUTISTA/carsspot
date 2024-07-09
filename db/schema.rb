@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_08_184102) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_09_194043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,7 +69,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_08_184102) do
     t.string "transmission"
     t.string "fuel_type"
     t.string "car_make"
-    t.string "image"
     t.integer "price_per_day"
     t.integer "rating"
     t.integer "number_of_seat"

@@ -153,10 +153,11 @@
       <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input", id: "car_car_type" %>
     </div>
 
-    <div class="form-group">
-      <%= form.label :image, class: "form-label", for: "car_image" %>
-      <%= form.file_field :image, class: "form-input", id: "car_image" %>
-    </div>
+<div class="form-group">
+  <%= form.label :image, class: "form-label", for: "car_image" %>
+  <%= form.file_field :image, class: "form-input", id: "car_image" %>
+</div>
+
 
     <div class="form-group">
       <%= form.label :number_of_doors, class: "form-label", for: "car_number_of_doors" %>

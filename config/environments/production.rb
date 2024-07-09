@@ -23,8 +23,8 @@ Rails.application.configure do
   config.assets.js_compressor = Terser.new
   # config.assets.css_compressor = :sass
 
-  # Fallback to the assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true  # Change this to true
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = false
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
@@ -79,4 +79,8 @@ Rails.application.configure do
   end
 
   config.active_record.dump_schema_after_migration = false
+
+  # Set the host for URL generation
+  config.action_mailer.default_url_options = { host: 'carsspot-1286c883ae12.herokuapp.com' }
+  Rails.application.routes.default_url_options[:host] = 'carsspot-1286c883ae12.herokuapp.com'
 end

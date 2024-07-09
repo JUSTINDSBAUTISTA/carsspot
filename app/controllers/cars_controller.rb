@@ -72,8 +72,9 @@ class CarsController < ApplicationController
 
     if @car.save
       if @car.image.attached?
-        # Enqueue a Cloudinary upload job with the URL of the image
-        CloudinaryUploadWorker.perform_async(url_for(@car.image))
+        # Enqueue a Cloudinary upload job with a signed URL of the image
+        image_url = Rails.application.routes.url_helpers.rails_blob_url(@car.image, host: request.base_url)
+        CloudinaryUploadWorker.perform_async(@car.id, image_url)
       end
 
       redirect_to @car, notice: 'Car was successfully created and is pending approval.'
@@ -190,5 +191,4 @@ class CarsController < ApplicationController
       :number_of_doors, :instant_booking, features: []
     )
   end
-
 end
