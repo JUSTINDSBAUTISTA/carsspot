@@ -8,6 +8,7 @@ class NotificationsController < ApplicationController
       render 'admin/cars/index'
     else
       @notifications = policy_scope(Notification).order(created_at: :desc)
+      Rails.logger.debug "Fetched #{@notifications.count} notifications"
     end
   end
 

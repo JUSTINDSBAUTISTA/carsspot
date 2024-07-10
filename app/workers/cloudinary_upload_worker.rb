@@ -1,14 +1,17 @@
-# app/workers/cloudinary_upload_worker.rb
+require 'open-uri'
+
 class CloudinaryUploadWorker
   include Sidekiq::Worker
 
   def perform(car_id, image_url)
-    logger.info "Performing CloudinaryUploadWorker with car_id=#{car_id} and image_url=#{image_url}"
-    car = Car.find(car_id)
-    Cloudinary::Uploader.upload(image_url, public_id: car.id)
-  rescue ActiveRecord::RecordNotFound
-    logger.error "Car with id=#{car_id} not found."
-  rescue => e
-    logger.error "An error occurred: #{e.message}"
+    begin
+      car = Car.find(car_id)
+      file = URI.open(image_url)
+      upload = Cloudinary::Uploader.upload(file.path)
+      car.update(image_url: upload['url'])
+      puts "Uploaded to Cloudinary: #{upload['url']}"
+    rescue => e
+      Rails.logger.error "CloudinaryUploadWorker failed: #{e.message}"
+    end
   end
 end

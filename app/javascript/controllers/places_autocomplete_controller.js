@@ -60,10 +60,6 @@ export default class extends Controller {
     if (this.hasIndexInputTarget) {
       this.setupAutocomplete(this.indexInputTarget, "index");
     }
-
-    document.addEventListener('click', (event) => {
-      this.clearSuggestions(event);
-    }, true);
   }
 
   setupAutocomplete(inputTarget, key) {
@@ -74,9 +70,6 @@ export default class extends Controller {
       if (place.geometry) {
         console.log('Latitude:', place.geometry.location.lat());
         console.log('Longitude:', place.geometry.location.lng());
-        if (key === "index") {
-          this.search(inputTarget);
-        }
       }
     });
 
@@ -101,6 +94,8 @@ export default class extends Controller {
         }
       });
     }
+
+    this.addCurrentLocation(inputTarget, key);
   }
 
   displaySuggestions(key, predictions, status) {
@@ -136,17 +131,46 @@ export default class extends Controller {
     if (!suggestionContainer) {
       suggestionContainer = document.createElement('div');
       suggestionContainer.id = `${key}-autocomplete-suggestions`;
-      suggestionContainer.classList.add('autocomplete-suggestions-container', 'custom-autocomplete-container');
+      suggestionContainer.classList.add('autocomplete-suggestions-container');
       document.body.appendChild(suggestionContainer);
     }
     return suggestionContainer;
   }
 
-  selectPlace(key, placeId) {
-    this.placesService.getDetails({ placeId }, place => {
-      if (place.geometry) {
-        console.log('Latitude:', place.geometry.location.lat());
-        console.log('Longitude:', place.geometry.location.lng());
+  addCurrentLocation(inputTarget, key) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const suggestionContainer = this.createSuggestionContainer(key);
+          const currentLocationItem = document.createElement('div');
+          currentLocationItem.classList.add('custom-autocomplete-item');
+          currentLocationItem.innerHTML = `<i class="fas fa-map-marker-alt custom-autocomplete-icon"></i> Current Location`;
+          currentLocationItem.addEventListener('click', () => {
+            this.setCurrentLocation(lat, lng, inputTarget);
+          });
+          suggestionContainer.prepend(currentLocationItem);
+        },
+        (error) => {
+          console.error("Error getting current location: ", error);
+        }
+      );
+    }
+  }
+
+  setCurrentLocation(lat, lng, inputTarget) {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat, lng };
+    geocoder.geocode({ location: latlng }, (results, status) => {
+      if (status === 'OK') {
+        if (results[0]) {
+          inputTarget.value = results[0].formatted_address;
+        } else {
+          console.error('No results found');
+        }
+      } else {
+        console.error('Geocoder failed due to: ' + status);
       }
     });
   }

@@ -25,6 +25,7 @@ class RentalsController < ApplicationController
     if @car.user == current_user
       redirect_to @car, alert: 'You cannot rent your own car.'
     elsif @rental.save
+      Rails.logger.debug "Creating notification for rental request by #{current_user.name} for car #{@car.car_name}"
       Notification.create(
         recipient: @car.user,
         actor: current_user,
@@ -104,10 +105,21 @@ class RentalsController < ApplicationController
   end
 
   def set_car
-    @car = Car.find(params[:car_id])
+    Rails.logger.debug "Params: #{params.inspect}"
+    car_id = params[:car_id] || params.dig(:rental, :car_id)
+    if car_id.present?
+      @car = Car.find(car_id)
+    else
+      raise ActiveRecord::RecordNotFound, "Car ID is missing"
+    end
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.error "Car not found: #{e.message}"
+    redirect_to cars_path, alert: "Car not found."
   end
 
   def rental_params
-    params.require(:rental).permit(:start_date, :end_date, :driving_license, :id_proof, :car_id)
+    params.require(:rental).permit(:start_date, :end_date, :driving_license, :id_proof, :car_id, :driving_license_front_image, :driving_license_back_image)
   end
+
+
 end

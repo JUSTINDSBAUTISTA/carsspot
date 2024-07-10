@@ -1,10 +1,10 @@
-require 'sidekiq/web'
-
-Sidekiq::Web.use Rack::Auth::Basic do |username, password|
-  username == ENV["SIDEKIQ_WEB_USERNAME"] && password == ENV["SIDEKIQ_WEB_PASSWORD"]
-end if Rails.env.production?
-
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == ENV["SIDEKIQ_WEB_USERNAME"] && password == ENV["SIDEKIQ_WEB_PASSWORD"]
+  end if Rails.env.production?
+
   devise_for :users
   root to: "pages#home"
 
@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
+
 
   # Add Sidekiq web UI with authentication
   authenticate :user, lambda { |u| u.admin? } do
