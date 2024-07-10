@@ -9,6 +9,20 @@
 <p><strong>User Name:</strong> <%= @rental.user&.name || 'No user assigned' %></p>
 <p><strong>User Email:</strong> <%= @rental.user&.email || 'No user assigned' %></p>
 
+<% if @rental.driving_license_front_image.attached? %>
+  <p><strong>Driving License Front:</strong></p>
+  <%= image_tag @rental.driving_license_front_image %>
+<% end %>
+
+<% if @rental.driving_license_back_image.attached? %>
+  <p><strong>Driving License Back:</strong></p>
+  <%= image_tag @rental.driving_license_back_image %>
+<% end %>
+
+<% if current_user == @rental.car.user %>
+  <p><strong>Rental ID:</strong> <%= @rental.id %></p>
+<% end %>
+
 <% if current_user == @rental.user %>
   <%= link_to 'Edit', edit_rental_path(@rental), class: 'btn btn-primary' %>
 <% end %>

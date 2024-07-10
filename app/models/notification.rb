@@ -1,6 +1,6 @@
 class Notification < ApplicationRecord
   belongs_to :recipient, class_name: 'User', foreign_key: 'recipient_id'
-  belongs_to :actor, class_name: 'User', foreign_key: 'actor_id'
+  belongs_to :actor, class_name: 'User', foreign_key: 'actor_id', optional: true
   belongs_to :notifiable, polymorphic: true
 
   scope :unread, -> { where(read: false) }
@@ -11,11 +11,13 @@ class Notification < ApplicationRecord
   end
 
   def url
+    # Log missing notifiable object
     unless notifiable.present?
       Rails.logger.debug "Notifiable object is missing for notification ID: #{id}"
       return Rails.application.routes.url_helpers.root_path
     end
 
+    # Generate URL based on the type of notifiable
     generated_url = case notifiable
                     when Car
                       Rails.application.routes.url_helpers.car_path(notifiable)

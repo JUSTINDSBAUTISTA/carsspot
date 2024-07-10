@@ -57,25 +57,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
   
-  .custom-autocomplete-item {
-    padding: 10px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .custom-autocomplete-item:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
-  }
-  
-  .custom-autocomplete-icon {
-    margin-right: 10px;
-  }
-  
-  .custom-autocomplete-current-location {
-    color: #9c27b0; /* Example color */
-  }
+
   
   .modal {
     display: none;

@@ -1,4 +1,4 @@
-<div class="notification <%= 'unread' unless notification.read %>">
+<div class="notification <%= 'unread' unless notification.read %>" data-notification-id="<%= notification.id %>">
   <p><strong>Message:</strong> <%= notification.message %></p>
 
   <% if notification.notifiable_type == 'Car' %>
@@ -20,6 +20,7 @@
     <% end %>
   <% end %>
 </div>
+
 
 
 <style>

@@ -1,31 +1,15 @@
-# app/models/rental.rb
 class Rental < ApplicationRecord
   belongs_to :user
   belongs_to :car
 
-  after_create :create_notification
   before_create :set_initial_status
+
+  has_one_attached :driving_license_front_image
+  has_one_attached :driving_license_back_image
 
   private
 
   def set_initial_status
     self.status ||= 'pending'
-  end
-
-  def create_notification
-    Notification.create!(
-      recipient_id: self.car.user_id,
-      actor_id: self.user_id,
-      notifiable: self,
-      message: "#{self.user.name} requested to rent your car #{self.car.car_name}",
-      read: false
-    )
-  end
-
-  def render_notification(notification)
-    ApplicationController.render(
-      partial: 'notifications/notification',
-      locals: { notification: notification }
-    )
   end
 end
