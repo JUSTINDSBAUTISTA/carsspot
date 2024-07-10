@@ -1,4 +1,3 @@
-require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Ensure the master key is available
   config.require_master_key = true
@@ -17,7 +16,7 @@ Rails.application.configure do
   config.require_master_key = true
 
   # Enable serving static files from the `/public` folder by default
-  config.public_file_server.enabled = trueå
+  config.public_file_server.enabled = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = Terser.new
@@ -25,9 +24,6 @@ Rails.application.configure do
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
-
-  # Generate digests for assets URLs.
-  config.assets.digest = true
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
@@ -42,14 +38,15 @@ Rails.application.configure do
   config.active_storage.service = :cloudinary
 
   # Mount Action Cable outside main process or domain
-  config.action_cable.mount_path = nil
-  config.action_cable.url = 'wss://carsspot-1286c883ae12.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'https://carsspot-1286c883ae12.herokuapp.com', /https:\/\/carsspot-1286c883ae12.herokuapp.*/ ]
+  # config.action_cable.mount_path = nil
+  # config.action_cable.url = 'wss://example.com/cable'
+  # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
-  # Use the lowest log level to ensure availability of diagnostic information when problems arise.
+  # Use the lowest log level to ensure availability of diagnostic information
+  # when problems arise.
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
@@ -59,14 +56,14 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
-  # config.active_job.queue_adapter = :resque
+  # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "carsspot_#{Rails.env}"
 
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.raise_delivery_errors = false
 
   config.i18n.fallbacks = true
 
