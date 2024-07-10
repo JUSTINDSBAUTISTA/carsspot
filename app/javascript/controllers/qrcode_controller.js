@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["reader", "startCameraButton", "drivingLicenseFrontImage", "drivingLicenseBackImage"];
+  static targets = ["reader", "startCameraButton", "stopCameraButton", "drivingLicenseFrontImage", "drivingLicenseBackImage"];
 
   connect() {
     console.log("QRCode controller connected");
@@ -10,7 +10,11 @@ export default class extends Controller {
   startCamera(event) {
     event.preventDefault();
 
-    this.html5QrCode = new Html5Qrcode(this.readerTarget);
+    this.readerTarget.style.display = 'block';
+    this.startCameraButtonTarget.style.display = 'none';
+    this.stopCameraButtonTarget.style.display = 'block';
+
+    this.html5QrCode = new Html5Qrcode(this.readerTarget.id);
 
     this.html5QrCode.start(
       { facingMode: "environment" }, // Use the rear camera
@@ -25,6 +29,9 @@ export default class extends Controller {
         this.drivingLicenseFrontImageTarget.value = decodedText; // Or any other action you need
         this.html5QrCode.stop().then(() => {
           console.log("QR Code scanning stopped.");
+          this.readerTarget.style.display = 'none';
+          this.startCameraButtonTarget.style.display = 'block';
+          this.stopCameraButtonTarget.style.display = 'none';
         }).catch((err) => {
           console.error("Unable to stop scanning.", err);
         });
@@ -40,9 +47,13 @@ export default class extends Controller {
 
   stopCamera(event) {
     event.preventDefault();
+
     if (this.html5QrCode) {
       this.html5QrCode.stop().then(() => {
         console.log("QR Code scanning stopped.");
+        this.readerTarget.style.display = 'none';
+        this.startCameraButtonTarget.style.display = 'block';
+        this.stopCameraButtonTarget.style.display = 'none';
       }).catch((err) => {
         console.error("Unable to stop scanning.", err);
       });

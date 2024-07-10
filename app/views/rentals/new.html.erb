@@ -30,6 +30,6 @@
 <% end %>
 
 <!-- Camera interface -->
-<div id="reader" data-qrcode-target="reader" style="width:500px;"></div>
+<div id="reader" data-qrcode-target="reader" style="width:500px; display: none;"></div>
 <button id="start-camera" data-action="click->qrcode#startCamera" class="btn btn-success">Start Camera</button>
-<button id="stop-camera" data-action="click->qrcode#stopCamera" class="btn btn-danger">Stop Camera</button>
+<button id="stop-camera" data-action="click->qrcode#stopCamera" class="btn btn-danger" style="display: none;">Stop Camera</button>
