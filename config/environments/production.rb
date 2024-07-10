@@ -1,4 +1,3 @@
-# config/environments/production.rb
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -74,8 +73,8 @@ Rails.application.configure do
   config.action_cable.disable_request_forgery_protection = true
 
   # Action Cable configuration
-  config.action_cable.url = "wss://carsspot-1286c883ae12.herokuapp.com/cable"
-  config.action_cable.allowed_request_origins = ['https://carsspot-1286c883ae12.herokuapp.com', 'http://carsspot-1286c883ae12.herokuapp.com']
+  config.action_cable.url = "ws://localhost:3000/cable"
+  config.action_cable.allowed_request_origins = ['http://localhost:3000', /http:\/\/localhost:\d+/]
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = false
