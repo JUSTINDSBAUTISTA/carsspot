@@ -1,4 +1,3 @@
-# config/environments/development.rb
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -9,9 +8,6 @@ Rails.application.configure do
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
-
-  # Use Cloudinary for Active Storage in development
-  config.active_storage.service = :cloudinary
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -39,8 +35,7 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  # Commented out to use Cloudinary
-  # config.active_storage.service = :local
+  config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -72,12 +67,12 @@ Rails.application.configure do
   # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
-  config.action_view.annotate_rendered_view_with_filenames = true
+  # config.action_view.annotate_rendered_view_with_filenames = true
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   config.action_cable.disable_request_forgery_protection = true
 
-  # Action Cable configuration for development
+  # Action Cable configuration
   config.action_cable.url = "ws://localhost:3000/cable"
   config.action_cable.allowed_request_origins = ['http://localhost:3000', /http:\/\/localhost:\d+/]
 
