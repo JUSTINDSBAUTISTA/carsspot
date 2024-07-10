@@ -1,81 +1,88 @@
 require "active_support/core_ext/integer/time"
-
 Rails.application.configure do
-  config.action_mailer.default_url_options = { host: "http://localhost:3000" }
-  # Settings specified here will take precedence over those in config/application.rb.
+  # Ensure the master key is available
+  config.require_master_key = true
 
-  # In the development environment your application's code is reloaded any time
-  # it changes. This slows down response time but is perfect for development
-  # since you don't have to restart the web server when you make code changes.
-  config.enable_reloading = true
+  # Code is not reloaded between requests.
+  config.cache_classes = true
 
-  # Do not eager load code on boot.
-  config.eager_load = false
+  # Eager load code on boot.
+  config.eager_load = true
 
-  # Show full error reports.
-  config.consider_all_requests_local = true
+  # Full error reports are disabled.
+  config.consider_all_requests_local = false
 
-  # Enable server timing
-  config.server_timing = true
+  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
+  config.require_master_key = true
 
-  # Enable/disable caching. By default caching is disabled.
-  # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp/caching-dev.txt").exist?
-    config.action_controller.perform_caching = true
-    config.action_controller.enable_fragment_cache_logging = true
+  # Enable serving static files from the `/public` folder by default
+  config.public_file_server.enabled = trueå
 
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
-    }
-  else
-    config.action_controller.perform_caching = false
+  # Compress JavaScripts and CSS.
+  config.assets.js_compressor = Terser.new
+  # config.assets.css_compressor = :sass
 
-    config.cache_store = :null_store
-  end
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = false
+
+  # Generate digests for assets URLs.
+  config.assets.digest = true
+
+  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
+
+  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
+  # config.action_controller.asset_host = 'http://assets.example.com'
+
+  # Specifies the header that your server uses for sending files.
+  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
+  # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :cloudinary
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Mount Action Cable outside main process or domain
+  config.action_cable.mount_path = nil
+  config.action_cable.url = 'wss://carsspot-1286c883ae12.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [ 'https://carsspot-1286c883ae12.herokuapp.com', /https:\/\/carsspot-1286c883ae12.herokuapp.*/ ]
+
+  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  config.force_ssl = true
+
+  # Use the lowest log level to ensure availability of diagnostic information when problems arise.
+  config.log_level = :debug
+
+  # Prepend all log lines with the following tags.
+  config.log_tags = [ :request_id ]
+
+  # Use a different cache store in production.
+  # config.cache_store = :mem_cache_store
+
+  # Use a real queuing backend for Active Job (and separate queues per environment)
+  # config.active_job.queue_adapter = :resque
+  # config.active_job.queue_name_prefix = "carsspot_#{Rails.env}"
 
   config.action_mailer.perform_caching = false
 
-  # Print deprecation notices to the Rails logger.
-  config.active_support.deprecation = :log
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  config.action_mailer.raise_delivery_errors = false
 
-  # Raise exceptions for disallowed deprecations.
-  config.active_support.disallowed_deprecation = :raise
+  config.i18n.fallbacks = true
 
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
+  config.active_support.deprecation = :notify
 
-  # Raise an error on page load if there are pending migrations.
-  config.active_record.migration_error = :page_load
+  config.log_formatter = ::Logger::Formatter.new
 
-  # Highlight code that triggered database queries in logs.
-  config.active_record.verbose_query_logs = true
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    logger           = ActiveSupport::Logger.new(STDOUT)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
 
-  # Highlight code that enqueued background job in logs.
-  config.active_job.verbose_enqueue_logs = true
+  config.active_record.dump_schema_after_migration = false
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
-
-  # Raises error for missing translations.
-  # config.i18n.raise_on_missing_translations = true
-
-  # Annotate rendered view with file names.
-  # config.action_view.annotate_rendered_view_with_filenames = true
-
-  # Uncomment if you wish to allow Action Cable access from any origin.
-  config.action_cable.disable_request_forgery_protection = true
-
-  # Action Cable configuration
-  config.action_cable.url = "ws://localhost:3000/cable"
-  config.action_cable.allowed_request_origins = ['http://localhost:3000', /http:\/\/localhost:\d+/]
-
-  # Raise error when a before_action's only/except options reference missing actions
-  config.action_controller.raise_on_missing_callback_actions = false
+  # Set the host for URL generation
+  config.action_mailer.default_url_options = { host: 'carsspot-1286c883ae12.herokuapp.com' }
+  Rails.application.routes.default_url_options[:host] = 'carsspot-1286c883ae12.herokuapp.com'
 end
