@@ -1,30 +1,38 @@
-<h1>Request to Rent <%= @car.car_name %></h1>
+<div data-controller="id-card-scanner">
+  <h1>Request to Rent <%= @car.car_name %></h1>
 
-<%= form_for @rental, url: rentals_path, html: { multipart: true, data: { controller: "file-upload" } } do |f| %>
-  <div class="form-group">
-    <%= f.label :start_date %>
-    <%= f.date_field :start_date, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :end_date %>
-    <%= f.date_field :end_date, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :driving_license %>
-    <%= f.text_field :driving_license, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :id_proof %>
-    <%= f.text_field :id_proof, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :driving_license_front_image, "Upload Driving License Front" %>
-    <%= f.file_field :driving_license_front_image, class: "form-control", accept: "image/*", data: { action: "change->file-upload#resizeImage" } %>
-  </div>
-  <div class="form-group">
-    <%= f.label :driving_license_back_image, "Upload Driving License Back" %>
-    <%= f.file_field :driving_license_back_image, class: "form-control", accept: "image/*", data: { action: "change->file-upload#resizeImage" } %>
-  </div>
-  <%= f.hidden_field :car_id, value: @car.id %>
-  <%= f.submit "Request to Rent", class: "btn btn-primary" %>
-<% end %>
+  <%= form_for @rental, url: rentals_path, html: { multipart: true } do |f| %>
+    <div class="form-group">
+      <%= f.label :start_date %>
+      <%= f.date_field :start_date, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :end_date %>
+      <%= f.date_field :end_date, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :driving_license %>
+      <%= f.text_field :driving_license, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :id_proof %>
+      <%= f.text_field :id_proof, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <label>Driving License Front Image</label>
+      <input type="file" accept="image/*" capture="environment" data-target="id-card-scanner.frontImage">
+      <video id="frontVideo" playsinline autoplay></video>
+      <button type="button" data-action="id-card-scanner#captureFrontImage">Capture Front Image</button>
+      <canvas id="frontCanvas" style="display: none;"></canvas>
+    </div>
+    <div class="form-group">
+      <label>Driving License Back Image</label>
+      <input type="file" accept="image/*" capture="environment" data-target="id-card-scanner.backImage">
+      <video id="backVideo" playsinline autoplay></video>
+      <button type="button" data-action="id-card-scanner#captureBackImage">Capture Back Image</button>
+      <canvas id="backCanvas" style="display: none;"></canvas>
+    </div>
+    <%= f.hidden_field :car_id, value: @car.id %>
+    <%= f.submit "Request to Rent", class: "btn btn-primary" %>
+  <% end %>
+</div>

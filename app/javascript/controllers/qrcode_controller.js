@@ -1,60 +1,50 @@
-import { Controller } from "@hotwired/stimulus";
-
-// Helper function to resize an image
-function resizeImage(file, maxWidth, maxHeight, callback) {
-  const reader = new FileReader();
-  
-  reader.onload = function(event) {
-    const img = new Image();
-    
-    img.onload = function() {
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > maxWidth) {
-          height *= maxWidth / width;
-          width = maxWidth;
-        }
-      } else {
-        if (height > maxHeight) {
-          width *= maxHeight / height;
-          height = maxHeight;
-        }
-      }
-
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-
-      ctx.drawImage(img, 0, 0, width, height);
-
-      canvas.toBlob(callback, "image/jpeg", 0.8);
-    };
-
-    img.src = event.target.result;
-  };
-
-  reader.readAsDataURL(file);
-}
+import { Controller } from "stimulus";
 
 export default class extends Controller {
-  static targets = ["drivingLicenseFrontImage", "drivingLicenseBackImage"];
+  static targets = ["frontImage", "backImage", "frontCanvas", "backCanvas"];
 
-  resizeImage(event) {
-    const input = event.target;
-    const file = input.files[0];
-    const maxWidth = 1024;
-    const maxHeight = 768;
+  connect() {
+    this.startCamera("front");
+    this.startCamera("back");
+  }
 
-    if (file) {
-      resizeImage(file, maxWidth, maxHeight, (blob) => {
-        const resizedFile = new File([blob], file.name, { type: "image/jpeg", lastModified: Date.now() });
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(resizedFile);
-        input.files = dataTransfer.files;
-      });
+  startCamera(side) {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+      .then(stream => {
+        this[`${side}VideoTarget`].srcObject = stream;
+        this[`${side}Stream`] = stream;
+      })
+      .catch(error => console.error("Error accessing the camera: ", error));
+  }
+
+  captureFrontImage() {
+    this.captureImage("front");
+  }
+
+  captureBackImage() {
+    this.captureImage("back");
+  }
+
+  captureImage(side) {
+    const video = this[`${side}VideoTarget`];
+    const canvas = this[`${side}CanvasTarget`];
+    const context = canvas.getContext("2d");
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert the canvas to a data URL and set it as the value of the hidden input field
+    const dataURL = canvas.toDataURL("image/png");
+    this[`${side}ImageTarget`].value = dataURL;
+
+    // Stop the camera
+    this.stopCamera(side);
+  }
+
+  stopCamera(side) {
+    if (this[`${side}Stream`]) {
+      this[`${side}Stream`].getTracks().forEach(track => track.stop());
     }
   }
 }
