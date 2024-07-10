@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["frontImage", "backImage", "frontCanvas", "backCanvas", "frontVideo", "backVideo"];
+  static targets = ["frontImage", "backImage", "frontCanvas", "backCanvas", "frontVideo", "backVideo", "frontInput", "backInput"];
 
   connect() {
     this.startCamera("front");
@@ -9,12 +9,29 @@ export default class extends Controller {
   }
 
   startCamera(side) {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-      .then(stream => {
-        this[`${side}VideoTarget`].srcObject = stream;
-        this[`${side}Stream`] = stream;
-      })
-      .catch(error => console.error("Error accessing the camera: ", error));
+    const input = this[`${side}InputTarget`];
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = this[`${side}CanvasTarget`];
+          const context = canvas.getContext("2d");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0, img.width, img.height);
+          const dataURL = canvas.toDataURL("image/png");
+          this[`${side}ImageTarget`].value = dataURL;
+        };
+        img.src = event.target.result;
+      };
+
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    });
   }
 
   captureFrontImage() {
@@ -34,11 +51,9 @@ export default class extends Controller {
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Convert the canvas to a data URL and set it as the value of the hidden input field
     const dataURL = canvas.toDataURL("image/png");
     this[`${side}ImageTarget`].value = dataURL;
 
-    // Stop the camera
     this.stopCamera(side);
   }
 
