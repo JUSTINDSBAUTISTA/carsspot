@@ -1,7 +1,7 @@
-import { Controller } from "stimulus";
+import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["frontImage", "backImage", "frontCanvas", "backCanvas"];
+  static targets = ["frontImage", "backImage", "frontCanvas", "backCanvas", "frontVideo", "backVideo"];
 
   connect() {
     this.startCamera("front");
