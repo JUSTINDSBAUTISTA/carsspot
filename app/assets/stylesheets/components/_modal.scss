@@ -1,64 +1,5 @@
-* {
-    box-sizing: border-box;
-  }
-  
-  .datetimepicker {
-    display: inline-flex;
-    align-items: center;
-    background-color: #fff;
-    border: 4px solid darkturquoise;
-    border-radius: 8px;
-    padding: 0.5rem; /* Add padding for better spacing */
-    margin-right: 10px; /* Add margin to space out elements */
-  }
-  
-  .datetimepicker:focus-within {
-    border-color: teal;
-  }
-  
-  .datetimepicker input {
-    font: inherit;
-    color: inherit;
-    appearance: none;
-    outline: none;
-    border: 0;
-    background-color: transparent;
-  }
-  
-  .datetimepicker input[type="date"] {
-    width: 8rem; /* Adjust the width as needed */
-    padding: 0.25rem 0 0.25rem 0.5rem;
-    border-right-width: 0;
-  }
-  
-  .datetimepicker input[type="time"] {
-    width: 4rem; /* Make the time input smaller */
-    padding: 0.25rem 0.5rem 0.25rem 0;
-    border-left-width: 0;
-  }
-  
-  .datetimepicker span {
-    height: 1rem;
-    margin-right: 0.25rem;
-    margin-left: 0.25rem;
-    border-right: 1px solid #ddd;
-  }
-  
-  .info {
-    padding-top: 0.5rem;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  
-  /* Modal Styles */
-  .custom-autocomplete-container {
-    border: 1px solid #9c27b0; /* Example border color */
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  
 
-  
+
   .modal {
     display: none;
     position: fixed;
@@ -383,40 +324,7 @@
   }
   
   /* General Button Styles */
-  button {
-    background-color: #fff;
-    color: #4A4A4A;
-    padding: 10px 15px;
-    border: 2px solid #E0E0E0;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    margin: 5px;
-    text-align: center;
-  }
   
-  button:hover {
-    background-color: #44A1A0;
-    color: #fff;
-    border-color: #44A1A0;
-  }
-  
-  /* Specific Button Styles */
-  .feature-item,
-  .vehicle-type,
-  .filter-button,
-  .reset-button,
-  .apply-button,
-  .search-button1 {
-    min-width: 80px; /* Adjust as needed */
-  }
-  
-  /* Specific adjustment for .filter-button */
-  .filter-button {
-    flex: 1;
-    max-width: 120px; /* Ensure it doesn't grow too large */
-  }
   
   .feature-item.selected,
   .vehicle-type.selected {
@@ -528,25 +436,5 @@
   
   .brand-button:hover {
     background-color: #f0f0f0;
-  }
-  
-  /* Layout Adjustments */
-  .main-container {
-    display: flex;
-  }
-  
-  .cars-list-container {
-    width: 40%; /* Adjust to 40% of the page */
-  }
-  
-  .map-container {
-    width: 60%; /* Adjust to 60% of the page */
-    padding-left: 10px;
-  }
-  
-  #map {
-    width: 100%;
-    height: 100%;
-    min-height: 500px; /* Set a minimum height for the map */
   }
   

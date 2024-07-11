@@ -60,13 +60,5 @@ export default class extends Controller {
     }
   }
 
-  applyStyles() {
-    // Apply custom styles here if needed
-    const datePickers = document.querySelectorAll(".flatpickr-input");
-    datePickers.forEach(picker => {
-      picker.style.fontSize = "14px"; // Example style change
-      picker.style.padding = "5px";
-      picker.style.width = "120px"; // Adjust width if necessary
-    });
-  }
+
 }

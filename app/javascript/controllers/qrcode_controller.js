@@ -1,50 +1,59 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
-  static targets = ["reader", "startCameraButton", "drivingLicenseFrontImage", "drivingLicenseBackImage"];
+// Helper function to resize an image
+function resizeImage(file, maxWidth, maxHeight, callback) {
+  const reader = new FileReader();
+  
+  reader.onload = function(event) {
+    const img = new Image();
+    
+    img.onload = function() {
+      let width = img.width;
+      let height = img.height;
 
-  connect() {
-    console.log("QRCode controller connected");
-  }
-
-  startCamera(event) {
-    event.preventDefault();
-
-    this.html5QrCode = new Html5Qrcode(this.readerTarget);
-
-    this.html5QrCode.start(
-      { facingMode: "environment" }, // Use the rear camera
-      {
-        fps: 10,    // Frame-per-second
-        qrbox: 250  // Optional, if you want bounded box UI
-      },
-      (decodedText, decodedResult) => {
-        // Handle the result here
-        console.log(`Scan result: ${decodedText}`);
-        // Example: Set the value to the input field
-        this.drivingLicenseFrontImageTarget.value = decodedText; // Or any other action you need
-        this.html5QrCode.stop().then(() => {
-          console.log("QR Code scanning stopped.");
-        }).catch((err) => {
-          console.error("Unable to stop scanning.", err);
-        });
-      },
-      (errorMessage) => {
-        // Parse the error message
-        console.error(`Error scanning: ${errorMessage}`);
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
       }
-    ).catch((err) => {
-      console.error(`Error starting camera: ${err}`);
-    });
-  }
 
-  stopCamera(event) {
-    event.preventDefault();
-    if (this.html5QrCode) {
-      this.html5QrCode.stop().then(() => {
-        console.log("QR Code scanning stopped.");
-      }).catch((err) => {
-        console.error("Unable to stop scanning.", err);
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(callback, "image/jpeg", 0.8);
+    };
+
+    img.src = event.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
+
+export default class extends Controller {
+  static targets = ["drivingLicenseFrontImage", "drivingLicenseBackImage"];
+
+  resizeImage(event) {
+    const input = event.target;
+    const file = input.files[0];
+    const maxWidth = 1024;
+    const maxHeight = 768;
+
+    if (file) {
+      resizeImage(file, maxWidth, maxHeight, (blob) => {
+        const resizedFile = new File([blob], file.name, { type: "image/jpeg", lastModified: Date.now() });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(resizedFile);
+        input.files = dataTransfer.files;
       });
     }
   }

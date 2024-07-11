@@ -126,16 +126,6 @@ export default class extends Controller {
     });
   }
 
-  createSuggestionContainer(key) {
-    let suggestionContainer = document.getElementById(`${key}-autocomplete-suggestions`);
-    if (!suggestionContainer) {
-      suggestionContainer = document.createElement('div');
-      suggestionContainer.id = `${key}-autocomplete-suggestions`;
-      suggestionContainer.classList.add('autocomplete-suggestions-container');
-      document.body.appendChild(suggestionContainer);
-    }
-    return suggestionContainer;
-  }
 
   addCurrentLocation(inputTarget, key) {
     if (navigator.geolocation) {
