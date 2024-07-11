@@ -1,6 +1,6 @@
 <h1>Request to Rent <%= @car.car_name %></h1>
 
-<%= form_for @rental, url: rentals_path do |f| %>
+<%= form_for @rental, url: rentals_path, html: { multipart: true } do |f| %>
   <div class="form-group">
     <%= f.label :start_date %>
     <%= f.date_field :start_date, class: "form-control" %>
@@ -18,20 +18,12 @@
     <%= f.text_field :id_proof, class: "form-control" %>
   </div>
   <div class="form-group">
-    <%= f.label :driving_license_front_image %>
-    <%= f.hidden_field :driving_license_front_image, data: { target: "qrcode.frontImage" } %>
-    <video data-target="qrcode.frontVideo" autoplay style="display: none;"></video>
-    <canvas data-target="qrcode.frontCanvas" style="display:none;"></canvas>
-    <input type="file" accept="image/*" capture="environment" data-target="qrcode.frontInput">
-    <button type="button" data-action="click->qrcode#captureFrontImage">Capture Front Image</button>
+    <%= f.label :driving_license_front_image, "Upload Driving License Front" %>
+    <%= f.file_field :driving_license_front_image, class: "form-control" %>
   </div>
   <div class="form-group">
-    <%= f.label :driving_license_back_image %>
-    <%= f.hidden_field :driving_license_back_image, data: { target: "qrcode.backImage" } %>
-    <video data-target="qrcode.backVideo" autoplay style="display: none;"></video>
-    <canvas data-target="qrcode.backCanvas" style="display:none;"></canvas>
-    <input type="file" accept="image/*" capture="environment" data-target="qrcode.backInput">
-    <button type="button" data-action="click->qrcode#captureBackImage">Capture Back Image</button>
+    <%= f.label :driving_license_back_image, "Upload Driving License Back" %>
+    <%= f.file_field :driving_license_back_image, class: "form-control" %>
   </div>
   <%= f.hidden_field :car_id, value: @car.id %>
   <%= f.submit "Request to Rent", class: "btn btn-primary" %>

@@ -121,5 +121,4 @@ class RentalsController < ApplicationController
     params.require(:rental).permit(:start_date, :end_date, :driving_license, :id_proof, :car_id, :driving_license_front_image, :driving_license_back_image)
   end
 
-
 end
