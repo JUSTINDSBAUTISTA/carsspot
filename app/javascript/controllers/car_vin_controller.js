@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["vin", "carName", "carBrand", "vinConfirm", "transmission", "fuelType", "numberOfDoors"];
+  static targets = ["vin", "carName", "carBrand", "transmission", "fuelType", "fuelTypeSecondary", "numberOfDoors", "engineHp", "driveType", "bodyClass", "carType", "modelYear", "vinConfirm", "airBagLocCurtain", "airBagLocFront", "airBagLocSide", "engineCylinders", "engineManufacturer", "engineModel", "gvwr", "plantCity", "plantCountry", "series", "tpms", "vehicleType"];
 
   fetchVinData() {
     const vin = this.vinTarget.value;
@@ -10,17 +10,62 @@ export default class extends Controller {
         .then(response => response.json())
         .then(data => {
           console.log("Fetched VIN data:", data);
-          this.carNameTarget.value = data.car_name || "Not available";
-          this.carBrandTarget.value = data.car_brand || "Not available";
-          this.transmissionTarget.value = data.transmission || "Not available";
-          this.fuelTypeTarget.value = data.fuel_type || "Not available";
-          this.numberOfDoorsTarget.value = data.number_of_doors || "Not available";
+          this.updateField(this.carNameTarget, data.car_name);
+          this.updateField(this.carBrandTarget, data.car_brand);
+          this.updateField(this.transmissionTarget, data.transmission);
+          this.updateField(this.fuelTypeTarget, data.fuel_type);
+          this.updateField(this.fuelTypeSecondaryTarget, data.fuel_type_secondary);
+          this.updateField(this.numberOfDoorsTarget, data.number_of_doors);
+          this.updateField(this.engineHpTarget, data.engine_hp);
+          this.updateField(this.driveTypeTarget, data.drive_type);
+          this.updateField(this.bodyClassTarget, data.body_class);
+          this.updateCarType(data.body_class);
+          this.updateField(this.modelYearTarget, data.model_year);
+          this.updateField(this.airBagLocCurtainTarget, data.air_bag_loc_curtain);
+          this.updateField(this.airBagLocFrontTarget, data.air_bag_loc_front);
+          this.updateField(this.airBagLocSideTarget, data.air_bag_loc_side);
+          this.updateField(this.engineCylindersTarget, data.engine_cylinders);
+          this.updateField(this.engineManufacturerTarget, data.engine_manufacturer);
+          this.updateField(this.engineModelTarget, data.engine_model);
+          this.updateField(this.gvwrTarget, data.gvwr);
+          this.updateField(this.plantCityTarget, data.plant_city);
+          this.updateField(this.plantCountryTarget, data.plant_country);
+          this.updateField(this.seriesTarget, data.series);
+          this.updateField(this.tpmsTarget, data.tpms);
+          this.updateField(this.vehicleTypeTarget, data.vehicle_type);
           this.vinConfirmTarget.value = vin;
           alert("VIN confirmed. Please proceed.");
         })
         .catch(error => {
           console.error("Error fetching VIN data:", error);
         });
+    }
+  }
+
+  updateField(target, value) {
+    if (value && value !== "Not available") {
+      target.closest('.form-group').style.display = 'block';
+      target.value = value;
+    } else {
+      target.closest('.form-group').style.display = 'none';
+    }
+  }
+
+  updateCarType(bodyClass) {
+    const carTypeMap = {
+      'Convertible/Cabriolet': 'Convertible',
+      'Sedan': 'Sedan',
+      'SUV': 'SUV',
+      'Truck': 'Truck',
+      'Coupe': 'Coupe'
+    };
+    const carType = carTypeMap[bodyClass] || '';
+    if (carType) {
+      const options = Array.from(this.carTypeTarget.options);
+      const optionToSelect = options.find(option => option.value === carType);
+      if (optionToSelect) {
+        optionToSelect.selected = true;
+      }
     }
   }
 

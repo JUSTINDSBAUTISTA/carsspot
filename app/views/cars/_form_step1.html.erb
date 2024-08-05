@@ -1,0 +1,199 @@
+<!-- _form_step1.html.erb-->
+<div class="form-header">
+  <h1>Earn money by renting out your car</h1>
+</div>
+<div class="form-content">
+  <div class="form-section">
+    <div class="form-group" data-controller="places-autocomplete">
+      <%= form.label :address, "Enter your city", class: "form-label" %>
+      <%= form.text_field :address, class: "form-input", id: "car_address", data: { "places-autocomplete-target" => "formInput" }, placeholder: "Enter a location" %>
+      <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
+    </div>
+    <div class="info-text">Please select a city to continue.</div>
+  </div>
+  <div class="form-image">
+    <img src="https://media.istockphoto.com/id/540529776/photo/portrait-of-young-woman-in-car-looking-at-map.jpg?s=2048x2048&w=is&k=20&c=tW09L4B8o8gr1PggDy591Pv5zsYEyAOQejSuM9lHL60=" alt="Car rental image" class="responsive-image">
+  </div>
+</div>
+
+
+<div class="info-section">
+  <div class="info-stats">
+    <div class="info-stat">
+      <h3>1.6 million</h3>
+      <p>drivers</p>
+    </div>
+    <div class="info-stat">
+      <h3>5.6 million</h3>
+      <p>trips completed</p>
+    </div>
+    <div class="info-stat">
+      <h3>24/7</p>
+      <p>Customer service</p>
+    </div>
+    <div class="info-stat">
+      <h3>Extensive coverage</h3>
+    </div>
+  </div>
+
+  <h2 class="section-title">Two ways to share</h2>
+  <p class="section-subtitle">Rent when you want, at the price you want</p>
+
+  <div class="sharing-options">
+    <div class="option-card">
+      <span class="badge1">Owner’s favorite choice</span>
+      <h3>Without key exchange</h3>
+      <p>Rent often and earn more</p>
+      <div class="option-details">
+        <%= image_tag "brand.png", alt: "Getaround Connect icon" %>
+        <h4>Getaround Connect</h4>
+        <p>Drivers open your car from the app</p>
+      </div>
+      <p>No need to meet drivers. They book, locate and unlock your car from the app.</p>
+      <p><strong>We verify each driver’s identity</strong> so your car always stays in good hands.</p>
+    </div>
+
+    <div class="option-card">
+      <h3>Key exchange</h3>
+      <p>Rent very occasionally</p>
+      <div class="option-details">
+        <%= image_tag "brand.png", alt: "Key exchange icon" %>
+        <h4>Meet drivers</h4>
+        <p>Hand over the keys every time</p>
+      </div>
+      <p>Meet drivers at each check-in and check-out to sign the rental agreement.</p>
+      <p>Suitable for car sharing outside of Getaround Connect eligible zones.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .form-header h1 {
+    font-size: 2.5rem;
+    color: #3D3D3D;
+  }
+
+  .form-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+ 
+
+
+
+
+
+  .responsive-image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+
+
+
+  .info-section {
+    width: 100%;
+    margin: 50px auto;
+    text-align: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .info-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+  }
+
+  .info-stat h3 {
+    font-size: 2rem;
+    margin: 0;
+    color: #3D3D3D;
+  }
+
+  .info-stat p {
+    font-size: 1rem;
+    margin: 5px 0 0;
+    color: #6c757d;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    color: #3D3D3D;
+  }
+
+  .section-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 40px;
+    color: #6c757d;
+  }
+
+  .sharing-options {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+
+  .option-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 45%;
+    text-align: left;
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .option-card h3 {
+    font-size: 1.5rem;
+    color: #3D3D3D;
+  }
+
+  .option-card p {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+  }
+
+  .option-details {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+  }
+
+  .option-details img {
+    width: 40px;
+    margin-right: 10px;
+  }
+
+  .option-details h4 {
+    font-size: 1.25rem;
+    color: #3D3D3D;
+    margin: 0;
+  }
+
+  .badge1 {
+    display: inline-block;
+    background-color: #ff69b4;
+    color: #fff;
+    border-radius: 12px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    margin-bottom: 10px;
+    position: absolute;
+    top: -10px;
+    left: 10px;
+  }
+</style>

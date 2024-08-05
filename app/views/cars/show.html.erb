@@ -15,6 +15,8 @@
       <span>(<%= @car.reviews.count %> reviews)</span>
     </div>
 
+    <hr>
+
     <div class="car-summary">
       <p><strong>Price:</strong> $<%= @car.price_per_day %> per day</p>
       <p><strong>Status:</strong> <%= @car.status %></p>
@@ -24,12 +26,14 @@
       <p><strong>Maximum Rental Duration:</strong> <%= @car.max_rental_duration %> days</p>
       <p><strong>Minimum Advance Notice:</strong> <%= @car.min_advance_notice %> days</p>
       <p><strong>Availability:</strong> <%= @car.availability_start_date %> to <%= @car.availability_end_date %></p>
-      <p><strong>Owner Rules:</strong> <%= @car.owner_rules %></p>
+      <p><strong>Owner Rules:</strong> <%= @car.owner_rules.present? ? @car.owner_rules : "None" %></p>
       <p><strong>Make:</strong> <%= @car.car_make %></p>
       <p><strong>Transmission:</strong> <%= @car.transmission %></p>
       <p><strong>Mileage:</strong> <%= @car.mileage %> miles</p>
       <p><strong>Doors:</strong> <%= @car.number_of_doors %></p>
     </div>
+
+    <hr>
 
     <div class="features-section">
       <h3>Features</h3>
@@ -57,30 +61,32 @@
       </ul>
     </div>
 
+    <hr>
+
     <div class="trip-details">
       <h3>Trip Details</h3>
-      <div class="trip-dates">
-        <label for="trip-start">Trip Start</label>
-        <input type="date" id="trip-start" name="trip[start_date]" class="trip-date-input" value="<%= params[:start_date] %>">
-        <label for="trip-end">Trip End</label>
-        <input type="date" id="trip-end" name="trip[end_date]" class="trip-date-input" value="<%= params[:end_date] %>">
-      </div>
+      <%= form_with url: new_car_rental_path(@car), method: :get do |f| %>
+        <div class="trip-dates">
+          <label for="trip-start">Trip Start</label>
+          <%= f.date_field :start_date, id: "trip-start", name: "start_date", class: "trip-date-input", value: params[:start_date] %>
+          <label for="trip-end">Trip End</label>
+          <%= f.date_field :end_date, id: "trip-end", name: "end_date", class: "trip-date-input", value: params[:end_date] %>
+        </div>
+        <%= f.hidden_field :car_id, value: @car.id %>
+        <div class="btn-group">
+          <%= f.submit "Next", class: "btn btn-primary" %>
+          <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
 
-    <div class="btn-group">
-      <%= link_to 'Back', cars_path, class: 'btn btn-primary' %>
-
-      <% if user_signed_in? && @car.user != current_user %>
-        <%= link_to "Request to Rent", new_car_rental_path(@car), class: "btn btn-primary" %>
-        <%= link_to "Message Owner", messages_path(recipient_id: @car.user.id), class: "btn btn-primary" %>
-        <%= link_to "Favorite", favorite_car_path(@car), method: :post, class: "btn btn-secondary" %>
-      <% end %>
-
-      <% if current_user.admin? && @car.status == 'pending' %>
+    <% if current_user.admin? && @car.status == 'pending' %>
+      <hr>
+      <div class="btn-group">
         <%= link_to 'Approve', approve_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-success' %>
         <%= link_to 'Reject', reject_admin_car_path(@car), data: { turbo_method: :patch }, class: 'btn btn-danger' %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </div>
 
@@ -92,7 +98,6 @@
        style="width: 100%; height: 400px;">
   </div>
 </div>
-
 
 <style>
 .car-detail-container {
@@ -128,7 +133,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .car-rating span {
@@ -146,7 +151,7 @@
 }
 
 .features-section {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .features-list {
@@ -159,7 +164,7 @@
 }
 
 .trip-details {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .trip-dates {
@@ -178,7 +183,7 @@
 .btn-group {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .btn {

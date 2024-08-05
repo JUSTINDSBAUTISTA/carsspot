@@ -1,4 +1,4 @@
-<%= form_with(model: @car, local: true, html: { class: "car-form", data: { controller: "form car-vin" } }, multipart: true) do |form| %>
+<%= form_with(model: @car, local: true, html: { class: "car-form", data: { controller: "form" } }, multipart: true) do |form| %>
   <% if @car.errors.any? %>
     <div id="error_explanation" class="error-explanation">
       <h2><%= pluralize(@car.errors.count, "error") %> prohibited this car from being saved:</h2>
@@ -11,19 +11,15 @@
   <% end %>
 
   <!-- Step 1: Location -->
-  <div class="form-step form-step-active" data-form-target="step">
-    <div class="form-group" data-controller="places-autocomplete">
-      <%= form.label :address, class: "form-label", for: "car_address" %>
-      <%= form.text_field :address, class: "form-input", id: "car_address", data: { "places-autocomplete-target" => "formInput" }, placeholder: "Enter a location" %>
-    </div>
-    <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
+  <div class="form-step" data-form-target="step">
+    <%= render 'form_step1', form: form %>
   </div>
 
   <!-- Step 2: VIN Verification -->
   <div class="form-step" data-form-target="step">
     <div class="form-group">
       <%= form.label :vin, class: "form-label", for: "car_vin" %>
-      <%= form.text_field :vin, id: 'car_vin', class: "form-input", data: { action: "blur->car-vin#fetchVinData", car_vin_target: "vin" } %>
+      <%= form.text_field :vin, id: 'car_vin', class: "form-input", data: { action: "blur->car-vin#fetchVinData input->form#saveFormData", car_vin_target: "vin" }, name: "vin" %>
     </div>
     <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
     <button type="button" class="btn btn-primary" data-action="click->form#nextStep">Next</button>
@@ -31,34 +27,119 @@
 
   <!-- Step 3: Car Details Confirmation -->
   <div class="form-step" data-form-target="step">
-    <div class="form-group">
+    <div class="form-group" data-target="car-vin.carNameTarget">
       <%= form.label :car_name, class: "form-label", for: "car_car_name" %>
-      <%= form.text_field :car_name, class: "form-input", id: "car_car_name", data: { "car-vin-target" => "carName" } %>
+      <%= form.text_field :car_name, class: "form-input", id: "car_car_name", data: { "car-vin-target" => "carName", action: "input->form#saveFormData" }, name: "car_name" %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-target="car-vin.carBrandTarget">
       <%= form.label :car_make, "Make", class: "form-label", for: "car_car_make" %>
-      <%= form.text_field :car_make, class: "form-input", id: "car_car_make", data: { "car-vin-target" => "carBrand" } %>
+      <%= form.text_field :car_make, class: "form-input", id: "car_car_make", data: { "car-vin-target" => "carBrand", action: "input->form#saveFormData" }, name: "car_make" %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-target="car-vin.transmissionTarget">
       <%= form.label :transmission, "Transmission", class: "form-label", for: "car_transmission" %>
-      <%= form.text_field :transmission, class: "form-input", id: "car_transmission", data: { "car-vin-target" => "transmission" } %>
+      <%= form.text_field :transmission, class: "form-input", id: "car_transmission", data: { "car-vin-target" => "transmission", action: "input->form#saveFormData" }, name: "transmission" %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-target="car-vin.fuelTypeTarget">
       <%= form.label :fuel_type, "Fuel Type", class: "form-label", for: "car_fuel_type" %>
-      <%= form.text_field :fuel_type, class: "form-input", id: "car_fuel_type", data: { "car-vin-target" => "fuelType" } %>
+      <%= form.text_field :fuel_type, class: "form-input", id: "car_fuel_type", data: { "car-vin-target" => "fuelType", action: "input->form#saveFormData" }, name: "fuel_type" %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" data-target="car-vin.fuelTypeSecondaryTarget">
+      <%= form.label :fuel_type_secondary, "Fuel Type Secondary", class: "form-label", for: "car_fuel_type_secondary" %>
+      <%= form.text_field :fuel_type_secondary, class: "form-input", id: "car_fuel_type_secondary", data: { "car-vin-target" => "fuelTypeSecondary", action: "input->form#saveFormData" }, name: "fuel_type_secondary" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.numberOfDoorsTarget">
       <%= form.label :number_of_doors, "Number of Doors", class: "form-label", for: "car_number_of_doors" %>
-      <%= form.text_field :number_of_doors, class: "form-input", id: "car_number_of_doors", data: { "car-vin-target" => "numberOfDoors" } %>
+      <%= form.text_field :number_of_doors, class: "form-input", id: "car_number_of_doors", data: { "car-vin-target" => "numberOfDoors", action: "input->form#saveFormData" }, name: "number_of_doors" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.engineHpTarget">
+      <%= form.label :engine_hp, "Engine HP", class: "form-label", for: "car_engine_hp" %>
+      <%= form.text_field :engine_hp, class: "form-input", id: "car_engine_hp", data: { "car-vin-target" => "engineHp", action: "input->form#saveFormData" }, name: "engine_hp" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.driveTypeTarget">
+      <%= form.label :drive_type, "Drive Type", class: "form-label", for: "car_drive_type" %>
+      <%= form.text_field :drive_type, class: "form-input", id: "car_drive_type", data: { "car-vin-target" => "driveType", action: "input->form#saveFormData" }, name: "drive_type" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.bodyClassTarget">
+      <%= form.label :body_class, "Body Class", class: "form-label", for: "car_body_class" %>
+      <%= form.text_field :body_class, class: "form-input", id: "car_body_class", data: { "car-vin-target" => "bodyClass", action: "input->form#saveFormData" }, name: "body_class" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.modelYearTarget">
+      <%= form.label :model_year, "Model Year", class: "form-label", for: "car_model_year" %>
+      <%= form.text_field :model_year, class: "form-input", id: "car_model_year", data: { "car-vin-target" => "modelYear", action: "input->form#saveFormData" }, name: "model_year" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.airBagLocCurtainTarget">
+      <%= form.label :air_bag_loc_curtain, "Air Bag Location Curtain", class: "form-label", for: "car_air_bag_loc_curtain" %>
+      <%= form.text_field :air_bag_loc_curtain, class: "form-input", id: "car_air_bag_loc_curtain", data: { "car-vin-target" => "airBagLocCurtain", action: "input->form#saveFormData" }, name: "air_bag_loc_curtain" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.airBagLocFrontTarget">
+      <%= form.label :air_bag_loc_front, "Air Bag Location Front", class: "form-label", for: "car_air_bag_loc_front" %>
+      <%= form.text_field :air_bag_loc_front, class: "form-input", id: "car_air_bag_loc_front", data: { "car-vin-target" => "airBagLocFront", action: "input->form#saveFormData" }, name: "air_bag_loc_front" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.airBagLocSideTarget">
+      <%= form.label :air_bag_loc_side, "Air Bag Location Side", class: "form-label", for: "car_air_bag_loc_side" %>
+      <%= form.text_field :air_bag_loc_side, class: "form-input", id: "car_air_bag_loc_side", data: { "car-vin-target" => "airBagLocSide", action: "input->form#saveFormData" }, name: "air_bag_loc_side" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.engineCylindersTarget">
+      <%= form.label :engine_cylinders, "Engine Cylinders", class: "form-label", for: "car_engine_cylinders" %>
+      <%= form.text_field :engine_cylinders, class: "form-input", id: "car_engine_cylinders", data: { "car-vin-target" => "engineCylinders", action: "input->form#saveFormData" }, name: "engine_cylinders" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.engineManufacturerTarget">
+      <%= form.label :engine_manufacturer, "Engine Manufacturer", class: "form-label", for: "car_engine_manufacturer" %>
+      <%= form.text_field :engine_manufacturer, class: "form-input", id: "car_engine_manufacturer", data: { "car-vin-target" => "engineManufacturer", action: "input->form#saveFormData" }, name: "engine_manufacturer" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.engineModelTarget">
+      <%= form.label :engine_model, "Engine Model", class: "form-label", for: "car_engine_model" %>
+      <%= form.text_field :engine_model, class: "form-input", id: "car_engine_model", data: { "car-vin-target" => "engineModel", action: "input->form#saveFormData" }, name: "engine_model" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.gvwrTarget">
+      <%= form.label :gvwr, "GVWR", class: "form-label", for: "car_gvwr" %>
+      <%= form.text_field :gvwr, class: "form-input", id: "car_gvwr", data: { "car-vin-target" => "gvwr", action: "input->form#saveFormData" }, name: "gvwr" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.plantCityTarget">
+      <%= form.label :plant_city, "Plant City", class: "form-label", for: "car_plant_city" %>
+      <%= form.text_field :plant_city, class: "form-input", id: "car_plant_city", data: { "car-vin-target" => "plantCity", action: "input->form#saveFormData" }, name: "plant_city" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.plantCountryTarget">
+      <%= form.label :plant_country, "Plant Country", class: "form-label", for: "car_plant_country" %>
+      <%= form.text_field :plant_country, class: "form-input", id: "car_plant_country", data: { "car-vin-target" => "plantCountry", action: "input->form#saveFormData" }, name: "plant_country" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.seriesTarget">
+      <%= form.label :series, "Series", class: "form-label", for: "car_series" %>
+      <%= form.text_field :series, class: "form-input", id: "car_series", data: { "car-vin-target" => "series", action: "input->form#saveFormData" }, name: "series" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.tpmsTarget">
+      <%= form.label :tpms, "TPMS", class: "form-label", for: "car_tpms" %>
+      <%= form.text_field :tpms, class: "form-input", id: "car_tpms", data: { "car-vin-target" => "tpms", action: "input->form#saveFormData" }, name: "tpms" %>
+    </div>
+
+    <div class="form-group" data-target="car-vin.vehicleTypeTarget">
+      <%= form.label :vehicle_type, "Vehicle Type", class: "form-label", for: "car_vehicle_type" %>
+      <%= form.text_field :vehicle_type, class: "form-input", id: "car_vehicle_type", data: { "car-vin-target" => "vehicleType", action: "input->form#saveFormData" }, name: "vehicle_type" %>
     </div>
 
     <div class="form-group">
       <%= form.label :vin, class: "form-label", for: "car_vin_confirm" %>
-      <%= form.text_field :vin, class: "form-input", id: "car_vin_confirm", data: { "car-vin-target" => "vinConfirm" }, value: @car.vin %>
+      <%= form.text_field :vin, class: "form-input", id: "car_vin_confirm", data: { "car-vin-target" => "vinConfirm", action: "input->form#saveFormData" }, name: "vin_confirm", value: @car.vin %>
     </div>
 
     <div class="form-group">
@@ -93,6 +174,7 @@
           'Dashcam' => 'fa-video',
           'Four-wheel Drive' => 'fa-car'
         } %>
+
         <% features.each do |feature, icon| %>
           <label class="feature-option">
             <%= form.check_box :features, { multiple: true, checked: @car.features.include?(feature) }, feature, nil %>
@@ -111,11 +193,11 @@
       <%= form.label :transmission, class: "form-label", for: "car_transmission" %>
       <div class="feature-options">
         <label class="feature-option">
-          <%= form.radio_button :transmission, 'Automatic', checked: @car.transmission == 'Automatic', id: "car_transmission_automatic" %>
+          <%= form.radio_button :transmission, 'Automatic', checked: @car.transmission == 'Automatic', id: "car_transmission_automatic", data: { action: "input->form#saveFormData" }, name: "transmission" %>
           <i class="fas fa-cogs"></i> Automatic
         </label>
         <label class="feature-option">
-          <%= form.radio_button :transmission, 'Manual', checked: @car.transmission == 'Manual', id: "car_transmission_manual" %>
+          <%= form.radio_button :transmission, 'Manual', checked: @car.transmission == 'Manual', id: "car_transmission_manual", data: { action: "input->form#saveFormData" }, name: "transmission" %>
           <i class="fas fa-cog"></i> Manual
         </label>
       </div>
@@ -125,19 +207,19 @@
       <%= form.label :fuel_type, class: "form-label", for: "car_fuel_type" %>
       <div class="feature-options">
         <label class="feature-option">
-          <%= form.radio_button :fuel_type, 'Petrol', checked: @car.fuel_type == 'Petrol', id: "car_fuel_type_petrol" %>
+          <%= form.radio_button :fuel_type, 'Petrol', checked: @car.fuel_type == 'Petrol', id: "car_fuel_type_petrol", data: { action: "input->form#saveFormData" }, name: "fuel_type" %>
           <i class="fas fa-gas-pump"></i> Petrol
         </label>
         <label class="feature-option">
-          <%= form.radio_button :fuel_type, 'Diesel', checked: @car.fuel_type == 'Diesel', id: "car_fuel_type_diesel" %>
+          <%= form.radio_button :fuel_type, 'Diesel', checked: @car.fuel_type == 'Diesel', id: "car_fuel_type_diesel", data: { action: "input->form#saveFormData" }, name: "fuel_type" %>
           <i class="fas fa-oil-can"></i> Diesel
         </label>
         <label class="feature-option">
-          <%= form.radio_button :fuel_type, 'Electric', checked: @car.fuel_type == 'Electric', id: "car_fuel_type_electric" %>
+          <%= form.radio_button :fuel_type, 'Electric', checked: @car.fuel_type == 'Electric', id: "car_fuel_type_electric", data: { action: "input->form#saveFormData" }, name: "fuel_type" %>
           <i class="fas fa-charging-station"></i> Electric
         </label>
         <label class="feature-option">
-          <%= form.radio_button :fuel_type, 'Hybrid', checked: @car.fuel_type == 'Hybrid', id: "car_fuel_type_hybrid" %>
+          <%= form.radio_button :fuel_type, 'Hybrid', checked: @car.fuel_type == 'Hybrid', id: "car_fuel_type_hybrid", data: { action: "input->form#saveFormData" }, name: "fuel_type" %>
           <i class="fas fa-leaf"></i> Hybrid
         </label>
       </div>
@@ -150,18 +232,12 @@
   <div class="form-step" data-form-target="step">
     <div class="form-group">
       <%= form.label :car_type, class: "form-label", for: "car_car_type" %>
-      <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input", id: "car_car_type" %>
+      <%= form.select :car_type, options_for_select(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']), {}, class: "form-input", id: "car_car_type", data: { "car-vin-target" => "carType", action: "change->form#saveFormData" }, name: "car_type" %>
     </div>
 
-<div class="form-group">
-  <%= form.label :image, class: "form-label", for: "car_image" %>
-  <%= form.file_field :image, class: "form-input", id: "car_image" %>
-</div>
-
-
     <div class="form-group">
-      <%= form.label :number_of_doors, class: "form-label", for: "car_number_of_doors" %>
-      <%= form.number_field :number_of_doors, class: "form-input", id: "car_number_of_doors" %>
+      <%= form.label :image, class: "form-label", for: "car_image" %>
+      <%= form.file_field :image, class: "form-input", id: "car_image", data: { action: "input->form#saveFormData" }, name: "image" %>
     </div>
 
     <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
@@ -172,42 +248,43 @@
   <div class="form-step" data-form-target="step">
     <div class="form-group">
       <%= form.label :price_per_day, class: "form-label" %>
-      <%= form.number_field :price_per_day, class: "form-input" %>
-    </div>
-
-    <div class="form-group">
-      <%= form.label :rating, class: "form-label" %>
-      <%= form.number_field :rating, class: "form-input" %>
+      <%= form.number_field :price_per_day, class: "form-input", data: { action: "input->form#saveFormData" }, name: "price_per_day" %>
     </div>
 
     <div class="form-group">
       <%= form.label :min_rental_duration, "Minimum Rental Duration (days)", class: "form-label" %>
-      <%= form.number_field :min_rental_duration, class: "form-input" %>
+      <%= form.number_field :min_rental_duration, class: "form-input", data: { action: "input->form#saveFormData" }, name: "min_rental_duration" %>
     </div>
 
     <div class="form-group">
       <%= form.label :max_rental_duration, "Maximum Rental Duration (days)", class: "form-label" %>
-      <%= form.number_field :max_rental_duration, class: "form-input" %>
+      <%= form.number_field :max_rental_duration, class: "form-input", data: { action: "input->form#saveFormData" }, name: "max_rental_duration" %>
     </div>
 
     <div class="form-group">
       <%= form.label :min_advance_notice, "Minimum Advance Notice (days)", class: "form-label" %>
-      <%= form.number_field :min_advance_notice, class: "form-input" %>
+      <%= form.number_field :min_advance_notice, class: "form-input", data: { action: "input->form#saveFormData" }, name: "min_advance_notice" %>
     </div>
 
     <div class="form-group">
       <%= form.label :availability_start_date, class: "form-label" %>
-      <%= form.date_field :availability_start_date, class: "form-input" %>
+      <div class="date-time-wrapper">
+        <%= form.date_field :availability_start_date, class: "form-input", data: { date_picker_target: "startDate", action: "change->form#saveFormData" }, name: "availability_start_date" %>
+        <%= form.time_field :availability_start_time, class: "form-input", data: { date_picker_target: "startTime", action: "input->form#saveFormData" }, placeholder: "HH:MM", name: "availability_start_time" %>
+      </div>
     </div>
 
     <div class="form-group">
       <%= form.label :availability_end_date, class: "form-label" %>
-      <%= form.date_field :availability_end_date, class: "form-input" %>
+      <div class="date-time-wrapper">
+        <%= form.date_field :availability_end_date, class: "form-input", data: { date_picker_target: "endDate", action: "change->form#saveFormData" }, name: "availability_end_date" %>
+        <%= form.time_field :availability_end_time, class: "form-input", data: { date_picker_target: "endTime", action: "input->form#saveFormData" }, placeholder: "HH:MM", name: "availability_end_time" %>
+      </div>
     </div>
 
     <div class="form-group">
       <%= form.label :owner_rules, class: "form-label" %>
-      <%= form.text_area :owner_rules, class: "form-input" %>
+      <%= form.text_area :owner_rules, class: "form-input", data: { action: "input->form#saveFormData" }, name: "owner_rules" %>
     </div>
 
     <button type="button" class="btn btn-secondary" data-action="click->form#prevStep">Previous</button>
@@ -215,120 +292,133 @@
   </div>
 <% end %>
 
+
 <style>
-  .car-form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
 
-  .error-explanation {
-    color: #d9534f;
-    background: #f2dede;
-    border: 1px solid #ebccd1;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
+.car-form {
+  width: 100%;
+  margin: 50px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
 
-  .error-explanation h2 {
-    margin-top: 0;
-  }
+.error-explanation {
+  color: #d9534f;
+  background: #f2dede;
+  border: 1px solid #ebccd1;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
 
-  .form-group {
-    margin-bottom: 20px;
-  }
+.error-explanation h2 {
+  margin-top: 0;
+}
 
-  .form-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-  .form-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
+.form-header h1 {
+  font-size: 2.5rem;
+  color: #3D3D3D;
+}
 
-  .form-input:focus {
-    border-color: #66afe9;
-    outline: none;
-  }
+.form-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .feature-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
+.form-section {
+  width: 48%;
+}
 
-  .feature-option {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 10px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    position: relative;
-  }
+.form-group {
+  margin-bottom: 20px;
+}
 
-  .feature-option input[type="checkbox"] {
-    position: absolute;
-    left: -9999px;
-  }
+.form-label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1.25rem;
+}
 
-  .feature-option input[type="checkbox"]:checked + i {
-    color: #007bff;
-  }
+.form-input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
 
-  .actions {
-    text-align: center;
-  }
+.form-input:focus {
+  border-color: #66afe9;
+  outline: none;
+}
 
-  .btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
+.info-text {
+  background-color: #ffefcc;
+  color: #8a6d3b;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 0.875rem;
+  text-align: center;
+}
 
-  .btn-primary {
-    background-color: #007bff;
-  }
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
 
-  .btn-primary:hover {
-    background-color: #0056b3;
-  }
+.btn-primary {
+  background-color: #007bff;
+}
 
-  .btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-  }
+.btn-primary:hover {
+  background-color: #0056b3;
+}
 
-  .btn-secondary:hover {
-    background-color: #5a6268;
-  }
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
 
-  .form-step {
-    display: none;
-  }
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
 
-  .form-step-active {
-    display: block;
-  }
+.form-step {
+  display: none;
+}
+
+.form-step-active {
+  display: block;
+}
+
+.form-image {
+  width: 48%;
+}
+
+.responsive-image {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
 </style>

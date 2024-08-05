@@ -94,8 +94,6 @@ export default class extends Controller {
         }
       });
     }
-
-    this.addCurrentLocation(inputTarget, key);
   }
 
   displaySuggestions(key, predictions, status) {
@@ -103,70 +101,29 @@ export default class extends Controller {
       return;
     }
 
-    const suggestionContainer = this.createSuggestionContainer(key);
+    const suggestionContainer = this.getSuggestionContainer(key);
     if (!suggestionContainer) {
       console.error(`Element with id '${key}-autocomplete-suggestions' not found.`);
       return;
     }
     suggestionContainer.innerHTML = ''; // Clear previous suggestions
-
-    predictions.forEach(prediction => {
-      const suggestionItem = document.createElement('div');
-      suggestionItem.classList.add('custom-autocomplete-item');
-      suggestionItem.innerHTML = `<i class="fas fa-map-marker-alt custom-autocomplete-icon"></i> ${prediction.description}`;
-      suggestionItem.addEventListener('click', () => {
-        this[`${key}InputTarget`].value = prediction.description;
-        this.selectPlace(key, prediction.place_id);
-        this.clearSuggestions(key);
-        if (key === "index") {
-          this.search(this[`${key}InputTarget`]);
-        }
-      });
-      suggestionContainer.appendChild(suggestionItem);
-    });
   }
 
+  getSuggestionContainer(key) {
+    const containerId = `${key}-autocomplete-suggestions`;
+    let container = document.getElementById(containerId);
 
-  addCurrentLocation(inputTarget, key) {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const suggestionContainer = this.createSuggestionContainer(key);
-          const currentLocationItem = document.createElement('div');
-          currentLocationItem.classList.add('custom-autocomplete-item');
-          currentLocationItem.innerHTML = `<i class="fas fa-map-marker-alt custom-autocomplete-icon"></i> Current Location`;
-          currentLocationItem.addEventListener('click', () => {
-            this.setCurrentLocation(lat, lng, inputTarget);
-          });
-          suggestionContainer.prepend(currentLocationItem);
-        },
-        (error) => {
-          console.error("Error getting current location: ", error);
-        }
-      );
+    if (!container) {
+      container = document.createElement('div');
+      container.id = containerId;
+      document.body.appendChild(container);
     }
-  }
 
-  setCurrentLocation(lat, lng, inputTarget) {
-    const geocoder = new google.maps.Geocoder();
-    const latlng = { lat, lng };
-    geocoder.geocode({ location: latlng }, (results, status) => {
-      if (status === 'OK') {
-        if (results[0]) {
-          inputTarget.value = results[0].formatted_address;
-        } else {
-          console.error('No results found');
-        }
-      } else {
-        console.error('Geocoder failed due to: ' + status);
-      }
-    });
+    return container;
   }
 
   clearSuggestions(key) {
-    const suggestionContainer = document.getElementById(`${key}-autocomplete-suggestions`);
+    const suggestionContainer = this.getSuggestionContainer(key);
     if (suggestionContainer) {
       suggestionContainer.innerHTML = '';
     }

@@ -1,8 +1,14 @@
-
+/* Navbar Styling */
 .navbar-lewagon {
   background-color: white;
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .navbar-brand img {
@@ -20,17 +26,21 @@
 .navbar-nav {
   display: flex;
   align-items: center;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
 }
 
-.navbar-nav.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
+.navbar-nav .nav-item {
+  margin: 0 10px;
+  flex: 1;
 }
 
 .navbar-nav .nav-item .nav-link {
   color: #333;
   font-weight: 500;
   padding: 10px 20px;
+  white-space: nowrap;
 }
 
 .navbar-nav .nav-item .nav-link:hover {
@@ -44,18 +54,18 @@
 .navbar-nav .nav-item .dropdown-menu {
   border-radius: 5px;
   border: 1px solid #ccc;
-  max-width: 300px; /* Limit the width of the dropdown */
-  word-wrap: break-word; /* Ensure long text wraps within the dropdown */
-  z-index: 1050; /* Ensure dropdown appears on top of other elements */
-  overflow: hidden; /* Ensure content doesn't overflow */
+  max-width: 300px;
+  word-wrap: break-word;
+  z-index: 1050;
+  overflow: hidden;
 }
 
 .navbar-nav .nav-item .dropdown-menu .dropdown-item {
   color: #333;
   padding: 10px 20px;
-  white-space: normal; /* Allow text to wrap within the item */
-  word-wrap: break-word; /* Ensure long words break and wrap within the item */
-  overflow-wrap: break-word; /* Ensure long words break and wrap within the item */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .navbar-nav .nav-item .dropdown-menu .dropdown-item:hover {
@@ -66,6 +76,7 @@
 .auth-buttons {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .avatar {
@@ -90,22 +101,127 @@
 /* Updated CSS for notification badge */
 .navbar-nav .nav-item .badge {
   position: absolute;
-  top: 5px; /* Adjust this value to align vertically */
-  right: -1px; /* Adjust this value to align horizontally */
-  font-size: 0.75rem; /* Adjust font size as needed */
-  background-color: #dc3545; /* Bootstrap's danger color */
+  top: 5px;
+  right: -1px;
+  font-size: 0.75rem;
+  background-color: #dc3545;
   color: white;
-  border-radius: 50%; /* Makes the badge round */
-  padding: 3px 6px; /* Adjust padding to make the badge smaller */
+  border-radius: 50%;
+  padding: 3px 6px;
 }
 
 .navbar-nav .nav-item {
   position: relative;
-  margin-right: 20px; /* Adjust to create more space between items */
 }
 
 /* Additional styling for the dropdown to ensure it appears on top */
 .dropdown-menu {
   position: absolute;
-  z-index: 1050; /* Ensure dropdown appears on top of other elements */
+  z-index: 1050;
+}
+
+/* Global and other styles */
+* {
+  box-sizing: border-box;
+}
+
+
+
+.main-container {
+  display: flex;
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  width: 100%;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+/* Filter Container Styling */
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  position: relative;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .navbar-lewagon {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .auth-buttons .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1012px) {
+  .navbar-lewagon {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar-nav .nav-item {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .auth-buttons .btn {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       get :pending_approval
       get :search, to: 'cars#index'
       get :filter
-      get :confirm_vin  # Route for VIN confirmation
+      get :confirm_vin
     end
     resources :rentals, only: [:index, :new, :create, :show, :destroy] do
       member do
@@ -54,8 +54,6 @@ Rails.application.routes.draw do
 
   mount ActionCable.server => '/cable'
 
-
-  # Add Sidekiq web UI with authentication
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end

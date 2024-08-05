@@ -7,16 +7,35 @@ class CarsController < ApplicationController
   def index
     @cars = policy_scope(Car).where(status: 'approved')
 
-    # Filter by search query
     if params[:location].present?
       @cars = @cars.where("address ILIKE ?", "%#{params[:location]}%")
     end
-    if params[:pickup_date].present?
-      @cars = @cars.where("availability_start_date <= ?", params[:pickup_date])
+
+    if params[:pickup_date].present? && params[:return_date].present?
+      @cars = @cars.where(
+        "(availability_start_date <= ? AND availability_end_date >= ?) OR
+         (availability_start_date <= ? AND availability_end_date >= ?) OR
+         (availability_start_date >= ? AND availability_end_date <= ?)",
+        params[:pickup_date], params[:pickup_date],
+        params[:return_date], params[:return_date],
+        params[:pickup_date], params[:return_date]
+      )
+
+      if params[:pickup_time].present? && params[:return_time].present?
+        pickup_time = Time.parse(params[:pickup_time])
+        return_time = Time.parse(params[:return_time])
+
+        @cars = @cars.where(
+          "(availability_start_time <= ? AND availability_end_time >= ?) OR
+           (availability_start_time <= ? AND availability_end_time >= ?) OR
+           (availability_start_time >= ? AND availability_end_time <= ?)",
+          pickup_time, pickup_time,
+          return_time, return_time,
+          pickup_time, return_time
+        )
+      end
     end
-    if params[:return_date].present?
-      @cars = @cars.where("availability_end_date >= ?", params[:return_date])
-    end
+
     if params[:car_types].present?
       @cars = @cars.where(car_type: params[:car_types].split(','))
     end
@@ -46,6 +65,7 @@ class CarsController < ApplicationController
 
   def show
     authorize @car
+    @rental = Rental.new
     CarView.find_or_create_by(user: current_user, car: @car) if user_signed_in?
 
     respond_to do |format|
@@ -59,27 +79,24 @@ class CarsController < ApplicationController
 
   def new
     @car = Car.new
+    @step = params[:step] || 'step1'
     authorize @car
   end
 
   def create
     @car = Car.new(car_params)
     @car.user = current_user
-    @car.status = 'pending'  # Set status to pending by default
     authorize @car
 
-    Rails.logger.debug "Car Params: #{car_params.inspect}"
-
-    if @car.save
+    if params[:step] == 'step1'
+      render :new, locals: { step: 'step2' }
+    elsif @car.save
       if @car.image.attached?
-        # Enqueue a Cloudinary upload job with the URL of the image
         CloudinaryUploadWorker.perform_async(url_for(@car.image))
       end
-
       redirect_to @car, notice: 'Car was successfully created and is pending approval.'
     else
-      Rails.logger.debug "Car Save Errors: #{@car.errors.full_messages.join(', ')}"
-      render :new, status: :unprocessable_entity
+      render :new, locals: { step: 'step1' }, status: :unprocessable_entity
     end
   end
 
@@ -131,11 +148,29 @@ class CarsController < ApplicationController
     if params[:location].present?
       @cars = @cars.where("address ILIKE ?", "%#{params[:location]}%")
     end
-    if params[:pickup_date].present?
-      @cars = @cars.where("availability_start_date <= ?", params[:pickup_date])
-    end
-    if params[:return_date].present?
-      @cars = @cars.where("availability_end_date >= ?", params[:return_date])
+    if params[:pickup_date].present? && params[:return_date].present?
+      @cars = @cars.where(
+        "(availability_start_date <= ? AND availability_end_date >= ?) OR
+         (availability_start_date <= ? AND availability_end_date >= ?) OR
+         (availability_start_date >= ? AND availability_end_date <= ?)",
+        params[:pickup_date], params[:pickup_date],
+        params[:return_date], params[:return_date],
+        params[:pickup_date], params[:return_date]
+      )
+
+      if params[:pickup_time].present? && params[:return_time].present?
+        pickup_time = Time.parse(params[:pickup_time])
+        return_time = Time.parse(params[:return_time])
+
+        @cars = @cars.where(
+          "(availability_start_time <= ? AND availability_end_time >= ?) OR
+           (availability_start_time <= ? AND availability_end_time >= ?) OR
+           (availability_start_time >= ? AND availability_end_time <= ?)",
+          pickup_time, pickup_time,
+          return_time, return_time,
+          pickup_time, return_time
+        )
+      end
     end
     if params[:car_types].present?
       @cars = @cars.where(car_type: params[:car_types].split(','))
@@ -163,8 +198,12 @@ class CarsController < ApplicationController
     transmission = data["TransmissionStyle"]
     fuel_type = data["FuelTypePrimary"]
     number_of_doors = data["Doors"]
+    engine_hp = data["EngineHP"]
+    drive_type = data["DriveType"]
+    body_class = data["BodyClass"]
+    model_year = data["ModelYear"]
 
-    render json: { car_name: model || "Not available", car_brand: make || "Not available", transmission: transmission || "Not available", fuel_type: fuel_type || "Not available", number_of_doors: number_of_doors || "Not available" }
+    render json: { car_name: model || "Not available", car_brand: make || "Not available", transmission: transmission || "Not available", fuel_type: fuel_type || "Not available", number_of_doors: number_of_doors || "Not available", engine_hp: engine_hp || "Not available", drive_type: drive_type || "Not available", body_class: body_class || "Not available", model_year: model_year || "Not available" }
   end
 
   private
@@ -183,12 +222,12 @@ class CarsController < ApplicationController
   def car_params
     params.require(:car).permit(
       :car_name, :car_brand, :vin, :transmission, :fuel_type, :car_make,
-      :image, :price_per_day, :rating, :number_of_seat, :status, :approved,
+      :image, :price_per_day, :number_of_seat, :status, :approved,
       :user_id, :latitude, :longitude, :address, :min_rental_duration,
       :max_rental_duration, :min_advance_notice, :availability_start_date,
-      :availability_end_date, :owner_rules, :country, :car_type, :mileage,
+      :availability_end_date, :availability_start_time, :availability_end_time,
+      :owner_rules, :country, :car_type, :mileage,
       :number_of_doors, :instant_booking, features: []
     )
   end
-
 end

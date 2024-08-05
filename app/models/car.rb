@@ -27,6 +27,9 @@ class Car < ApplicationRecord
   scope :filter_by_gearbox, -> (gearbox) { where(transmission: gearbox) }
   scope :filter_by_engine, -> (engine) { where(fuel_type: engine) }
   scope :filter_by_brand, -> (brand) { where(car_make: brand) }
+  scope :available_within_time_range, -> (start_time, end_time) {
+    where('(availability_start_time <= ? AND availability_end_time >= ?)', start_time, end_time)
+  }
 
   private
 

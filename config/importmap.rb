@@ -21,3 +21,8 @@ pin "@mapbox/mapbox-gl-geocoder", to: "https://cdn.skypack.dev/@mapbox/mapbox-gl
 # config/importmap.rb
 
 # config/importmap.rb
+# config/importmap.rb
+# config/importmap.rb
+
+# config/importmap.rb
+# config/importmap.rb

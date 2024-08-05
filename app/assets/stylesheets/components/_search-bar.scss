@@ -12,23 +12,10 @@
   margin: 0 auto;
 }
 
-@media (max-width: 768px) {
-  .search-bar {
-    flex-direction: column;
-    width: 100%;
-  }
-}
-
 .input-group {
   display: flex;
-  gap: 10px;
+  gap: 25px; /* Increased gap for better spacing */
   width: 100%;
-}
-
-@media (max-width: 768px) {
-  .input-group {
-    flex-direction: column;
-  }
 }
 
 .input-item {
@@ -40,13 +27,6 @@
   flex: 1;
   position: relative;
   max-width: 300px;
-}
-
-@media (max-width: 768px) {
-  .input-item {
-    max-width: 100%;
-    width: 100%;
-  }
 }
 
 .input-item i {
@@ -66,7 +46,8 @@
 }
 
 .input-wrapper input[type="text"],
-.input-wrapper input[type="date"] {
+.input-wrapper input[type="date"],
+.input-wrapper input[type="time"] {
   border: none;
   background: transparent;
   outline: none;
@@ -84,14 +65,6 @@
   max-width: 150px;
 }
 
-@media (max-width: 768px) {
-  .search-button-wrapper {
-    width: 100%;
-    justify-content: center;
-    margin-top: 10px;
-  }
-}
-
 .search-button {
   background-color: #44A1A0;
   color: white;
@@ -101,12 +74,6 @@
   cursor: pointer;
   font-size: 1em;
   transition: background-color 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .search-button {
-    width: 100%;
-  }
 }
 
 .search-button:hover {
@@ -129,7 +96,47 @@
   background-color: #e0e0e0;
 }
 
+.time-picker {
+  display: none;
+}
+
+/* Ensure the container height is sufficient to prevent layout shift */
+.input-group {
+  min-height: 70px; /* Adjust based on the combined height of the date and time pickers */
+}
+
 @media (max-width: 768px) {
+  .search-bar {
+    flex-direction: column;
+    width: 100%;
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .input-group {
+    flex-direction: column;
+    align-items: center; /* Center items */
+    min-height: auto; /* Allow the height to adjust for smaller screens */
+  }
+
+  .input-item {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: 15px; /* Add spacing between input items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow for visual separation */
+  }
+
+  .search-button-wrapper {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+    order: 1; /* Ensure search button is at the bottom on mobile */
+  }
+
+  .search-button {
+    width: 100%;
+    padding: 15px 0; /* Adjust padding for better appearance */
+  }
+
   .input-item + .input-item::before {
     display: none;
   }

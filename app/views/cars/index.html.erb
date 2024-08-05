@@ -2,33 +2,30 @@
 <p><%= pluralize(@cars.count, 'car') %> found</p>
 
 <div class="filter-container" data-controller="date-picker car dropdown modal places-autocomplete">
-  <%= form_with url: cars_path, method: :get, local: true do |form| %>
+  <%= form_with url: cars_path, method: :get, local: true, id: "search-form" do |form| %>
     <div class="filter-row">
-      <div data-controller="places-autocomplete" style="position: relative;">
-        <form id="search-form" data-action="submit->places-autocomplete#search">
-          <input type="text" class="search-input location-input pac-target-input" placeholder="Specific address, station, subway station..." id="searchAddress" name="location" data-places-autocomplete-target="indexInput" value="<%= params[:location] %>" autocomplete="off">
-        </form>
+      <div class="search-input-wrapper">
+        <input type="text" class="search-input location-input pac-target-input" placeholder="Specific address, station, subway station..." id="searchAddress" name="location" data-places-autocomplete-target="indexInput" value="<%= params[:location] %>" autocomplete="off">
       </div>
 
       <div class="datetimepicker">
-        <input type="date" id="pickupDate" name="pickup_date" value="<%= params[:pickup_date] %>" data-date-picker-target="startDate">
+        <input type="text" id="pickupDate" name="pickup_date" value="<%= params[:pickup_date] %>" data-date-picker-target="startDate" placeholder="YYYY-MM-DD">
         <span></span>
-        <input type="time" id="pickupTime" name="pickup_time" value="<%= params[:pickup_time] %>" data-date-picker-target="startTime">
+        <input type="text" id="pickupTime" name="pickup_time" value="<%= params[:pickup_time] %>" data-date-picker-target="startTime" placeholder="HH:MM">
       </div>
-
+     
       <div class="datetimepicker">
-        <input type="date" id="returnDate" name="return_date" value="<%= params[:return_date] %>" data-date-picker-target="endDate">
+        <input type="text" id="returnDate" name="return_date" value="<%= params[:return_date] %>" data-date-picker-target="endDate" placeholder="YYYY-MM-DD">
         <span></span>
-        <input type="time" id="returnTime" name="return_time" value="<%= params[:return_time] %>" data-date-picker-target="endTime">
+        <input type="text" id="returnTime" name="return_time" value="<%= params[:return_time] %>" data-date-picker-target="endTime" placeholder="HH:MM">
       </div>
-
-      <%= button_tag "Search", class: "search-button1" %>
-
-        <%= render 'modal', form: form %>
-
+    </div>
+    <div class="filter-row">
+      <%= button_tag "Search", class: "car-search-button" %>
+      <%= render 'modal', form: form %>
 
       <div data-controller="dropdown">
-        <button type="button" class="filter-button dropdown-toggle" data-action="click->dropdown#toggleDropdown" aria-haspopup="true" aria-expanded="false">Vehicle type</button>
+        <button type="button" class="car-filter-button dropdown-toggle" data-action="click->dropdown#toggleDropdown" aria-haspopup="true" aria-expanded="false">Vehicle type</button>
         <div class="dropdown-menu" data-dropdown-target="dropdown">
           <h3>VEHICLE TYPE</h3>
           <div class="vehicle-types">
@@ -39,13 +36,13 @@
             <% end %>
           </div>
           <div class="dropdown-actions">
-            <button type="button" class="reset-button" data-action="click->dropdown#resetFilters">Reset</button>
-            <button type="button" class="apply-button" data-action="click->dropdown#applyTypes">Apply</button>
+            <button type="button" class="car-reset-button" data-action="click->dropdown#resetFilters">Reset</button>
+            <button type="button" class="car-apply-button" data-action="click->dropdown#applyTypes">Apply</button>
           </div>
         </div>
       </div>
 
-      <button type="button" class="filter-button" data-action="click->modal#toggleModal">More filters</button>
+      <button type="button" class="car-filter-button" data-action="click->modal#toggleModal">More filters</button>
     </div>
   <% end %>
 </div>
@@ -63,3 +60,14 @@
     <div id="map"></div>
   </div>
 </div>
+
+<script>
+  document.getElementById('search-form').addEventListener('submit', function(event) {
+    var inputs = this.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      if (!input.value) {
+        input.removeAttribute('name');
+      }
+    });
+  });
+</script>

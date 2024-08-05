@@ -26,12 +26,20 @@
           <label for="pickup_date">Pickup date</label>
           <%= date_field_tag :pickup_date, params[:pickup_date], placeholder: "Pickup date", id: "pickup_date", name: "pickup_date", data: { date_picker_target: "startDate" } %>
         </div>
+        <div class="input-wrapper time-picker" id="pickup-time-wrapper">
+          <label for="pickup_time">Pickup time</label>
+          <%= time_field_tag :pickup_time, params[:pickup_time], placeholder: "HH:MM", id: "pickup_time", name: "pickup_time", data: { date_picker_target: "startTime" } %>
+        </div>
       </div>
       <div class="input-item">
         <i class="fas fa-calendar-alt"></i>
         <div class="input-wrapper">
           <label for="return_date">Return date</label>
           <%= date_field_tag :return_date, params[:return_date], placeholder: "Return date", id: "return_date", name: "return_date", data: { date_picker_target: "endDate" } %>
+        </div>
+        <div class="input-wrapper time-picker" id="return-time-wrapper">
+          <label for="return_time">Return time</label>
+          <%= time_field_tag :return_time, params[:return_time], placeholder: "HH:MM", id: "return_time", name: "return_time", data: { date_picker_target: "endTime" } %>
         </div>
       </div>
       <div class="input-item search-button-wrapper">
